@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minecraft Hub | Comunidad Creativa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #ffc600;
+      --background: #1a1a1a;
+      --card: #262626;
+      --text: #fff;
+      --accent: #00c853;
+    }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Kanit', sans-serif;
+    }
+    body {
+      background: var(--background);
+      color: var(--text);
+    }
+    header {
+      background: #121212;
+      padding: 15px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    header h1 {
+      font-size: 1.6em;
+    }
+    .menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1.5em;
+    }
+    nav {
+      display: flex;
+      gap: 20px;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: bold;
+      transition: color 0.2s ease;
+    }
+    nav a:hover {
+      color: var(--accent);
+    }
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      gap: 15px;
+      padding: 15px 25px;
+      background: #121212;
+    }
+    .hero {
+      padding: 60px 20px 30px;
+      text-align: center;
+    }
+    .hero h2 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    .hero p {
+      font-size: 1.2em;
+      color: #ccc;
+    }
+    .container {
+      padding: 30px 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    .section-title {
+      font-size: 1.4em;
+      color: var(--primary);
+      margin-bottom: 20px;
+      border-left: 5px solid var(--primary);
+      padding-left: 10px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    }
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+    .card .info {
+      padding: 15px;
+    }
+    .info h3 {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    .info p {
+      font-size: 0.9em;
+      color: #ccc;
+    }
+    .info a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    .version-select {
+      margin-top: 10px;
+      background: #181818;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px;
+      width: 100%;
+    }
+    .footer-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      padding: 25px;
+      background: #101010;
+      align-items: center;
+    }
+    .footer-buttons a {
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #1f1f1f;
+      border-radius: 50%;
+      transition: background 0.3s;
+    }
+    .footer-buttons a:hover {
+      background: var(--accent);
+    }
+    .footer-buttons img {
+      width: 24px;
+      height: 24px;
+    }
+    .publish-btn {
+      background: var(--accent);
+      color: white;
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      display: block;
+      width: fit-content;
+      margin: 20px auto;
+    }
+    footer {
+      background: #0a0a0a;
+      text-align: center;
+      padding: 15px;
+      color: #777;
+      font-size: 0.85em;
+    }
+    form {
+      display: grid;
+      gap: 15px;
+      background: var(--card);
+      padding: 25px;
+      border-radius: 10px;
+      max-width: 100%;
+    }
+    form input, form textarea, form select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: none;
+      font-size: 1em;
+    }
+    form button {
+      background: var(--accent);
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+      }
+      .menu-btn {
+        display: block;
+      }
+      .mobile-nav.show {
+        display: flex;
+      }
+      form {
+        padding: 15px;
+      }
+    }
+  </style>
+  <script>
+    function toggleMenu() {
+      const nav = document.getElementById('mobileNav');
+      nav.classList.toggle('show');
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Minecraft Hub</h1>
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <nav>
+      <a href="#">Inicio</a>
+      <a href="#addons">Addons</a>
+      <a href="#mods">Mods</a>
+      <a href="#texturas">Texturas</a>
+      <a href="#publicar">Publicar</a>
+    </nav>
+  </header>
+  <div id="mobileNav" class="mobile-nav">
+    <a href="#">Inicio</a>
+    <a href="#addons">Addons</a>
+    <a href="#mods">Mods</a>
+    <a href="#texturas">Texturas</a>
+    <a href="#publicar">Publicar</a>
+  </div>
+  <section class="hero">
+    <h2>Explora contenido único para Minecraft</h2>
+    <p>Addons, Mods, Texturas y más, todo aprobado por la comunidad.</p>
+    <a class="publish-btn" href="#publicar">Publicar Contenido</a>
+  </section>
+  <div class="container">
+    <div class="section-title">Marketplace Creativo</div>
+    <div class="grid" id="contenido-aprobado">
+      <!-- Contenido cargado desde Firebase -->
+    </div>
+    <div class="section-title" id="publicar">Publica tu contenido</div>
+    <form id="uploadForm">
+      <input type="text" name="nombre" placeholder="Tu nombre o usuario" required>
+      <input type="text" name="titulo" placeholder="Título del contenido" required>
+      <textarea rows="4" name="descripcion" placeholder="Descripción del contenido" required></textarea>
+      <select name="tipo" required>
+        <option value="">Tipo de contenido</option>
+        <option value="addon">Addon</option>
+        <option value="mod">Mod</option>
+        <option value="textura">Textura</option>
+        <option value="noticia">Noticia</option>
+      </select>
+      <input type="url" name="link1" placeholder="Link versión 1" required>
+      <input type="text" name="version1" placeholder="Versión 1 (ej: 1.20)" required>
+      <input type="url" name="link2" placeholder="Link versión 2 (opcional)">
+      <input type="text" name="version2" placeholder="Versión 2 (opcional)">
+      <input type="url" name="link3" placeholder="Link versión 3 (opcional)">
+      <input type="text" name="version3" placeholder="Versión 3 (opcional)">
+      <input type="file" id="imagenFile" accept="image/*" required>
+      <button type="submit">Enviar para revisión</button>
+    </form>
+  </div>
+  <div class="footer-buttons">
+    <a href="https://wa.me/tu-canal"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
+    <a href="https://tiktok.com/@tucanal"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok"></a>
+    <a href="https://forms.gle/sugerencias-form"><img src="https://cdn-icons-png.flaticon.com/512/1828/1828911.png" alt="Sugerencias"></a>
+  </div>
+  <footer>
+    &copy; 2025 Minecraft Hub. No oficial. Creado por fans para fans.
+  </footer>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBiazxsNqn_kj0VQqROMnp0XU2OukdMtNo",
+      authDomain: "minecraft-hub-2f796.firebaseapp.com",
+      projectId: "minecraft-hub-2f796",
+      storageBucket: "minecraft-hub-2f796.appspot.com",
+      messagingSenderId: "574308739058",
+      appId: "1:574308739058:web:399691b7aeb785678fad6b",
+      measurementId: "G-LGMC1CVDQC"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    const form = document.getElementById("uploadForm");
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const nombre = form.nombre.value;
+      const titulo = form.titulo.value;
+      const descripcion = form.descripcion.value;
+      const tipo = form.tipo.value;
+      const versiones = {};
+
+      if (form.version1.value && form.link1.value) versiones[form.version1.value] = form.link1.value;
+      if (form.version2.value && form.link2.value) versiones[form.version2.value] = form.link2.value;
+      if (form.version3.value && form.link3.value) versiones[form.version3.value] = form.link3.value;
+
+      const imagen = document.getElementById("imagenFile").files[0];
+      if (!imagen) return alert("Debes subir una imagen");
+
+      try {
+        const storageRef = ref(storage, 'imagenes/' + Date.now() + '-' + imagen.name);
+        await uploadBytes(storageRef, imagen);
+        const imageUrl = await getDownloadURL(storageRef);
+
+        await addDoc(collection(db, "contenidos"), {
+          nombre,
+          titulo,
+          descripcion,
+          tipo,
+          versiones,
+          imagen: imageUrl,
+          aprobado: false,
+          fecha: serverTimestamp()
+        });
+
+        alert("¡Contenido enviado con éxito!");
+        form.reset();
+      } catch (error) {
+        console.error(error);
+        alert("Error al enviar el contenido");
+      }
+    });
+
+    async function cargarContenidos() {
+      const grid = document.getElementById("contenido-aprobado");
+      const q = query(collection(db, "contenidos"), where("aprobado", "==", true));
+      const querySnapshot = await getDocs(q);
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const versiones = data.versiones || {};
+        const versionesDisponibles = Object.keys(versiones);
+        const primeraVersion = versionesDisponibles[0];
+        const primerLink = versiones[primeraVersion];
+
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          <img src="${data.imagen}" alt="${data.titulo}">
+          <div class="info">
+            <h3>${data.titulo}</h3>
+            <p>${data.descripcion}</p>
+            <select class="version-select">
+              ${versionesDisponibles.map(v => `<option value="${v}">${v}</option>`).join('')}
+            </select>
+            <a href="${primerLink}" target="_blank" class="ver-mas">Ver más →</a>
+          </div>
+        `;
+
+        const select = card.querySelector(".version-select");
+        const enlace = card.querySelector(".ver-mas");
+        select.addEventListener("change", () => {
+          const nuevaVersion = select.value;
+          enlace.href = versiones[nuevaVersion] || "#";
+        });
+
+        grid.appendChild(card);
+      });
+    }
+
+    cargarContenidos();
+  </script>
+</body>
+</html>
