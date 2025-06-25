@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
+<!DOCTYPE html><html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -180,59 +179,12 @@
       padding: 25px;
       border-radius: 10px;
     }
-    form input, 
-    form textarea, 
-    form select {
+    form input, form textarea, form select {
       padding: 12px;
       border-radius: 6px;
       border: none;
       font-size: 1em;
-      background-color: #333; /* Color de fondo para inputs */
-      color: var(--text); /* Color del texto en inputs */
     }
-
-    /* Estilos para el input de tipo file oculto y su label */
-    .file-input-container {
-      position: relative;
-      width: 100%; /* Ocupa todo el ancho disponible en el grid */
-    }
-
-    .file-input {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 0.1px;
-      height: 0.1px;
-      opacity: 0;
-      overflow: hidden;
-      z-index: -1;
-    }
-
-    .file-input-label {
-      display: inline-block;
-      background: var(--primary); /* Tu color primario para el botón */
-      color: var(--background); /* Texto oscuro para contraste */
-      padding: 12px;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-      text-align: center;
-      transition: background 0.2s ease;
-      width: 100%; /* Asegura que el botón ocupe el ancho del input */
-    }
-
-    .file-input-label:hover {
-      background: #e6b200; /* Un tono un poco más oscuro al pasar el ratón */
-    }
-
-    .file-name {
-      display: block;
-      margin-top: 5px;
-      font-size: 0.9em;
-      color: #ccc;
-      word-break: break-all; /* Rompe palabras largas para que no se desborden */
-    }
-
     form button {
       background: var(--accent);
       color: white;
@@ -288,7 +240,8 @@
   <div class="container">
     <div class="section-title">Marketplace Creativo</div>
     <div class="grid" id="contenido-aprobado">
-      </div>
+      <!-- Contenido dinámico desde Firebase -->
+    </div>
     <div class="section-title" id="publicar">Publica tu contenido</div>
     <form>
       <input type="text" name="nombre" placeholder="Tu nombre o usuario" required>
@@ -301,13 +254,6 @@
         <option value="textura">Textura</option>
         <option value="noticia">Noticia</option>
       </select>
-      
-      <div class="file-input-container">
-        <input type="file" id="imagenInput" class="file-input" accept="image/*">
-        <label for="imagenInput" class="file-input-label">Seleccionar imagen del contenido</label>
-        <span class="file-name" id="fileName">Ningún archivo seleccionado</span>
-      </div>
-
       <input type="url" name="link" placeholder="Link de descarga (solo una versión por ahora)" required>
       <input type="text" name="version" placeholder="Versión (ej: 1.20)" required>
       <button type="submit">Enviar para revisión</button>
@@ -325,7 +271,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
     import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js"; // Importa Storage
 
     const firebaseConfig = {
       apiKey: "AIzaSyBiazxsNqn_kj0VQqROMnp0XU2OukdMtNo",
@@ -340,51 +285,16 @@
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
-    const storage = getStorage(app); // Inicializa Firebase Storage
-
-    // Elementos del DOM para la subida de imagen
-    const imagenInput = document.getElementById('imagenInput');
-    const fileNameSpan = document.getElementById('fileName');
-
-    // Escucha cambios en el input de archivo para mostrar el nombre del archivo
-    imagenInput.addEventListener('change', () => {
-      if (imagenInput.files.length > 0) {
-        fileNameSpan.textContent = imagenInput.files[0].name;
-      } else {
-        fileNameSpan.textContent = 'Ningún archivo seleccionado';
-      }
-    });
 
     // Envío del formulario
     document.querySelector("form").addEventListener("submit", async (e) => {
       e.preventDefault();
-
       const nombre = e.target["nombre"].value;
       const titulo = e.target["titulo"].value;
       const descripcion = e.target["descripcion"].value;
       const tipo = e.target["tipo"].value;
       const link = e.target["link"].value;
       const version = e.target["version"].value;
-      const imagenFile = imagenInput.files[0]; // Obtiene el archivo de imagen
-
-      let imageUrl = 'https://i.imgur.com/hUPXXQF.png'; // Imagen por defecto
-
-      if (imagenFile) {
-        try {
-          // Crea una referencia al lugar donde se guardará la imagen en Storage
-          const storageRef = ref(storage, `imagenes_contenido/${Date.now()}_${imagenFile.name}`);
-          
-          // Sube el archivo
-          await uploadBytes(storageRef, imagenFile);
-          
-          // Obtiene la URL de descarga del archivo subido
-          imageUrl = await getDownloadURL(storageRef);
-        } catch (error) {
-          console.error("Error al subir la imagen:", error);
-          alert("Hubo un error al subir la imagen. Por favor, inténtalo de nuevo.");
-          return; // Detiene el envío si la imagen no se sube
-        }
-      }
 
       try {
         await addDoc(collection(db, "contenidos"), {
@@ -392,16 +302,14 @@
           titulo,
           descripcion,
           tipo,
-          imagen: imageUrl, // Guarda la URL de la imagen (subida o por defecto)
           versiones: { [version]: link },
           aprobado: false,
           fecha: serverTimestamp()
         });
         alert("¡Contenido enviado para revisión!");
-        e.target.reset(); // Resetea el formulario
-        fileNameSpan.textContent = 'Ningún archivo seleccionado'; // Resetea el nombre del archivo
+        e.target.reset();
       } catch (err) {
-        console.error("Error al guardar en Firestore:", err);
+        console.error("Error al guardar:", err);
         alert("Hubo un error al enviar tu contenido.");
       }
     });
@@ -409,8 +317,6 @@
     // Mostrar contenidos aprobados
     async function cargarContenidos() {
       const grid = document.getElementById("contenido-aprobado");
-      grid.innerHTML = ''; // Limpiar el grid antes de cargar nuevos contenidos
-
       const q = query(collection(db, "contenidos"), where("aprobado", "==", true));
       const querySnapshot = await getDocs(q);
 
@@ -424,7 +330,8 @@
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
-          <img src="${data.imagen || 'https://i.imgur.com/hUPXXQF.png'}" alt="${data.titulo}"> <div class="info">
+          <img src="https://i.imgur.com/hUPXXQF.png" alt="${data.titulo}">
+          <div class="info">
             <h3>${data.titulo}</h3>
             <p>${data.descripcion}</p>
             <select class="version-select">
@@ -448,4 +355,4 @@
     cargarContenidos();
   </script>
 </body>
-</html>
+</html>/html>
