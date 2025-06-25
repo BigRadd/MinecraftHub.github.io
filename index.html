@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
+<!DOCTYPE html><html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -214,7 +213,8 @@
   </style>
   <script>
     function toggleMenu() {
-      document.getElementById('mobileNav').classList.toggle('show');
+      const nav = document.getElementById('mobileNav');
+      nav.classList.toggle('show');
     }
   </script>
 </head>
@@ -244,64 +244,58 @@
   </section>
   <div class="container">
     <div class="section-title">Marketplace Creativo</div>
-    <div class="grid" id="contenido-aprobado"></div>
-    <div class="section-title" id="publicar">Publica tu contenido</div>
-    <form id="uploadForm">
-      <input type="text" name="nombre" placeholder="Tu nombre o usuario" required>
-      <input type="text" name="titulo" placeholder="Título del contenido" required>
-      <textarea rows="4" name="descripcion" placeholder="Descripción del contenido" required></textarea>
-      <select name="tipo" required>
-        <option value="">Tipo de contenido</option>
-        <option value="addon">Addon</option>
-        <option value="mod">Mod</option>
-        <option value="textura">Textura</option>
-        <option value="noticia">Noticia</option>
-      </select>
-      <input type="url" name="link1" placeholder="Link versión 1" required>
-      <input type="text" name="version1" placeholder="Versión 1 (ej: 1.20)" required>
-      <input type="url" name="link2" placeholder="Link versión 2 (opcional)">
-      <input type="text" name="version2" placeholder="Versión 2 (opcional)">
-      <input type="url" name="link3" placeholder="Link versión 3 (opcional)">
-      <input type="text" name="version3" placeholder="Versión 3 (opcional)">
-      <input type="file" id="imagenFile" accept="image/*" required>
-      <button type="submit">Enviar para revisión</button>
-    </form>
-  </div>
-  <div class="footer-buttons">
+    <div class="grid" id="contenido-aprobado"></div><div class="section-title" id="publicar">Publica tu contenido</div>
+<form id="uploadForm">
+  <input type="text" name="nombre" placeholder="Tu nombre o usuario" required>
+  <input type="text" name="titulo" placeholder="Título del contenido" required>
+  <textarea rows="4" name="descripcion" placeholder="Descripción del contenido" required></textarea>
+  <select name="tipo" required>
+    <option value="">Tipo de contenido</option>
+    <option value="addon">Addon</option>
+    <option value="mod">Mod</option>
+    <option value="textura">Textura</option>
+    <option value="noticia">Noticia</option>
+  </select>
+  <input type="url" name="link1" placeholder="Link versión 1" required>
+  <input type="text" name="version1" placeholder="Versión 1 (ej: 1.20)" required>
+  <input type="url" name="link2" placeholder="Link versión 2 (opcional)">
+  <input type="text" name="version2" placeholder="Versión 2 (opcional)">
+  <input type="url" name="link3" placeholder="Link versión 3 (opcional)">
+  <input type="text" name="version3" placeholder="Versión 3 (opcional)">
+  <input type="file" id="imagenFile" accept="image/*" required>
+  <button type="submit">Enviar para revisión</button>
+</form>
+
+  </div>  <div class="footer-buttons">
     <a href="https://wa.me/tu-canal"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
     <a href="https://tiktok.com/@tucanal"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok"></a>
     <a href="https://forms.gle/sugerencias-form"><img src="https://cdn-icons-png.flaticon.com/512/1828/1828911.png" alt="Sugerencias"></a>
-  </div>
-  <footer>
+  </div>  <footer>
     &copy; 2025 Minecraft Hub. No oficial. Creado por fans para fans.
-  </footer>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
-
+  </footer>  <!-- Firebase SDK sin módulos -->  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore-compat.js"></script>  <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-storage-compat.js"></script>  <script>
     const firebaseConfig = {
-      apiKey: "TU_API_KEY",
-      authDomain: "TU_DOMINIO.firebaseapp.com",
-      projectId: "TU_PROJECT_ID",
-      storageBucket: "TU_BUCKET.appspot.com",
-      messagingSenderId: "XXXXXXX",
-      appId: "XXXXXXX",
-      measurementId: "G-XXXXXXX"
+      apiKey: "AIzaSyBiazxsNqn_kj0VQqROMnp0XU2OukdMtNo",
+      authDomain: "minecraft-hub-2f796.firebaseapp.com",
+      projectId: "minecraft-hub-2f796",
+      storageBucket: "minecraft-hub-2f796.appspot.com",
+      messagingSenderId: "574308739058",
+      appId: "1:574308739058:web:399691b7aeb785678fad6b",
+      measurementId: "G-LGMC1CVDQC"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const storage = getStorage(app);
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const storage = firebase.storage();
 
-    const form = document.getElementById("uploadForm");
-    form.addEventListener("submit", async (e) => {
+    document.getElementById("uploadForm").addEventListener("submit", async function(e) {
       e.preventDefault();
+
+      const form = e.target;
       const nombre = form.nombre.value;
       const titulo = form.titulo.value;
       const descripcion = form.descripcion.value;
       const tipo = form.tipo.value;
+
       const versiones = {};
       if (form.version1.value && form.link1.value) versiones[form.version1.value] = form.link1.value;
       if (form.version2.value && form.link2.value) versiones[form.version2.value] = form.link2.value;
@@ -311,11 +305,11 @@
       if (!imagen) return alert("Debes subir una imagen");
 
       try {
-        const storageRef = ref(storage, 'imagenes/' + Date.now() + '-' + imagen.name);
-        await uploadBytes(storageRef, imagen);
-        const imageUrl = await getDownloadURL(storageRef);
+        const storageRef = storage.ref().child('imagenes/' + Date.now() + '-' + imagen.name);
+        await storageRef.put(imagen);
+        const imageUrl = await storageRef.getDownloadURL();
 
-        await addDoc(collection(db, "contenidos"), {
+        await db.collection("contenidos").add({
           nombre,
           titulo,
           descripcion,
@@ -323,55 +317,15 @@
           versiones,
           imagen: imageUrl,
           aprobado: false,
-          fecha: serverTimestamp()
+          fecha: firebase.firestore.FieldValue.serverTimestamp()
         });
 
         alert("¡Contenido enviado con éxito!");
         form.reset();
       } catch (error) {
         console.error(error);
-        alert("Error al enviar el contenido");
+        alert("Error al enviar el contenido: " + error.message);
       }
     });
-
-    async function cargarContenidos() {
-      const grid = document.getElementById("contenido-aprobado");
-      const q = query(collection(db, "contenidos"), where("aprobado", "==", true));
-      const querySnapshot = await getDocs(q);
-
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        const versiones = data.versiones || {};
-        const versionesDisponibles = Object.keys(versiones);
-        const primeraVersion = versionesDisponibles[0];
-        const primerLink = versiones[primeraVersion];
-
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          <img src="${data.imagen}" alt="${data.titulo}">
-          <div class="info">
-            <h3>${data.titulo}</h3>
-            <p>${data.descripcion}</p>
-            <select class="version-select">
-              ${versionesDisponibles.map(v => `<option value="${v}">${v}</option>`).join('')}
-            </select>
-            <a href="${primerLink}" target="_blank" class="ver-mas">Ver más →</a>
-          </div>
-        `;
-
-        const select = card.querySelector(".version-select");
-        const enlace = card.querySelector(".ver-mas");
-        select.addEventListener("change", () => {
-          const nuevaVersion = select.value;
-          enlace.href = versiones[nuevaVersion] || "#";
-        });
-
-        grid.appendChild(card);
-      });
-    }
-
-    cargarContenidos();
-  </script>
-</body>
+  </script></body>
 </html>
