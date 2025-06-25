@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="es">
+<!DOCTYPE html>
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,13 @@
       --text: #fff;
       --accent: #00c853;
     }
+    [data-theme="light"] {
+      --primary: #d97706;
+      --background: #f5f5f5;
+      --card: #ffffff;
+      --text: #333333;
+      --accent: #10b981;
+    }
     * {
       margin: 0;
       padding: 0;
@@ -21,6 +29,7 @@
     body {
       background: var(--background);
       color: var(--text);
+      transition: background 0.3s, color 0.3s;
     }
     header {
       background: #121212;
@@ -32,6 +41,9 @@
       top: 0;
       z-index: 1000;
     }
+    [data-theme="light"] header {
+      background: #e5e5e5;
+    }
     header h1 {
       font-size: 1.6em;
     }
@@ -39,18 +51,25 @@
       display: none;
       background: none;
       border: none;
-      color: white;
+      color: var(--text);
       font-size: 1.5em;
+      cursor: pointer;
     }
     nav {
       display: flex;
       gap: 20px;
+      align-items: center;
     }
     nav a {
       text-decoration: none;
       color: var(--text);
       font-weight: bold;
       transition: color 0.2s ease;
+    }
+    nav a[data-count]:after {
+      content: " (" attr(data-count) ")";
+      font-size: 0.85em;
+      color: var(--primary);
     }
     nav a:hover {
       color: var(--accent);
@@ -61,6 +80,9 @@
       gap: 15px;
       padding: 15px 25px;
       background: #121212;
+    }
+    [data-theme="light"] .mobile-nav {
+      background: #e5e5e5;
     }
     .hero {
       padding: 60px 20px 30px;
@@ -74,6 +96,9 @@
       font-size: 1.2em;
       color: #ccc;
     }
+    [data-theme="light"] .hero p {
+      color: #666;
+    }
     .container {
       padding: 30px 20px;
       max-width: 1200px;
@@ -86,6 +111,12 @@
       border-left: 5px solid var(--primary);
       padding-left: 10px;
     }
+    .category-section {
+      display: none;
+    }
+    .category-section.active {
+      display: block;
+    }
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -96,6 +127,7 @@
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 0 8px rgba(0,0,0,0.5);
+      position: relative;
     }
     .card img {
       width: 100%;
@@ -108,10 +140,27 @@
     .info h3 {
       font-size: 1.2em;
       margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .views-count {
+      background: rgba(0,0,0,0.5);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.8em;
+    }
+    [data-theme="light"] .views-count {
+      background: rgba(0,0,0,0.1);
+      color: var(--text);
     }
     .info p {
       font-size: 0.9em;
       color: #ccc;
+      margin-bottom: 10px;
+    }
+    [data-theme="light"] .info p {
+      color: #666;
     }
     .info a {
       color: var(--primary);
@@ -129,6 +178,66 @@
       padding: 8px;
       width: 100%;
     }
+    [data-theme="light"] .version-select {
+      background: #f0f0f0;
+      color: #333;
+    }
+    form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+      background: var(--card);
+      padding: 25px;
+      border-radius: 10px;
+    }
+    form input, form textarea, form select {
+      padding: 12px;
+      border-radius: 6px;
+      border: none;
+      font-size: 1em;
+      background: #181818;
+      color: white;
+    }
+    [data-theme="light"] form input,
+    [data-theme="light"] form textarea,
+    [data-theme="light"] form select {
+      background: #f0f0f0;
+      color: #333;
+    }
+    form button {
+      background: var(--accent);
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      grid-column: 1 / -1;
+    }
+    .version-inputs {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .version-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .version-group input {
+      width: 100%;
+    }
+    .add-version-btn {
+      background: var(--primary);
+      color: #121212;
+      border: none;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 5px;
+    }
     .footer-buttons {
       display: flex;
       justify-content: center;
@@ -136,6 +245,9 @@
       padding: 25px;
       background: #101010;
       align-items: center;
+    }
+    [data-theme="light"] .footer-buttons {
+      background: #e0e0e0;
     }
     .footer-buttons a {
       width: 40px;
@@ -146,6 +258,9 @@
       background: #1f1f1f;
       border-radius: 50%;
       transition: background 0.3s;
+    }
+    [data-theme="light"] .footer-buttons a {
+      background: #d1d1d1;
     }
     .footer-buttons a:hover {
       background: var(--accent);
@@ -172,27 +287,18 @@
       color: #777;
       font-size: 0.85em;
     }
-    form {
-      display: grid;
-      gap: 15px;
-      background: var(--card);
-      padding: 25px;
-      border-radius: 10px;
+    [data-theme="light"] footer {
+      background: #d1d1d1;
     }
-    form input, form textarea, form select {
-      padding: 12px;
-      border-radius: 6px;
+    .theme-toggle {
+      background: none;
       border: none;
-      font-size: 1em;
-    }
-    form button {
-      background: var(--accent);
-      color: white;
-      padding: 12px;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
+      color: var(--text);
+      font-size: 1.2em;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
     @media (max-width: 768px) {
       nav {
@@ -206,138 +312,292 @@
       }
     }
   </style>
-  <script>
-    function toggleMenu() {
-      const nav = document.getElementById('mobileNav');
-      nav.classList.toggle('show');
-    }
-  </script>
 </head>
 <body>
   <header>
     <h1>Minecraft Hub</h1>
-    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    <div>
+      <button class="theme-toggle" id="themeToggle">🌓</button>
+      <button class="menu-btn" onclick="document.getElementById('mobileNav').classList.toggle('show')">☰</button>
+    </div>
     <nav>
-      <a href="#">Inicio</a>
-      <a href="#addons">Addons</a>
-      <a href="#mods">Mods</a>
-      <a href="#texturas">Texturas</a>
-      <a href="#publicar">Publicar</a>
+      <a href="#" class="nav-link" data-section="inicio">Inicio</a>
+      <a href="#addons" class="nav-link" data-section="addons" data-count="0">Addons</a>
+      <a href="#mods" class="nav-link" data-section="mods" data-count="0">Mods</a>
+      <a href="#texturas" class="nav-link" data-section="texturas" data-count="0">Texturas</a>
+      <a href="#tutoriales" class="nav-link" data-section="tutoriales" data-count="0">Tutoriales</a>
+      <a href="#publicar" class="nav-link" data-section="publicar">Publicar</a>
     </nav>
   </header>
   <div id="mobileNav" class="mobile-nav">
-    <a href="#">Inicio</a>
-    <a href="#addons">Addons</a>
-    <a href="#mods">Mods</a>
-    <a href="#texturas">Texturas</a>
-    <a href="#publicar">Publicar</a>
+    <a href="#" class="nav-link" data-section="inicio">Inicio</a>
+    <a href="#addons" class="nav-link" data-section="addons" data-count="0">Addons</a>
+    <a href="#mods" class="nav-link" data-section="mods" data-count="0">Mods</a>
+    <a href="#texturas" class="nav-link" data-section="texturas" data-count="0">Texturas</a>
+    <a href="#tutoriales" class="nav-link" data-section="tutoriales" data-count="0">Tutoriales</a>
+    <a href="#publicar" class="nav-link" data-section="publicar">Publicar</a>
   </div>
-  <section class="hero">
+  <section class="hero" id="inicio-section">
     <h2>Explora contenido único para Minecraft</h2>
     <p>Addons, Mods, Texturas y más, todo aprobado por la comunidad.</p>
     <a class="publish-btn" href="#publicar">Publicar Contenido</a>
   </section>
   <div class="container">
-    <div class="section-title">Marketplace Creativo</div>
-    <div class="grid" id="contenido-aprobado">
-      <!-- Contenido dinámico desde Firebase -->
+    <!-- Sección de Addons -->
+    <div class="category-section" id="addons-section">
+      <div class="section-title">Addons</div>
+      <div class="grid" id="addons-grid"></div>
     </div>
-    <div class="section-title" id="publicar">Publica tu contenido</div>
-    <form>
-      <input type="text" name="nombre" placeholder="Tu nombre o usuario" required>
-      <input type="text" name="titulo" placeholder="Título del contenido" required>
-      <textarea rows="4" name="descripcion" placeholder="Descripción del contenido" required></textarea>
-      <select name="tipo" required>
-        <option value="">Tipo de contenido</option>
-        <option value="addon">Addon</option>
-        <option value="mod">Mod</option>
-        <option value="textura">Textura</option>
-        <option value="noticia">Noticia</option>
-      </select>
-      <input type="url" name="link" placeholder="Link de descarga (solo una versión por ahora)" required>
-      <input type="text" name="version" placeholder="Versión (ej: 1.20)" required>
-      <button type="submit">Enviar para revisión</button>
-    </form>
+
+    <!-- Sección de Mods -->
+    <div class="category-section" id="mods-section">
+      <div class="section-title">Mods</div>
+      <div class="grid" id="mods-grid"></div>
+    </div>
+
+    <!-- Sección de Texturas -->
+    <div class="category-section" id="texturas-section">
+      <div class="section-title">Texturas</div>
+      <div class="grid" id="texturas-grid"></div>
+    </div>
+
+    <!-- Sección de Tutoriales -->
+    <div class="category-section" id="tutoriales-section">
+      <div class="section-title">Tutoriales</div>
+      <div class="grid" id="tutoriales-grid"></div>
+    </div>
+
+    <!-- Sección de Publicar -->
+    <div class="category-section" id="publicar-section">
+      <div class="section-title">Publica tu contenido</div>
+      <form id="uploadForm">
+        <input type="text" name="nombre" placeholder="Tu nombre o usuario" required>
+        <input type="text" name="titulo" placeholder="Título del contenido" required>
+        <textarea rows="4" name="descripcion" placeholder="Descripción del contenido" required></textarea>
+        <select name="tipo" required>
+          <option value="">Tipo de contenido</option>
+          <option value="addon">Addon</option>
+          <option value="mod">Mod</option>
+          <option value="textura">Textura</option>
+          <option value="tutorial">Tutorial</option>
+        </select>
+        
+        <div class="version-inputs" id="versionInputs">
+          <div class="version-group">
+            <input type="text" name="version-name[]" placeholder="Nombre de versión (ej: 1.20)" required>
+            <input type="url" name="version-link[]" placeholder="Link de descarga" required>
+          </div>
+        </div>
+        <button type="button" class="add-version-btn" id="addVersionBtn">+ Añadir otra versión</button>
+        
+        <input type="file" name="imagen" accept="image/*" required>
+        <button type="submit">Enviar para revisión</button>
+      </form>
+    </div>
   </div>
   <div class="footer-buttons">
-    <a href="https://whatsapp.com/channel/0029VayiemvJuyAE73jT4P0Q""><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
-    <a href="https://www.tiktok.com/@raddcraft?_t=ZS-8xUWGUWUdk2&_r=1"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok"></a>
+    <a href="https://wa.me/tu-canal"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
+    <a href="https://tiktok.com/@tucanal"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png" alt="TikTok"></a>
     <a href="https://forms.gle/sugerencias-form"><img src="https://cdn-icons-png.flaticon.com/512/1828/1828911.png" alt="Sugerencias"></a>
   </div>
   <footer>
     &copy; 2025 Minecraft Hub. No oficial. Creado por fans para fans.
   </footer>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
-    import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, where, updateDoc, doc, increment } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBiazxsNqn_kj0VQqROMnp0XU2OukdMtNo",
       authDomain: "minecraft-hub-2f796.firebaseapp.com",
       projectId: "minecraft-hub-2f796",
-      storageBucket: "minecraft-hub-2f796.firebasestorage.app",
+      storageBucket: "minecraft-hub-2f796.appspot.com",
       messagingSenderId: "574308739058",
-      appId: "1:574308739058:web:399691b7aeb785678fad6b",
-      measurementId: "G-LGMC1CVDQC"
+      appId: "1:574308739058:web:399691b7aeb785678fad6b"
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
     const db = getFirestore(app);
 
-    // Envío del formulario
-    document.querySelector("form").addEventListener("submit", async (e) => {
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    });
+
+    // Navigation functionality
+    function showSection(sectionId) {
+      // Hide all sections
+      document.querySelectorAll('.category-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Show the selected section
+      if (sectionId === 'inicio') {
+        document.getElementById('inicio-section').style.display = 'block';
+        document.querySelector('.container').style.display = 'none';
+      } else {
+        document.getElementById('inicio-section').style.display = 'none';
+        document.querySelector('.container').style.display = 'block';
+        const section = document.getElementById(`${sectionId}-section`);
+        if (section) {
+          section.classList.add('active');
+        }
+      }
+    }
+
+    // Set up navigation links
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const section = link.getAttribute('data-section');
+        showSection(section);
+        
+        // Update URL hash
+        window.location.hash = section === 'inicio' ? '' : section;
+      });
+    });
+
+    // Handle initial page load
+    function handleInitialLoad() {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && ['addons', 'mods', 'texturas', 'tutoriales', 'publicar'].includes(hash)) {
+        showSection(hash);
+      } else {
+        showSection('inicio');
+      }
+    }
+
+    // Handle back/forward navigation
+    window.addEventListener('hashchange', handleInitialLoad);
+
+    // Multiple versions functionality
+    const versionInputs = document.getElementById('versionInputs');
+    const addVersionBtn = document.getElementById('addVersionBtn');
+
+    addVersionBtn.addEventListener('click', () => {
+      const versionGroup = document.createElement('div');
+      versionGroup.className = 'version-group';
+      versionGroup.innerHTML = `
+        <input type="text" name="version-name[]" placeholder="Nombre de versión (ej: 1.20)" required>
+        <input type="url" name="version-link[]" placeholder="Link de descarga" required>
+      `;
+      versionInputs.appendChild(versionGroup);
+    });
+
+    document.getElementById('uploadForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const nombre = e.target["nombre"].value;
-      const titulo = e.target["titulo"].value;
-      const descripcion = e.target["descripcion"].value;
-      const tipo = e.target["tipo"].value;
-      const link = e.target["link"].value;
-      const version = e.target["version"].value;
+      const form = e.target;
+      const nombre = form['nombre'].value;
+      const titulo = form['titulo'].value;
+      const descripcion = form['descripcion'].value;
+      const tipo = form['tipo'].value;
+      const imagenFile = form['imagen'].files[0];
+      
+      // Collect all versions
+      const versionNames = form.querySelectorAll('input[name="version-name[]"]');
+      const versionLinks = form.querySelectorAll('input[name="version-link[]"]');
+      const versiones = {};
+      
+      versionNames.forEach((input, index) => {
+        const versionName = input.value;
+        const versionLink = versionLinks[index].value;
+        if (versionName && versionLink) {
+          versiones[versionName] = versionLink;
+        }
+      });
+
+      const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+      });
 
       try {
+        const base64 = await toBase64(imagenFile);
+        const formData = new FormData();
+        formData.append("key", "2f46a52689b8faf89cb1a670b25e89d5");
+        formData.append("image", base64);
+
+        const res = await fetch("https://api.imgbb.com/1/upload", {
+          method: "POST",
+          body: formData
+        });
+
+        const dataImgBB = await res.json();
+        const imagenURL = dataImgBB.data.url;
+
         await addDoc(collection(db, "contenidos"), {
           nombre,
           titulo,
           descripcion,
           tipo,
-          versiones: { [version]: link },
+          versiones,
           aprobado: false,
-          fecha: serverTimestamp()
+          fecha: serverTimestamp(),
+          imagenURL,
+          vistas: 0
         });
+
         alert("¡Contenido enviado para revisión!");
-        e.target.reset();
+        form.reset();
+        // Reset to one version input
+        versionInputs.innerHTML = `
+          <div class="version-group">
+            <input type="text" name="version-name[]" placeholder="Nombre de versión (ej: 1.20)" required>
+            <input type="url" name="version-link[]" placeholder="Link de descarga" required>
+          </div>
+        `;
+        
+        // Update category counts
+        contarPorCategoria();
       } catch (err) {
-        console.error("Error al guardar:", err);
-        alert("Hubo un error al enviar tu contenido.");
+        console.error("Error:", err);
+        alert("Error al enviar el contenido");
       }
     });
 
-    // Mostrar contenidos aprobados
     async function cargarContenidos() {
-      const grid = document.getElementById("contenido-aprobado");
       const q = query(collection(db, "contenidos"), where("aprobado", "==", true));
       const querySnapshot = await getDocs(q);
 
-      querySnapshot.forEach((doc) => {
+      // Clear all grids
+      document.getElementById('addons-grid').innerHTML = '';
+      document.getElementById('mods-grid').innerHTML = '';
+      document.getElementById('texturas-grid').innerHTML = '';
+      document.getElementById('tutoriales-grid').innerHTML = '';
+
+      querySnapshot.forEach(async (doc) => {
         const data = doc.data();
         const versiones = data.versiones || {};
         const versionesDisponibles = Object.keys(versiones);
         const primeraVersion = versionesDisponibles[0];
         const primerLink = versiones[primeraVersion];
+        const imagen = data.imagenURL || "https://i.imgur.com/hUPXXQF.png";
+
+        // Increment view count
+        await updateDoc(doc.ref, {
+          vistas: increment(1)
+        });
 
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
-          <img src="https://www.minecraft.net/content/dam/minecraftnet/franchise/component-library/parallaxC/scene_default/day/Focus_Cherry.png" alt="${data.titulo}">
+          <img src="${imagen}" alt="${data.titulo}">
           <div class="info">
-            <h3>${data.titulo}</h3>
+            <h3>${data.titulo} <span class="views-count">${(data.vistas || 0) + 1} vistas</span></h3>
             <p>${data.descripcion}</p>
             <select class="version-select">
               ${versionesDisponibles.map(v => `<option value="${v}">${v}</option>`).join('')}
             </select>
-            <a href="${primerLink}" target="_blank" class="descargar">descargar →</a>
+            <a href="${primerLink}" target="_blank" class="ver-mas">Descargar ⬇️</a>
           </div>
         `;
 
@@ -348,11 +608,36 @@
           enlace.href = versiones[nuevaVersion] || "#";
         });
 
-        grid.appendChild(card);
+        // Add to the appropriate grid based on type
+        switch(data.tipo) {
+          case 'addon':
+            document.getElementById('addons-grid').appendChild(card);
+            break;
+          case 'mod':
+            document.getElementById('mods-grid').appendChild(card);
+            break;
+          case 'textura':
+            document.getElementById('texturas-grid').appendChild(card);
+            break;
+          case 'tutorial':
+            document.getElementById('tutoriales-grid').appendChild(card);
+            break;
+        }
       });
     }
 
-    cargarContenidos();
-  </script>
-</body>
-</html>/html>
+    // Count by category for menu
+    async function contarPorCategoria() {
+      const contenidoRef = collection(db, "contenidos");
+      const snapshot = await getDocs(contenidoRef);
+      const conteo = { addon: 0, mod: 0, textura: 0, tutorial: 0 };
+      
+      snapshot.forEach(doc => {
+        const tipo = doc.data().tipo;
+        if (conteo[tipo] !== undefined && doc.data().aprobado) conteo[tipo]++;
+      });
+      
+      document.querySelectorAll(".nav-link[data-count]").forEach(a => {
+        const section = a.getAttribute("data-section");
+        if (conteo[section] !== undefined) {
+          a.setAttribute("data-count
