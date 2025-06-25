@@ -214,8 +214,7 @@
   </style>
   <script>
     function toggleMenu() {
-      const nav = document.getElementById('mobileNav');
-      nav.classList.toggle('show');
+      document.getElementById('mobileNav').classList.toggle('show');
     }
   </script>
 </head>
@@ -245,9 +244,7 @@
   </section>
   <div class="container">
     <div class="section-title">Marketplace Creativo</div>
-    <div class="grid" id="contenido-aprobado">
-      <!-- Contenido cargado desde Firebase -->
-    </div>
+    <div class="grid" id="contenido-aprobado"></div>
     <div class="section-title" id="publicar">Publica tu contenido</div>
     <form id="uploadForm">
       <input type="text" name="nombre" placeholder="Tu nombre o usuario" required>
@@ -285,13 +282,13 @@
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyBiazxsNqn_kj0VQqROMnp0XU2OukdMtNo",
-      authDomain: "minecraft-hub-2f796.firebaseapp.com",
-      projectId: "minecraft-hub-2f796",
-      storageBucket: "minecraft-hub-2f796.appspot.com",
-      messagingSenderId: "574308739058",
-      appId: "1:574308739058:web:399691b7aeb785678fad6b",
-      measurementId: "G-LGMC1CVDQC"
+      apiKey: "TU_API_KEY",
+      authDomain: "TU_DOMINIO.firebaseapp.com",
+      projectId: "TU_PROJECT_ID",
+      storageBucket: "TU_BUCKET.appspot.com",
+      messagingSenderId: "XXXXXXX",
+      appId: "XXXXXXX",
+      measurementId: "G-XXXXXXX"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -306,7 +303,6 @@
       const descripcion = form.descripcion.value;
       const tipo = form.tipo.value;
       const versiones = {};
-
       if (form.version1.value && form.link1.value) versiones[form.version1.value] = form.link1.value;
       if (form.version2.value && form.link2.value) versiones[form.version2.value] = form.link2.value;
       if (form.version3.value && form.link3.value) versiones[form.version3.value] = form.link3.value;
