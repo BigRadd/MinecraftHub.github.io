@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Minecraft Hub | Comunidad Creativa</title>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #ffc600;
@@ -179,17 +179,60 @@
       background: var(--card);
       padding: 25px;
       border-radius: 10px;
-      max-width: 400px;
-      margin: 0 auto;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     }
-    form input, form textarea, form select {
-      width: 100%;
+    form input, 
+    form textarea, 
+    form select {
       padding: 12px;
       border-radius: 6px;
       border: none;
       font-size: 1em;
+      background-color: #333; /* Color de fondo para inputs */
+      color: var(--text); /* Color del texto en inputs */
     }
+
+    /* Estilos para el input de tipo file oculto y su label */
+    .file-input-container {
+      position: relative;
+      width: 100%; /* Ocupa todo el ancho disponible en el grid */
+    }
+
+    .file-input {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .file-input-label {
+      display: inline-block;
+      background: var(--primary); /* Tu color primario para el botón */
+      color: var(--background); /* Texto oscuro para contraste */
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.2s ease;
+      width: 100%; /* Asegura que el botón ocupe el ancho del input */
+    }
+
+    .file-input-label:hover {
+      background: #e6b200; /* Un tono un poco más oscuro al pasar el ratón */
+    }
+
+    .file-name {
+      display: block;
+      margin-top: 5px;
+      font-size: 0.9em;
+      color: #ccc;
+      word-break: break-all; /* Rompe palabras largas para que no se desborden */
+    }
+
     form button {
       background: var(--accent);
       color: white;
@@ -245,10 +288,9 @@
   <div class="container">
     <div class="section-title">Marketplace Creativo</div>
     <div class="grid" id="contenido-aprobado">
-      <!-- Contenido desde Firebase -->
-    </div>
+      </div>
     <div class="section-title" id="publicar">Publica tu contenido</div>
-    <form id="uploadForm">
+    <form>
       <input type="text" name="nombre" placeholder="Tu nombre o usuario" required>
       <input type="text" name="titulo" placeholder="Título del contenido" required>
       <textarea rows="4" name="descripcion" placeholder="Descripción del contenido" required></textarea>
@@ -259,13 +301,15 @@
         <option value="textura">Textura</option>
         <option value="noticia">Noticia</option>
       </select>
-      <input type="url" name="link1" placeholder="Link versión 1" required>
-      <input type="text" name="version1" placeholder="Versión 1 (ej: 1.20)" required>
-      <input type="url" name="link2" placeholder="Link versión 2 (opcional)">
-      <input type="text" name="version2" placeholder="Versión 2 (opcional)">
-      <input type="url" name="link3" placeholder="Link versión 3 (opcional)">
-      <input type="text" name="version3" placeholder="Versión 3 (opcional)">
-      <input type="file" id="imagenFile" accept="image/*" required>
+      
+      <div class="file-input-container">
+        <input type="file" id="imagenInput" class="file-input" accept="image/*">
+        <label for="imagenInput" class="file-input-label">Seleccionar imagen del contenido</label>
+        <span class="file-name" id="fileName">Ningún archivo seleccionado</span>
+      </div>
+
+      <input type="url" name="link" placeholder="Link de descarga (solo una versión por ahora)" required>
+      <input type="text" name="version" placeholder="Versión (ej: 1.20)" required>
       <button type="submit">Enviar para revisión</button>
     </form>
   </div>
@@ -277,68 +321,96 @@
   <footer>
     &copy; 2025 Minecraft Hub. No oficial. Creado por fans para fans.
   </footer>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-analytics.js";
     import { getFirestore, collection, addDoc, serverTimestamp, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js"; // Importa Storage
 
     const firebaseConfig = {
       apiKey: "AIzaSyBiazxsNqn_kj0VQqROMnp0XU2OukdMtNo",
       authDomain: "minecraft-hub-2f796.firebaseapp.com",
       projectId: "minecraft-hub-2f796",
-      storageBucket: "minecraft-hub-2f796.appspot.com",
+      storageBucket: "minecraft-hub-2f796.firebasestorage.app",
       messagingSenderId: "574308739058",
       appId: "1:574308739058:web:399691b7aeb785678fad6b",
       measurementId: "G-LGMC1CVDQC"
     };
 
     const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
     const db = getFirestore(app);
-    const storage = getStorage(app);
+    const storage = getStorage(app); // Inicializa Firebase Storage
 
-    const form = document.getElementById("uploadForm");
-    form.addEventListener("submit", async (e) => {
+    // Elementos del DOM para la subida de imagen
+    const imagenInput = document.getElementById('imagenInput');
+    const fileNameSpan = document.getElementById('fileName');
+
+    // Escucha cambios en el input de archivo para mostrar el nombre del archivo
+    imagenInput.addEventListener('change', () => {
+      if (imagenInput.files.length > 0) {
+        fileNameSpan.textContent = imagenInput.files[0].name;
+      } else {
+        fileNameSpan.textContent = 'Ningún archivo seleccionado';
+      }
+    });
+
+    // Envío del formulario
+    document.querySelector("form").addEventListener("submit", async (e) => {
       e.preventDefault();
-      const nombre = form.nombre.value;
-      const titulo = form.titulo.value;
-      const descripcion = form.descripcion.value;
-      const tipo = form.tipo.value;
-      const versiones = {};
 
-      if (form.version1.value && form.link1.value) versiones[form.version1.value] = form.link1.value;
-      if (form.version2.value && form.link2.value) versiones[form.version2.value] = form.link2.value;
-      if (form.version3.value && form.link3.value) versiones[form.version3.value] = form.link3.value;
+      const nombre = e.target["nombre"].value;
+      const titulo = e.target["titulo"].value;
+      const descripcion = e.target["descripcion"].value;
+      const tipo = e.target["tipo"].value;
+      const link = e.target["link"].value;
+      const version = e.target["version"].value;
+      const imagenFile = imagenInput.files[0]; // Obtiene el archivo de imagen
 
-      const imagen = document.getElementById("imagenFile").files[0];
-      if (!imagen) return alert("Debes subir una imagen");
+      let imageUrl = 'https://i.imgur.com/hUPXXQF.png'; // Imagen por defecto
+
+      if (imagenFile) {
+        try {
+          // Crea una referencia al lugar donde se guardará la imagen en Storage
+          const storageRef = ref(storage, `imagenes_contenido/${Date.now()}_${imagenFile.name}`);
+          
+          // Sube el archivo
+          await uploadBytes(storageRef, imagenFile);
+          
+          // Obtiene la URL de descarga del archivo subido
+          imageUrl = await getDownloadURL(storageRef);
+        } catch (error) {
+          console.error("Error al subir la imagen:", error);
+          alert("Hubo un error al subir la imagen. Por favor, inténtalo de nuevo.");
+          return; // Detiene el envío si la imagen no se sube
+        }
+      }
 
       try {
-        const storageRef = ref(storage, 'imagenes/' + Date.now() + '-' + imagen.name);
-        await uploadBytes(storageRef, imagen);
-        const imageUrl = await getDownloadURL(storageRef);
-
         await addDoc(collection(db, "contenidos"), {
           nombre,
           titulo,
           descripcion,
           tipo,
-          versiones,
-          imagen: imageUrl,
+          imagen: imageUrl, // Guarda la URL de la imagen (subida o por defecto)
+          versiones: { [version]: link },
           aprobado: false,
           fecha: serverTimestamp()
         });
-
-        alert("¡Contenido enviado con éxito!");
-        form.reset();
-      } catch (error) {
-        console.error(error);
-        alert("Error al enviar el contenido");
+        alert("¡Contenido enviado para revisión!");
+        e.target.reset(); // Resetea el formulario
+        fileNameSpan.textContent = 'Ningún archivo seleccionado'; // Resetea el nombre del archivo
+      } catch (err) {
+        console.error("Error al guardar en Firestore:", err);
+        alert("Hubo un error al enviar tu contenido.");
       }
     });
 
+    // Mostrar contenidos aprobados
     async function cargarContenidos() {
       const grid = document.getElementById("contenido-aprobado");
+      grid.innerHTML = ''; // Limpiar el grid antes de cargar nuevos contenidos
+
       const q = query(collection(db, "contenidos"), where("aprobado", "==", true));
       const querySnapshot = await getDocs(q);
 
@@ -352,8 +424,7 @@
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = `
-          <img src="${data.imagen}" alt="${data.titulo}">
-          <div class="info">
+          <img src="${data.imagen || 'https://i.imgur.com/hUPXXQF.png'}" alt="${data.titulo}"> <div class="info">
             <h3>${data.titulo}</h3>
             <p>${data.descripcion}</p>
             <select class="version-select">
