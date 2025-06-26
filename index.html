@@ -389,7 +389,7 @@
         </div>
         <button type="button" id="addVersionBtn">➕ Añadir Versión</button>
 
-        <button type="submit">Enviar a Revisión</button>
+        <button type="submit">Enviar ahora</button>
       </form>
     </div>
   </div>
@@ -532,14 +532,13 @@
             descripcion: contentDescription,
             tipo: contentType,
             versiones: versiones,
-            aprobado: false,
             fecha: serverTimestamp(),
             imagenURL: imagenURL,
             vistas: 0,
             likes: 0
           });
 
-          alert("¡Contenido enviado para revisión!");
+          alert("¡Contenido piblicado!");
           contentFormOverlay.style.display = 'none';
           publishForm.reset();
           
@@ -576,19 +575,7 @@
         }, 1000);
       }
 
-      // Cargar y mostrar contenido
-      async function cargarContenido() {
-        const q = query(collection(db, "contenidos"), where("aprobado", "==", true));
-        const querySnapshot = await getDocs(q);
-        const contenidosPorCategoria = {
-          textura: [],
-          addon: [],
-          mod: [],
-          plantilla: [],
-          mundo: [],
-          server: [],
-          tutorial: []
-        };
+
 
         // Organizar contenido por categoría
         querySnapshot.forEach((doc) => {
@@ -603,7 +590,23 @@
         for (const [categoria, contenidos] of Object.entries(contenidosPorCategoria)) {
           if (contenidos.length > 0) {
             const section = document.createElement('div');
-            section.className = 'content-section';
+            section.className = 'content-sectasync function cargarContenido() {
+  // ▶ Elimina el filtro "aprobado" y ordena por fecha (opcional)
+  const q = query(
+    collection(db, "contenidos"), 
+    orderBy("fecha", "desc")  // Ordena del más reciente al más antiguo
+  );
+
+  const querySnapshot = await getDocs(q);
+  const contenidosPorCategoria = {
+    textura: [],
+    addon: [],
+    mod: [],
+    plantilla: [],
+    mundo: [],
+    server: [],
+    tutorial: []
+  };ion';
             section.id = `${categoria}-section`;
             section.innerHTML = `
               <h2>${getCategoryName(categoria)}</h2>
