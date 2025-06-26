@@ -323,7 +323,8 @@
   <div class="profile">
     <img src="https://i.pinimg.com/736x/2d/b0/1d/2db01d6e21cba969c8363d2aa473c813.jpg" alt="Yasho Logo">
     <h1><span class="logo-text">Minecraft Hub</span></h1>
-    <p>⛩️</p>
+    <p>⛩️
+    raddcraft⛩️</p>
     <div class="socials">
       <a href="https://whatsapp.com/channel/0029VayiemvJuyAE73jT4P0Q" target="_blank"><i class="fab fa-whatsapp"></i></a>
       <a href="https://www.tiktok.com/@raddcraft?_t=ZS-8xVc0SfUJqE&_r=1" target="_blank"><i class="fab fa-tiktok"></i></a>
@@ -389,7 +390,7 @@
         </div>
         <button type="button" id="addVersionBtn">➕ Añadir Versión</button>
 
-        <button type="submit">Enviar ahora</button>
+        <button type="submit">Publicar ahora</button>
       </form>
     </div>
   </div>
@@ -538,7 +539,7 @@
             likes: 0
           });
 
-          alert("¡Contenido piblicado!");
+          alert("¡Contenido publicado!");
           contentFormOverlay.style.display = 'none';
           publishForm.reset();
           
@@ -575,22 +576,7 @@
         }, 1000);
       }
 
-
-
-        // Organizar contenido por categoría
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          if (contenidosPorCategoria[data.tipo]) {
-            contenidosPorCategoria[data.tipo].push({ id: doc.id, ...data });
-          }
-        });
-
-        // Crear secciones para cada categoría
-        contentSections.innerHTML = '';
-        for (const [categoria, contenidos] of Object.entries(contenidosPorCategoria)) {
-          if (contenidos.length > 0) {
-            const section = document.createElement('div');
-            section.className = 'content-sectasync function cargarContenido() {
+async function cargarContenido() {
   // ▶ Elimina el filtro "aprobado" y ordena por fecha (opcional)
   const q = query(
     collection(db, "contenidos"), 
@@ -606,7 +592,22 @@
     mundo: [],
     server: [],
     tutorial: []
-  };ion';
+  };
+
+        // Organizar contenido por categoría
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          if (contenidosPorCategoria[data.tipo]) {
+            contenidosPorCategoria[data.tipo].push({ id: doc.id, ...data });
+          }
+        });
+
+        // Crear secciones para cada categoría
+        contentSections.innerHTML = '';
+        for (const [categoria, contenidos] of Object.entries(contenidosPorCategoria)) {
+          if (contenidos.length > 0) {
+            const section = document.createElement('div');
+            section.className = 'content-section';
             section.id = `${categoria}-section`;
             section.innerHTML = `
               <h2>${getCategoryName(categoria)}</h2>
