@@ -180,34 +180,48 @@
       align-items: center;
       z-index: 1000;
     }
-    .content-form-container {
-      background-color: var(--auth-bg); /* Fondo rojo oscuro */
+    /* MODIFICADO: Ajustes para responsividad de los modals */
+    .content-form-container,
+    .auth-form-content,
+    .user-profile .profile-content,
+    .top-users-content {
+      background-color: var(--auth-bg);
       padding: 2rem;
       border-radius: 12px;
       width: 90%;
-      max-width: 500px;
+      /* max-width: 500px;  Mantener ancho máximo */
+      box-sizing: border-box; /* Incluir padding en el ancho */
       color: var(--text-color-primary);
       text-align: left;
       position: relative;
-      max-height: 90vh;
-      overflow-y: auto;
+      max-height: 95vh; /* Ajustado para dejar un pequeño margen arriba y abajo */
+      overflow-y: auto; /* Permite scroll dentro del modal si el contenido es largo */
+      -webkit-overflow-scrolling: touch; /* Mejora el scroll en iOS */
       transition: background-color 0.3s;
     }
-    .content-form-container h3 {
+    
+    .content-form-container h3,
+    .auth-form-content h3,
+    .user-profile .profile-content h3,
+    .top-users-content h3 {
       text-align: center;
       margin-bottom: 1.5rem;
-      color: var(--highlight-color); /* Texto rojo */
+      color: var(--highlight-color);
     }
-    .content-form-container label {
+    .content-form-container label,
+    .auth-form-content label {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: bold;
-      color: var(--highlight-color); /* Texto rojo */
+      color: var(--highlight-color);
     }
     .content-form-container input[type="text"],
     .content-form-container textarea,
     .content-form-container select,
-    .content-form-container input[type="file"] {
+    .content-form-container input[type="file"],
+    .auth-form-content input[type="text"],
+    .auth-form-content input[type="email"],
+    .auth-form-content input[type="password"] {
       width: calc(100% - 20px);
       padding: 10px;
       margin-bottom: 1rem;
@@ -461,8 +475,8 @@
       color: var(--text-color-primary);
       text-align: left;
       position: relative;
-      max-height: 90vh;
-      overflow-y: auto;
+      /* max-height: 90vh; -- Removido aquí para usar el de arriba */
+      /* overflow-y: auto; -- Removido aquí para usar el de arriba */
       transition: background-color 0.3s;
     }
     .auth-form-content h3 {
@@ -605,8 +619,8 @@
       color: var(--text-color-primary);
       text-align: center;
       position: relative;
-      max-height: 90vh;
-      overflow-y: auto;
+      /* max-height: 90vh; -- Removido aquí para usar el de arriba */
+      /* overflow-y: auto; -- Removido aquí para usar el de arriba */
       transition: background-color 0.3s;
     }
     .profile-content .avatar-display {
@@ -718,8 +732,8 @@
       color: var(--text-color-primary);
       text-align: left;
       position: relative;
-      max-height: 90vh;
-      overflow-y: auto;
+      /* max-height: 90vh; -- Removido aquí para usar el de arriba */
+      /* overflow-y: auto; -- Removido aquí para usar el de arriba */
       transition: background-color 0.3s;
     }
     .top-users-content h3 {
@@ -1186,8 +1200,7 @@
       // Elementos del Top de Usuarios
       const topUsersBtn = document.getElementById('topUsersBtn');
       const topUsersContainer = document.getElementById('topUsersContainer');
-      const closeTopUsersBtn = document.getElementById('closeTopUsersBtn');
-      const topUsersList = document.getElementById('topUsersList');
+      const closeTopUsersBtn = document = document.getElementById('closeTopUsersBtn');
 
       // Elemento para descargas de Minecraft
       const minecraftDownloadsList = document.getElementById('minecraftDownloadsList');
@@ -1276,8 +1289,14 @@
       profileBtn.addEventListener('click', async () => {
         if (currentUser) {
           showLoading();
-          await loadUserProfile(currentUser.uid);
-          hideLoading();
+          try {
+            await loadUserProfile(currentUser.uid);
+          } catch (error) {
+            console.error("Error al cargar perfil al hacer click:", error);
+            alert("Error al cargar tu perfil. Intenta de nuevo.");
+          } finally {
+            hideLoading();
+          }
           userProfile.style.display = 'flex';
         } else {
           authContainer.style.display = 'flex';
@@ -1502,6 +1521,8 @@
                 console.error("Error al subir nueva imagen de avatar:", err);
                 alert(`Error al subir la imagen de avatar: ${err.message}`);
                 return;
+            } finally {
+                // hideLoading() ya se llama aquí, así que no es necesario añadirlo dos veces si el try/catch falla
             }
         } else {
             const selectedImg = profileAvatarSelection.querySelector('img.selected');
@@ -1515,13 +1536,13 @@
                 description: profileDescription.value.trim(),
                 avatarURL: newAvatarUrl
             });
-            hideLoading();
             alert("Cambios de perfil guardados exitosamente.");
-            await loadUserProfile(currentUser.uid);
+            await loadUserProfile(currentUser.uid); // Recargar perfil para reflejar cambios
         } catch (error) {
-            hideLoading();
             console.error("Error al guardar descripción/avatar:", error);
             alert("Error al guardar cambios en el perfil.");
+        } finally {
+            hideLoading(); // Asegúrate de ocultar el loading aquí también, incluso si no se subió archivo
         }
       });
       
@@ -1548,14 +1569,14 @@
             profileAvatarFile.value = '';
 
             await loadMyPublications(uid);
-            await loadMyFavorites(uid, userData.favorites || []); // Cargar favoritos del usuario
+            await loadMyFavorites(uid, userData.favorites || []);
           } else {
             console.log("No se encontraron datos de usuario en Firestore para UID:", uid);
             alert("Tu perfil no tiene datos completos. Por favor, completa tu registro.");
           }
         } catch (error) {
           console.error("Error al cargar perfil de usuario:", error);
-          alert("Error al cargar el perfil. Por favor, intenta de nuevo.");
+          throw error; // Propagar el error para que el llamador pueda manejar el hideLoading
         }
       }
 
@@ -1581,7 +1602,6 @@
         }
       }
 
-      // Nueva función para cargar los favoritos del usuario
       async function loadMyFavorites(uid, favoriteIds) {
         myFavoritesGrid.innerHTML = '';
         if (favoriteIds.length === 0) {
@@ -1590,8 +1610,6 @@
         }
 
         try {
-            // La forma correcta de cargar por ID del documento es con getDoc(doc(db, "collection", id)).
-            // Hacemos un getDoc por cada ID en favoriteIds.
             const favoriteContentPromises = favoriteIds.map(id => getDoc(doc(db, "contenidos", id)));
             const favoriteContentSnaps = await Promise.all(favoriteContentPromises);
 
@@ -1732,7 +1750,6 @@
           localStorage.setItem('lastSubmissionTime', currentTime.toString()); // Guardar como string
           updateCooldownMessage();
 
-          hideLoading();
           alert("¡Contenido publicado!");
           contentFormOverlay.style.display = 'none';
           publishForm.reset();
@@ -1753,11 +1770,12 @@
                 loadCategoryContent(activeCategory);
             }
           }
-          loadUserProfile(currentUser.uid);
+          loadUserProfile(currentUser.uid); // Recargar perfil para ver nueva publicación
         } catch (err) {
-          hideLoading();
           console.error("Error al publicar:", err);
           alert(`Error al publicar el contenido: ${err.message}`);
+        } finally {
+            hideLoading(); // Asegúrate de que el loading se oculte siempre
         }
       });
 
@@ -1835,27 +1853,32 @@
             );
         }
 
-        const querySnapshot = await getDocs(q);
-        const documents = querySnapshot.docs;
+        try {
+            const querySnapshot = await getDocs(q);
+            const documents = querySnapshot.docs;
 
-        if (documents.length === 0 && !lastDoc) {
-            grid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No hay contenido en esta categoría aún.</p>';
-            section.querySelector('.next-btn').style.display = 'none';
-        } else if (documents.length === 0) {
-            alert("No hay más publicaciones en esta categoría.");
-            section.querySelector('.next-btn').style.display = 'none';
-        } else {
-            // Usar Promise.all para cargar las tarjetas en paralelo y mejorar el rendimiento
-            const cardPromises = documents.map(docSnap => createContentCard({ id: docSnap.id, ...docSnap.data() }));
-            const cards = await Promise.all(cardPromises);
-            cards.forEach(card => grid.appendChild(card));
+            if (documents.length === 0 && !lastDoc) {
+                grid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No hay contenido en esta categoría aún.</p>';
+                section.querySelector('.next-btn').style.display = 'none';
+            } else if (documents.length === 0) {
+                alert("No hay más publicaciones en esta categoría.");
+                section.querySelector('.next-btn').style.display = 'none';
+            } else {
+                const cardPromises = documents.map(docSnap => createContentCard({ id: docSnap.id, ...docSnap.data() }));
+                const cards = await Promise.all(cardPromises);
+                cards.forEach(card => grid.appendChild(card));
+                
+                lastVisibleDocs[category] = documents[documents.length - 1];
+                section.querySelector('.next-btn').style.display = 'inline-block';
+            }
             
-            lastVisibleDocs[category] = documents[documents.length - 1];
-            section.querySelector('.next-btn').style.display = 'inline-block';
+            section.classList.add('active');
+        } catch (error) {
+            console.error("Error al cargar la categoría:", error);
+            alert("Error al cargar el contenido de la categoría.");
+        } finally {
+            hideLoading(); // Ocultar siempre al finalizar
         }
-        
-        section.classList.add('active');
-        hideLoading();
       }
 
       async function loadMinecraftDownloads(lastDoc = null) {
@@ -1888,31 +1911,37 @@
             );
         }
 
-        const querySnapshot = await getDocs(q);
-        const documents = querySnapshot.docs;
+        try {
+            const querySnapshot = await getDocs(q);
+            const documents = querySnapshot.docs;
 
-        if (documents.length === 0 && !lastDoc) {
-            listContainer.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No hay versiones de Minecraft disponibles aún.</p>';
-            minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'none';
-        } else if (documents.length === 0) {
-            alert("No hay más versiones de Minecraft disponibles.");
-            minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'none';
-        } else {
-            for (const docSnap of documents) {
-                const contenido = docSnap.data();
-                contenido.id = docSnap.id;
-                if (contenido.versiones && typeof contenido.versiones === 'object') {
-                    for (const [versionName, downloadLink] of Object.entries(contenido.versiones)) {
-                        const downloadItem = createDownloadItem(versionName, downloadLink);
-                        listContainer.appendChild(downloadItem);
+            if (documents.length === 0 && !lastDoc) {
+                listContainer.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No hay versiones de Minecraft disponibles aún.</p>';
+                minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'none';
+            } else if (documents.length === 0) {
+                alert("No hay más versiones de Minecraft disponibles.");
+                minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'none';
+            } else {
+                for (const docSnap of documents) {
+                    const contenido = docSnap.data();
+                    contenido.id = docSnap.id;
+                    if (contenido.versiones && typeof contenido.versiones === 'object') {
+                        for (const [versionName, downloadLink] of Object.entries(contenido.versiones)) {
+                            const downloadItem = createDownloadItem(versionName, downloadLink);
+                            listContainer.appendChild(downloadItem);
+                        }
                     }
                 }
+                lastVisibleDocs['minecraft-version'] = documents[documents.length - 1];
+                minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'inline-block';
             }
-            lastVisibleDocs['minecraft-version'] = documents[documents.length - 1];
-            minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'inline-block';
+            minecraftDownloadsSection.classList.add('active');
+        } catch (error) {
+            console.error("Error al cargar descargas de Minecraft:", error);
+            alert("Error al cargar las descargas de Minecraft.");
+        } finally {
+            hideLoading();
         }
-        minecraftDownloadsSection.classList.add('active');
-        hideLoading();
       }
 
       minecraftDownloadsPagination.querySelector('.next-btn').addEventListener('click', () => {
@@ -2011,7 +2040,7 @@
         
         const likeBtn = card.querySelector('.like-btn');
         const likesCount = card.querySelector('.likes-count');
-        const favoriteBtn = card.querySelector('.favorite-btn'); // Botón de favorito
+        const favoriteBtn = card.querySelector('.favorite-btn');
         
         // --- Lógica de Likes ---
         const likedContents = JSON.parse(localStorage.getItem('likedContents') || '{}');
@@ -2045,16 +2074,20 @@
         });
 
         // --- Lógica de Favoritos ---
+        // Verificar el estado del favorito solo si hay un usuario logueado
         if (currentUser) {
-            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-            if (userDoc.exists() && userDoc.data().favorites?.includes(contenido.id)) {
+            // Se debe obtener el estado del favorito directamente del documento del usuario,
+            // ya que `loadMyFavorites` solo carga en el perfil.
+            // Para la tarjeta, necesitamos una verificación directa aquí.
+            const userDocSnap = await getDoc(doc(db, "users", currentUser.uid));
+            if (userDocSnap.exists() && userDocSnap.data().favorites?.includes(contenido.id)) {
                 favoriteBtn.classList.add('favorited');
                 favoriteBtn.innerHTML = '<i class="fas fa-star"></i>'; // Estrella sólida
             } else {
                 favoriteBtn.innerHTML = '<i class="far fa-star"></i>'; // Estrella vacía
             }
         } else {
-            favoriteBtn.innerHTML = '<i class="far fa-star"></i>'; // Estrella vacía si no logueado
+            favoriteBtn.innerHTML = '<i class="far fa-star"></i>'; // Siempre vacía si no logueado
         }
 
         favoriteBtn.addEventListener('click', async () => {
@@ -2071,7 +2104,6 @@
                 const favorites = userDocSnap.exists() ? (userDocSnap.data().favorites || []) : [];
 
                 if (favorites.includes(contentId)) {
-                    // Quitar de favoritos
                     await updateDoc(userDocRef, {
                         favorites: arrayRemove(contentId)
                     });
@@ -2079,7 +2111,6 @@
                     favoriteBtn.innerHTML = '<i class="far fa-star"></i>';
                     alert('Eliminado de favoritos.');
                 } else {
-                    // Añadir a favoritos
                     await updateDoc(userDocRef, {
                         favorites: arrayUnion(contentId)
                     });
@@ -2089,8 +2120,10 @@
                 }
                 // Actualizar favoritos en el perfil si está abierto
                 if (userProfile.style.display === 'flex') {
-                    // Recargar los favoritos pasando la lista actualizada
-                    await loadMyFavorites(currentUser.uid, favorites.includes(contentId) ? favorites.filter(id => id !== contentId) : [...favorites, contentId]);
+                    // Cargar la lista de favoritos actualizada desde Firestore para asegurar consistencia
+                    const updatedUserDocSnap = await getDoc(userDocRef);
+                    const updatedFavorites = updatedUserDocSnap.exists() ? (updatedUserDocSnap.data().favorites || []) : [];
+                    await loadMyFavorites(currentUser.uid, updatedFavorites);
                 }
             } catch (error) {
                 console.error("Error al gestionar favoritos:", error);
@@ -2103,9 +2136,8 @@
         const commentInput = card.querySelector('.comment-input');
         const commentSubmit = card.querySelector('.comment-submit');
         const commentsList = card.querySelector('.comments-list');
-        const commentForm = card.querySelector('.comment-form'); // Nuevo: para manejar respuestas
+        const commentForm = card.querySelector('.comment-form');
 
-        // Función para enviar comentario (puede ser raíz o respuesta)
         async function submitComment(parentId = null, replyToUser = '') {
             if (!currentUser) {
                 alert('Debes iniciar sesión para comentar.');
@@ -2115,7 +2147,6 @@
             let commentText = commentInput.value.trim();
             if (!commentText) return;
 
-            // Si es una respuesta, prepend el nombre de usuario
             if (replyToUser) {
                 commentText = `@${replyToUser} ${commentText}`;
             }
@@ -2132,27 +2163,26 @@
                     autor: authorName,
                     texto: commentText,
                     fecha: serverTimestamp(),
-                    parentId: parentId // Campo para comentarios anidados
+                    parentId: parentId
                 });
                 
                 commentInput.value = '';
-                // Quitar placeholder de respuesta si existe
                 if (commentInput.dataset.replyingTo) {
                     commentInput.placeholder = 'Añade un comentario...';
                     delete commentInput.dataset.replyingTo;
                     delete commentInput.dataset.replyingToId;
                 }
-                loadComments(contenido.id, commentsList); // Recargar comentarios
+                loadComments(contenido.id, commentsList);
             } catch (error) {
                 console.error("Error al enviar comentario:", error);
             }
         }
 
-        // Listener para el botón de enviar del comentario principal
+        // Definir el listener base una sola vez
         const submitCommentBaseListener = () => submitComment();
         commentSubmit.addEventListener('click', submitCommentBaseListener);
 
-        loadComments(contenido.id, commentsList); // Cargar comentarios iniciales
+        loadComments(contenido.id, commentsList);
 
 
         const versionSelect = card.querySelector('.version-select');
@@ -2190,99 +2220,101 @@
         const q = query(
           collection(db, "comentarios"), 
           where("contenidoId", "==", contentId),
-          orderBy("fecha", "asc") // Ordenar por fecha ascendente para mostrar hilos correctamente
+          orderBy("fecha", "asc")
         );
         
-        const querySnapshot = await getDocs(q);
-        container.innerHTML = '';
-        
-        if (querySnapshot.empty) {
-            container.innerHTML = '<p style="font-size: 0.8rem; color: var(--text-color-secondary);">Sé el primero en comentar.</p>';
-            return;
-        }
-
-        const comments = [];
-        querySnapshot.forEach((doc) => {
-            comments.push({ id: doc.id, ...doc.data() });
-        });
-
-        // Construir árbol de comentarios para anidarlos
-        const commentMap = new Map();
-        comments.forEach(comment => commentMap.set(comment.id, { ...comment, replies: [] }));
-
-        const rootComments = [];
-        comments.forEach(comment => {
-            if (comment.parentId && commentMap.has(comment.parentId)) {
-                commentMap.get(comment.parentId).replies.push(commentMap.get(comment.id));
-            } else {
-                rootComments.push(commentMap.get(comment.id));
+        try { // Añadido try-catch para manejar errores y asegurar hideLoading()
+            const querySnapshot = await getDocs(q);
+            container.innerHTML = '';
+            
+            if (querySnapshot.empty) {
+                container.innerHTML = '<p style="font-size: 0.8rem; color: var(--text-color-secondary);">Sé el primero en comentar.</p>';
+                return;
             }
-        });
 
-        function renderComment(comment, parentElement) {
-            const commentElement = document.createElement('div');
-            commentElement.className = 'comment-item'; // Nuevo contenedor para cada comentario/respuesta
-            commentElement.innerHTML = `
-                <div class="comment">
-                    <span class="comment-author">${comment.autor}</span>
-                    <span class="comment-time">${formatDate(comment.fecha?.toDate())}</span>
-                    <p class="comment-text">${comment.texto}</p>
-                    <div class="comment-actions">
-                        <button class="comment-reply-btn" data-comment-id="${comment.id}" data-author="${comment.autor}">Responder</button>
-                    </div>
-                </div>
-                <div class="comment-replies"></div>
-            `;
-            parentElement.appendChild(commentElement);
-
-            // Listener para el botón de responder
-            commentElement.querySelector('.comment-reply-btn').addEventListener('click', (e) => {
-                const replyingToId = e.target.dataset.commentId;
-                const replyingToAuthor = e.target.dataset.author;
-                const form = e.target.closest('.comments-section').querySelector('.comment-form');
-                const input = form.querySelector('.comment-input');
-                const submitBtn = form.querySelector('.comment-submit');
-
-                input.placeholder = `Respondiendo a ${replyingToAuthor}...`;
-                input.dataset.replyingTo = replyingToAuthor;
-                input.dataset.replyingToId = replyingToId;
-
-                // Para evitar múltiples listeners, eliminamos y volvemos a añadir
-                // el listener del submit para que apunte a la función de respuesta correcta.
-                submitBtn.removeEventListener('click', submitCommentBaseListener); // Remueve el listener base
-                submitBtn.addEventListener('click', function replyListener() {
-                    submitComment(replyingToId, replyingToAuthor);
-                    input.placeholder = 'Añade un comentario...'; // Resetear placeholder
-                    delete input.dataset.replyingTo;
-                    delete input.dataset.replyingToId;
-                    submitBtn.removeEventListener('click', replyListener); // Eliminar este listener específico
-                    submitBtn.addEventListener('click', submitCommentBaseListener); // Volver al listener base
-                });
-                input.focus();
+            const comments = [];
+            querySnapshot.forEach((doc) => {
+                comments.push({ id: doc.id, ...doc.data() });
             });
 
-            const repliesContainer = commentElement.querySelector('.comment-replies');
-            comment.replies.sort((a,b) => a.fecha.toDate() - b.fecha.toDate()).forEach(reply => renderComment(reply, repliesContainer));
-        }
+            const commentMap = new Map();
+            comments.forEach(comment => commentMap.set(comment.id, { ...comment, replies: [] }));
 
-        // Listener base para el botón de enviar del comentario principal.
-        // Se define aquí para poder referenciarlo y eliminarlo/añadirlo.
-        const submitCommentBaseListener = () => submitComment();
-        // Asegurarse de que el listener base se aplique al formulario
-        // Solo la primera vez que se carga el componente o se resetea.
-        // Ya está aplicado en createContentCard, así que aquí lo gestionamos para las respuestas.
-        
-        rootComments.sort((a,b) => a.fecha.toDate() - b.fecha.toDate()).forEach(comment => renderComment(comment, container));
+            const rootComments = [];
+            comments.forEach(comment => {
+                if (comment.parentId && commentMap.has(comment.parentId)) {
+                    commentMap.get(comment.parentId).replies.push(commentMap.get(comment.id));
+                } else {
+                    rootComments.push(commentMap.get(comment.id));
+                }
+            });
+
+            function renderComment(comment, parentElement) {
+                const commentElement = document.createElement('div');
+                commentElement.className = 'comment-item';
+                commentElement.innerHTML = `
+                    <div class="comment">
+                        <span class="comment-author">${comment.autor}</span>
+                        <span class="comment-time">${formatDate(comment.fecha?.toDate())}</span>
+                        <p class="comment-text">${comment.texto}</p>
+                        <div class="comment-actions">
+                            <button class="comment-reply-btn" data-comment-id="${comment.id}" data-author="${comment.autor}">Responder</button>
+                        </div>
+                    </div>
+                    <div class="comment-replies"></div>
+                `;
+                parentElement.appendChild(commentElement);
+
+                commentElement.querySelector('.comment-reply-btn').addEventListener('click', (e) => {
+                    const replyingToId = e.target.dataset.commentId;
+                    const replyingToAuthor = e.target.dataset.author;
+                    const form = e.target.closest('.comments-section').querySelector('.comment-form');
+                    const input = form.querySelector('.comment-input');
+                    const submitBtn = form.querySelector('.comment-submit');
+
+                    input.placeholder = `Respondiendo a ${replyingToAuthor}...`;
+                    input.dataset.replyingTo = replyingToAuthor;
+                    input.dataset.replyingToId = replyingToId;
+
+                    // Remove listener base, add reply listener temporarily
+                    submitBtn.removeEventListener('click', submitCommentBaseListener);
+                    submitBtn.addEventListener('click', function replyListener() {
+                        submitComment(replyingToId, replyingToAuthor);
+                        input.placeholder = 'Añade un comentario...';
+                        delete input.dataset.replyingTo;
+                        delete input.dataset.replyingToId;
+                        submitBtn.removeEventListener('click', replyListener);
+                        submitBtn.addEventListener('click', submitCommentBaseListener); // Re-add base listener
+                    }, { once: true }); // Ensure this listener is removed after one execution
+                    input.focus();
+                });
+
+                const repliesContainer = commentElement.querySelector('.comment-replies');
+                comment.replies.sort((a,b) => a.fecha.toDate() - b.fecha.toDate()).forEach(reply => renderComment(reply, repliesContainer));
+            }
+            
+            // Define submitCommentBaseListener once here so it's accessible.
+            const submitCommentBaseListener = () => {
+                const form = container.closest('.comments-section').querySelector('.comment-form');
+                const input = form.querySelector('.comment-input');
+                const submitBtn = form.querySelector('.comment-submit');
+                submitComment();
+                // Ensure the base listener is re-attached if it was temporarily removed
+                submitBtn.removeEventListener('click', submitCommentBaseListener); // Remove to prevent duplicates
+                submitBtn.addEventListener('click', submitCommentBaseListener); // Re-add
+            };
+
+
+            rootComments.sort((a,b) => a.fecha.toDate() - b.fecha.toDate()).forEach(comment => renderComment(comment, container));
+
+        } catch (error) {
+            console.error("Error al cargar comentarios:", error);
+            container.innerHTML = '<p style="font-size: 0.8rem; color: red;">Error al cargar comentarios.</p>';
+        }
       }
       
       // --- Lógica del Top de Usuarios ---
-      topUsersBtn.addEventListener('click', showTopUsers);
-      closeTopUsersBtn.addEventListener('click', () => {
-        topUsersContainer.style.display = 'none';
-        mainHub.style.display = 'inline-block'; 
-      });
-
-      async function showTopUsers() {
+      topUsersBtn.addEventListener('click', async () => { // Hago async el event listener para manejar el loading
         showLoading();
         topUsersList.innerHTML = '';
         currentCategory = 'top';
@@ -2313,13 +2345,18 @@
           }
           mainHub.style.display = 'none';
           topUsersContainer.style.display = 'flex';
-          hideLoading();
         } catch (error) {
-          hideLoading();
           console.error("Error al cargar el top de usuarios:", error);
           alert("Error al cargar el top de usuarios.");
+        } finally {
+          hideLoading(); // Asegúrate de ocultar el loading siempre
         }
-      }
+      });
+
+      closeTopUsersBtn.addEventListener('click', () => {
+        topUsersContainer.style.display = 'none';
+        mainHub.style.display = 'inline-block'; 
+      });
 
       // --- Funciones de Utilidad ---
       async function getUserData(uid) {
@@ -2337,8 +2374,6 @@
 
       function formatDate(date) {
         if (!date) return '';
-        // Usar un formato más simple si la complejidad es un problema
-        // Podrías mostrar solo la fecha si la hora exacta no es crucial
         return date.toLocaleString('es-CO', {
           day: '2-digit',
           month: '2-digit',
@@ -2353,7 +2388,7 @@
           textura: 'Texturas',
           addon: 'Addons',
           mod: 'Mods',
-          plantilla: 'Plantillas', // AÑADIDA DE NUEVO
+          plantilla: 'Plantillas',
           skin: 'Skins',
           shader: 'Shaders',
           tutorial: 'Tutoriales',
