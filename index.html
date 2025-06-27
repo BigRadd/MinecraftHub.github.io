@@ -1,0 +1,2381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RADD | Minecraft Hub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Variables CSS para modos oscuro/claro */
+    :root {
+      --bg-body: #1a0005;
+      --bg-hub: #33000b;
+      --bg-btn: #260009;
+      --border-btn: #4d0013;
+      --text-color-primary: white;
+      --text-color-secondary: #ffb3c6;
+      --highlight-color: #ff3366;
+      --hover-highlight-color: #cc0033;
+      --gradient-start: #ff3366;
+      --gradient-middle: #ff8c66;
+      --gradient-end: #ff3366;
+      --auth-bg: #33000b; /* Fondo de contenedores auth/perfil */
+      --auth-input-bg: #260009; /* Fondo de inputs auth */
+      --auth-input-border: #4d0013;
+      --comment-bg: #260009; /* Fondo de comentarios */
+      --comment-text: #ff8c66; /* Texto de comentarios */
+      --toggle-password-color: #ff8c66;
+      --user-card-bg: #260009; /* Fondo de tarjeta de usuario en Top */
+    }
+
+    /* Tema Claro */
+    body.light-mode {
+      --bg-body: #f0f0f0;
+      --bg-hub: #ffffff;
+      --bg-btn: #e0e0e0;
+      --border-btn: #cccccc;
+      --text-color-primary: #333333;
+      --text-color-secondary: #666666;
+      --highlight-color: #4CAF50; /* Verde más amigable */
+      --hover-highlight-color: #388E3C;
+      --gradient-start: #4CAF50;
+      --gradient-middle: #8BC34A;
+      --gradient-end: #4CAF50;
+      --auth-bg: #ffffff;
+      --auth-input-bg: #f9f9f9;
+      --auth-input-border: #dddddd;
+      --comment-bg: #e9e9e9;
+      --comment-text: #555555;
+      --toggle-password-color: #777777;
+      --user-card-bg: #e0e0e0;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg-body);
+      color: var(--text-color-primary);
+      text-align: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .profile {
+      padding: 2rem 0;
+    }
+    .profile img {
+      width: 80px;
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--highlight-color); /* Sombra roja */
+    }
+    .logo-text {
+      background: linear-gradient(90deg, var(--gradient-start), var(--gradient-middle), var(--gradient-end));
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: shine 3s linear infinite;
+      display: inline-block;
+    }
+    @keyframes shine {
+      0% { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+    .profile p {
+      margin: 0.3rem;
+      color: var(--highlight-color); /* Texto rojo */
+      font-weight: bold;
+    }
+    .socials i {
+      font-size: 1.5rem;
+      margin: 0 0.5rem;
+      color: var(--text-color-primary);
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+    .socials i:hover {
+      color: var(--highlight-color); /* Hover rojo */
+    }
+    .hub {
+      margin-top: 2rem;
+      background: var(--bg-hub); /* Fondo rojo más oscuro */
+      padding: 1rem;
+      border-radius: 12px;
+      display: inline-block;
+      width: 90%;
+      max-width: 600px;
+      transition: background-color 0.3s;
+    }
+    /* Estilos para el nuevo botón principal de Minecraft */
+    .hub .main-minecraft-btn {
+      background-color: var(--hover-highlight-color); /* Rojo más intenso como el h2 original */
+      padding: 0.7rem;
+      border-radius: 8px;
+      font-size: 1.3rem; /* Tamaño de fuente del h2 original */
+      font-weight: bold; /* Para que el texto sea negrita */
+      color: var(--text-color-primary); /* Color del texto */
+      text-decoration: none; /* Quita el subrayado del enlace */
+      display: flex; /* Para alinear el icono y el texto */
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem; /* Espacio entre el icono y el texto */
+      cursor: pointer; /* Muestra el cursor de puntero */
+      transition: background 0.3s, transform 0.2s; /* Transición suave para el hover */
+      margin-bottom: 1rem; /* Espacio debajo del botón */
+    }
+
+    .hub .main-minecraft-btn:hover {
+      background-color: var(--highlight-color); /* Rojo más oscuro al pasar el ratón */
+      transform: scale(1.02); /* Ligeramente más grande al pasar el ratón */
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .btn {
+      background-color: var(--bg-btn); /* Fondo rojo muy oscuro */
+      border: 2px solid var(--border-btn);
+      padding: 0.8rem;
+      border-radius: 8px;
+      font-weight: bold;
+      color: var(--text-color-primary);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .btn:hover {
+      background-color: var(--border-btn); /* Hover rojo oscuro */
+      transform: scale(1.05);
+    }
+    .publish-content-btn {
+      margin-top: 1rem;
+      background-color: var(--highlight-color); /* Botón rojo */
+      color: var(--text-color-primary);
+      padding: 0.8rem;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-block;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .publish-content-btn:hover {
+      background-color: var(--hover-highlight-color); /* Hover rojo más oscuro */
+    }
+    /* Estilos para el formulario (se mantienen igual) */
+    .content-form-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .content-form-container {
+      background-color: var(--auth-bg); /* Fondo rojo oscuro */
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      color: var(--text-color-primary);
+      text-align: left;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+      transition: background-color 0.3s;
+    }
+    .content-form-container h3 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--highlight-color); /* Texto rojo */
+    }
+    .content-form-container label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: var(--highlight-color); /* Texto rojo */
+    }
+    .content-form-container input[type="text"],
+    .content-form-container textarea,
+    .content-form-container select,
+    .content-form-container input[type="file"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--auth-input-border);
+      border-radius: 5px;
+      background-color: var(--auth-input-bg);
+      color: var(--text-color-primary);
+      font-family: 'Segoe UI', sans-serif;
+      transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+    .content-form-container textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    .content-form-container button {
+      background-color: var(--hover-highlight-color); /* Rojo intenso */
+      color: var(--text-color-primary);
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      display: block;
+      margin: 1rem auto 0;
+    }
+    .content-form-container button:hover {
+      background-color: var(--highlight-color); /* Hover rojo más oscuro */
+    }
+    /* Estilos para el contenido */
+    .content-section {
+      display: none;
+      padding: 20px;
+      max-width: 800px;
+      margin: 20px auto;
+    }
+    .content-section.active {
+      display: block !important; /* CAMBIO AQUÍ: AÑADIDO !important */
+    }
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .content-card {
+      background: var(--bg-hub);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(255, 51, 102, 0.3); /* Sombra roja */
+      transition: background-color 0.3s;
+    }
+    .content-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+    .card-body {
+      padding: 15px;
+    }
+    .card-body h3 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+      color: var(--highlight-color); /* Texto rojo */
+    }
+    .card-body p {
+      font-size: 0.9rem;
+      color: var(--text-color-secondary); /* Texto rojo claro */
+      margin-bottom: 15px;
+    }
+    .version-select {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      background: var(--auth-input-bg);
+      border: 1px solid var(--auth-input-border);
+      color: var(--text-color-primary);
+      border-radius: 5px;
+      transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+    .download-btn {
+      display: block;
+      background: var(--highlight-color);
+      color: var(--text-color-primary);
+      text-align: center;
+      padding: 8px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .download-btn:hover {
+      background: var(--hover-highlight-color);
+    }
+    .back-btn {
+      display: inline-block;
+      margin: 20px 0;
+      padding: 10px 20px;
+      background: var(--hover-highlight-color);
+      color: var(--text-color-primary);
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .back-btn:hover {
+        background: var(--highlight-color);
+    }
+
+    /* Estilos para likes y favoritos */
+    .interaction-buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        margin-bottom: 15px; /* Espacio para separar de select/download */
+        border-top: 1px solid var(--border-btn);
+        padding-top: 10px;
+    }
+    .like-section, .favorite-section {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .like-btn, .favorite-btn {
+      background: none;
+      border: none;
+      color: var(--text-color-secondary);
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: all 0.3s;
+    }
+    .like-btn.liked, .favorite-btn.favorited {
+      color: var(--highlight-color);
+      transform: scale(1.1);
+    }
+    .likes-count, .favorites-count {
+      font-size: 0.9rem;
+      color: var(--text-color-secondary);
+    }
+
+    /* Estilos para comentarios */
+    .comments-section {
+      margin-top: 15px;
+      border-top: 1px solid var(--border-btn);
+      padding-top: 10px;
+    }
+    .comment-form {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .comment-input {
+      flex-grow: 1;
+      padding: 8px;
+      background: var(--comment-bg);
+      border: 1px solid var(--border-btn);
+      border-radius: 5px;
+      color: var(--text-color-primary);
+      transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+    .comment-submit {
+      background: var(--highlight-color);
+      color: var(--text-color-primary);
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .comment-submit:hover {
+        background: var(--hover-highlight-color);
+    }
+    .comments-list {
+      max-height: 200px; /* Aumentado un poco para ver más comentarios */
+      overflow-y: auto;
+      padding-right: 5px; /* Para el scrollbar */
+    }
+    .comment-item {
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+        border-left: 3px solid var(--highlight-color);
+        padding-left: 10px;
+    }
+    .comment {
+      background: var(--comment-bg);
+      padding: 8px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .comment-author {
+      font-weight: bold;
+      color: var(--highlight-color);
+    }
+    .comment-time {
+      font-size: 0.7rem;
+      color: var(--comment-text);
+      margin-left: 5px;
+    }
+    .comment-text {
+        margin-top: 5px;
+        color: var(--text-color-primary);
+    }
+    .comment-actions {
+        margin-top: 5px;
+        text-align: right;
+    }
+    .comment-reply-btn {
+        background: none;
+        border: none;
+        color: var(--comment-text);
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+    .comment-reply-btn:hover {
+        color: var(--highlight-color);
+    }
+    /* Estilos para comentarios anidados */
+    .comment-replies {
+        margin-left: 20px;
+        margin-top: 10px;
+        padding-left: 5px;
+        border-left: 1px dashed var(--border-btn);
+    }
+    .cooldown-message {
+      color: var(--comment-text);
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+    
+    /* Nuevos estilos para autenticación */
+    .auth-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .auth-form-content {
+      background: var(--auth-bg);
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      color: var(--text-color-primary);
+      text-align: left;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+      transition: background-color 0.3s;
+    }
+    .auth-form-content h3 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--highlight-color);
+    }
+    .auth-form-content label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+      color: var(--highlight-color);
+    }
+    .auth-form-content input[type="text"],
+    .auth-form-content input[type="email"],
+    .auth-form-content input[type="password"] {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--auth-input-border);
+      border-radius: 5px;
+      background-color: var(--auth-input-bg);
+      color: var(--text-color-primary);
+      font-family: 'Segoe UI', sans-serif;
+      transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+    .auth-btn {
+      background: var(--highlight-color);
+      color: var(--text-color-primary);
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      display: block;
+      margin: 1rem auto 0;
+      text-align: center;
+    }
+    .auth-btn:hover {
+      background-color: var(--hover-highlight-color);
+    }
+    .toggle-auth-mode {
+      text-align: center;
+      margin-top: 1rem;
+      color: var(--comment-text);
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    
+    /* Estilos para avatares */
+    .avatar-selection {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 1rem;
+      justify-content: center;
+    }
+    .avatar-selection img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .avatar-selection img.selected {
+      border-color: var(--highlight-color);
+      transform: scale(1.1);
+    }
+    
+    /* Botón de perfil flotante */
+    .profile-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: var(--highlight-color);
+      color: var(--text-color-primary);
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      z-index: 999;
+      transition: background 0.3s;
+    }
+    .profile-btn:hover {
+      background: var(--hover-highlight-color);
+    }
+
+    /* Botón de modo oscuro/claro */
+    .theme-toggle-btn {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--highlight-color);
+        color: var(--text-color-primary);
+        border: none;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        z-index: 999;
+        transition: background 0.3s;
+    }
+    .theme-toggle-btn:hover {
+        background: var(--hover-highlight-color);
+    }
+    
+    /* Perfil de Usuario */
+    .user-profile {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .profile-content {
+      background: var(--auth-bg);
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 600px;
+      color: var(--text-color-primary);
+      text-align: center;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+      transition: background-color 0.3s;
+    }
+    .profile-content .avatar-display {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--highlight-color);
+      margin-bottom: 1rem;
+    }
+    .profile-content h3 {
+      color: var(--highlight-color);
+      margin-bottom: 0.5rem;
+    }
+    .profile-content p {
+      color: var(--text-color-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .profile-description-area {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 1rem;
+      border: 1px solid var(--auth-input-border);
+      border-radius: 5px;
+      background-color: var(--auth-input-bg);
+      color: var(--text-color-primary);
+      font-family: 'Segoe UI', sans-serif;
+      resize: vertical;
+      min-height: 60px;
+      transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+    .profile-content .close-btn, .auth-form-content .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 2rem;
+      color: var(--highlight-color);
+      cursor: pointer;
+    }
+    .profile-content .logout-btn {
+      background-color: var(--hover-highlight-color);
+      margin-top: 1.5rem;
+      padding: 0.7rem 1.2rem;
+    }
+    .profile-content .save-profile-btn {
+      background-color: #4CAF50; /* Green */
+      margin-top: 1rem;
+      padding: 0.7rem 1.2rem;
+    }
+
+    /* Mis Favoritos en el perfil */
+    .my-favorites-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+      border-top: 1px solid var(--border-btn);
+      padding-top: 20px;
+      color: var(--text-color-primary);
+    }
+    .my-favorite-card {
+        background: var(--user-card-bg);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 5px rgba(255, 51, 102, 0.2);
+        padding: 10px;
+        text-align: center;
+        transition: background-color 0.3s;
+    }
+    .my-favorite-card img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-bottom: 5px;
+    }
+    .my-favorite-card h4 {
+        font-size: 0.9rem;
+        margin: 0;
+        color: var(--highlight-color);
+    }
+    .my-favorite-card p {
+        font-size: 0.7rem;
+        color: var(--text-color-secondary);
+        margin: 5px 0 0;
+    }
+
+
+    /* Top usuarios */
+    .top-users-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 1001;
+    }
+    .top-users-content {
+      background: var(--auth-bg);
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      color: var(--text-color-primary);
+      text-align: left;
+      position: relative;
+      max-height: 90vh;
+      overflow-y: auto;
+      transition: background-color 0.3s;
+    }
+    .top-users-content h3 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--highlight-color);
+    }
+    .user-card {
+      background: var(--user-card-bg);
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background-color 0.3s;
+    }
+    .user-card img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--highlight-color);
+      margin-right: 10px;
+    }
+    .user-card span {
+      flex-grow: 1;
+    }
+    .user-card .publication-count {
+      font-weight: bold;
+      color: var(--comment-text);
+    }
+
+    /* Mis publicaciones en el perfil */
+    .my-publications-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+      border-top: 1px solid var(--border-btn);
+      padding-top: 20px;
+    }
+    .my-publication-card {
+      background: var(--user-card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 5px rgba(255, 51, 102, 0.2);
+      padding: 10px;
+      text-align: center;
+      transition: background-color 0.3s;
+    }
+    .my-publication-card img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin-bottom: 5px;
+    }
+    .my-publication-card h4 {
+      font-size: 0.9rem;
+      margin: 0;
+      color: var(--highlight-color);
+    }
+    .my-publication-card p {
+      font-size: 0.7rem;
+      color: var(--text-color-secondary);
+      margin: 5px 0 0;
+    }
+
+    /* Estilos para la sección de descargas de Minecraft */
+    .minecraft-downloads-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 20px;
+      text-align: left;
+    }
+    .minecraft-downloads-list .download-item {
+      background: var(--bg-btn);
+      padding: 15px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--border-btn);
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+    .minecraft-downloads-list .download-item span {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: var(--highlight-color);
+    }
+    .minecraft-downloads-list .download-item a {
+      background: var(--highlight-color);
+      color: var(--text-color-primary);
+      padding: 8px 15px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .minecraft-downloads-list .download-item a:hover {
+      background: var(--hover-highlight-color);
+    }
+    
+    /* Paginación */
+    .pagination-controls {
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+    }
+    .pagination-controls button {
+        background-color: var(--highlight-color);
+        color: var(--text-color-primary);
+        border: none;
+        padding: 0.7rem 1.2rem;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .pagination-controls button:hover {
+        background-color: var(--hover-highlight-color);
+    }
+    .pagination-controls button:disabled {
+        background-color: #66001a;
+        cursor: not-allowed;
+    }
+
+    /* Nuevo: Avatar en el perfil para cambiar */
+    .profile-avatar-upload {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+    .profile-avatar-upload label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: var(--highlight-color);
+    }
+    .profile-avatar-upload input[type="file"] {
+        background-color: var(--bg-btn);
+        border: 1px solid var(--border-btn);
+        padding: 8px;
+        border-radius: 5px;
+        color: var(--text-color-primary);
+        width: calc(100% - 20px);
+        transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+  </style>
+</head>
+<body>
+    
+    <button class="profile-btn" id="profileBtn"><i class="fas fa-user"></i></button>
+    <button class="theme-toggle-btn" id="themeToggleBtn"><i class="fas fa-sun"></i></button> <div class="profile">
+    <img src="https://i.pinimg.com/736x/2d/b0/1d/2db01d6e21cba969c8363d2aa473c813.jpg" alt="Logo de Yasho">
+    <h1><span class="logo-text">Minecraft Hub</span></h1>
+    <p>⛩️
+    raddcraft⛩️</p>
+    <div class="socials">
+      <a href="https://whatsapp.com/channel/0029VayiemvJuyAE73jT4P0Q" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://www.tiktok.com/@raddcraft?_t=ZS-8xVc0SfUJqE&_r=1" target="_blank"><i class="fab fa-tiktok"></i></a>
+    </div>
+  </div>
+  
+  <div class="hub" id="mainHub">
+    
+    <a class="main-minecraft-btn category-btn" data-category="minecraft-downloads" id="mainMinecraftBtn">
+        <i class="fas fa-gamepad"></i> MINECRAFT <i class="fas fa-gamepad"></i>
+    </a>
+    <div class="grid">
+      <a class="btn category-btn" data-category="textura"><i class="fas fa-paint-brush"></i> Texturas</a>
+      <a class="btn category-btn" data-category="addon"><i class="fas fa-puzzle-piece"></i> Addons</a>
+      <a class="btn category-btn" data-category="mod"><i class="fas fa-cogs"></i> Mods</a>
+      <a class="btn category-btn" data-category="plantilla"><i class="fas fa-layer-group"></i> Plantillas</a> <a class="btn category-btn" data-category="skin"><i class="fas fa-user-friends"></i> Skins</a>
+      <a class="btn category-btn" data-category="shader"><i class="fas fa-sun"></i> Shaders</a>
+      <a class="btn category-btn" data-category="tutorial"><i class="fas fa-graduation-cap"></i> Tutoriales</a>
+      <a class="btn category-btn" data-category="top" id="topUsersBtn"><i class="fas fa-crown"></i> Top</a>
+      
+</div>
+    <a class="publish-content-btn" id="publishContentBtn" style="display: none;">⬇️ Publicar Contenido</a>
+    <p id="cooldownMessage" class="cooldown-message"></p>
+  </div>
+
+  
+<div id="contentSections"></div>
+
+  
+<div class="content-form-overlay" id="contentFormOverlay">
+    <div class="content-form-container">
+      <span class="close-btn" id="closeFormBtn">×</span>
+      <h3>Publicar Nuevo Contenido</h3>
+      <form id="publishForm">
+        <label for="userNameInput">Nombre o Usuario:</label>
+        <input type="text" id="userNameInput" name="userName" required readonly> 
+        <label for="contentTitle">Título del Contenido:</label>
+        <input type="text" id="contentTitle" name="contentTitle" required>
+
+        <label for="contentDescription">Descripción del Contenido:</label>
+        <textarea id="contentDescription" name="contentDescription" required></textarea>
+
+        <label for="contentType">Tipo de Contenido:</label>
+        <select id="contentType" name="contentType" required>
+          <option value="">Selecciona un tipo</option>
+          <option value="textura">Textura</option>
+          <option value="addon">Addon</option>
+          <option value="mod">Mod</option>
+          <option value="plantilla">Plantilla</option> <option value="skin">Skin</option>
+          <option value="shader">Shader</option>
+          <option value="tutorial">Tutorial</option>
+          
+          <option value="minecraft-version">Minecraft Versión</option>
+        </select>
+
+        <label for="contentImage">Imagen del Contenido:</label>
+        <input type="file" id="contentImage" name="contentImage" accept="image/*" required>
+
+        <label>Versiones del Contenido:</label>
+        <div id="versionsContainer">
+          <div class="version-block">
+            <input type="text" name="version-name[]" placeholder="Nombre de versión (ej: 1.20)" required>
+            <input type="url" name="version-link[]" placeholder="Link de descarga" required>
+          </div>
+        </div>
+        <button type="button" id="addVersionBtn">➕ Añadir Versión</button>
+
+        <button type="submit">Publicar ahora</button>
+      </form>
+    </div>
+  </div>
+
+  
+<div class="auth-container" id="authContainer">
+    <div class="auth-form-content">
+      <span class="close-btn" id="closeAuthBtn">×</span>
+      <h3 id="authTitle">Iniciar Sesión</h3>
+      <form id="authForm">
+        <div id="registerFields" style="display: none;">
+          <label for="authUsername">Nombre de Usuario:</label>
+          <input type="text" id="authUsername" placeholder="Tu nombre de usuario único">
+          <label for="avatarSelect">Elige tu Avatar:</label>
+          <div class="avatar-selection" id="avatarSelection">
+            <img src="https://i.ibb.co/5WF3JMwB/IMG-20250626-WA0080.jpg" data-avatar-url="https://i.ibb.co/5WF3JMwB/IMG-20250626-WA0080.jpg" class="selected">
+            <img src="https://i.ibb.co/RT2rBhfq/IMG-20250626-WA0073.jpg" data-avatar-url="https://i.ibb.co/RT2rBhfq/IMG-20250626-WA0073.jpg">
+            <img src="https://i.ibb.co/7xr0HW79/IMG-20250626-WA0072.jpg" data-avatar-url="https://i.ibb.co/7xr0HW79/IMG-20250626-WA0072.jpg">
+            <img src="https://i.ibb.co/Kx0XcWHj/IMG-20250626-WA0070.jpg" data-avatar-url="https://i.ibb.co/Kx0XcWHj/IMG-20250626-WA0070.jpg">
+            <img src="https://i.ibb.co/239SGW4x/IMG-20250626-WA0068.jpg" data-avatar-url="https://i.ibb.co/239SGW4x/IMG-20250626-WA0068.jpg">
+          </div>
+        </div>
+        <label for="authEmail">Email:</label>
+        <input type="email" id="authEmail" placeholder="tu@email.com" required>
+        <label for="authPassword">Contraseña:</label>
+        <div class="password-input-container">
+            <input type="password" id="authPassword" placeholder="********" required>
+            <span class="toggle-password"><i class="fas fa-eye"></i></span>
+        </div>
+        <button type="submit" id="authSubmitBtn" class="auth-btn">Iniciar Sesión</button>
+        <a href="#" id="forgotPasswordLink" style="display: block; text-align: center; margin-top: 10px; color: var(--comment-text); font-size: 0.9rem; text-decoration: underline;">¿Olvidaste tu contraseña?</a>
+        <p class="toggle-auth-mode" id="toggleAuthMode">¿No tienes cuenta? Regístrate</p>
+      </form>
+    </div>
+  </div>
+
+  
+<div class="user-profile" id="userProfile">
+    <div class="profile-content">
+      <span class="close-btn" id="closeProfileBtn">×</span>
+      <img src="https://i.imgur.com/gK103rS.png" alt="Avatar de Usuario" class="avatar-display" id="profileAvatar">
+      <h3 id="profileUsername">Nombre de Usuario</h3>
+      <p id="profileEmail">email@example.com</p>
+      
+      <div class="profile-avatar-upload">
+            <label for="profileAvatarFile">Cambiar Avatar (Subir):</label>
+            <input type="file" id="profileAvatarFile" accept="image/*">
+            <label for="profileAvatarSelect">O Elige un Avatar Predeterminado:</label>
+            <div class="avatar-selection" id="profileAvatarSelection">
+                <img src="https://i.ibb.co/5WF3JMwB/IMG-20250626-WA0080.jpg" data-avatar-url="https://i.ibb.co/5WF3JMwB/IMG-20250626-WA0080.jpg">
+                <img src="https://i.ibb.co/RT2rBhfq/IMG-20250626-WA0073.jpg" data-avatar-url="https://i.ibb.co/RT2rBhfq/IMG-20250626-WA0073.jpg">
+                <img src="https://i.ibb.co/7xr0HW79/IMG-20250626-WA0072.jpg" data-avatar-url="https://i.ibb.co/7xr0HW79/IMG-20250626-WA0072.jpg">
+                <img src="https://i.ibb.co/Kx0XcWHj/IMG-20250626-WA0070.jpg" data-avatar-url="https://i.ibb.co/Kx0XcWHj/IMG-20250626-WA0070.jpg">
+                <img src="https://i.ibb.co/239SGW4x/IMG-20250626-WA0068.jpg" data-avatar-url="https://i.ibb.co/239SGW4x/IMG-20250626-WA0068.jpg">
+            </div>
+      </div>
+
+      <label for="profileDescription" style="text-align: left; display: block; margin-top: 1rem;">Tu Descripción Personal:</label>
+      <textarea id="profileDescription" class="profile-description-area" placeholder="Escribe algo sobre ti..."></textarea>
+      <button class="auth-btn save-profile-btn" id="saveProfileBtn">Guardar Cambios</button>
+
+      <div class="profile-stats">
+        <div class="profile-stat-item">
+          <strong id="profilePublicationsCount">0</strong>
+          <span>Publicaciones</span>
+        </div>
+      </div>
+
+      <h4>Mis Publicaciones</h4>
+      <div class="my-publications-grid" id="myPublicationsGrid">
+      </div>
+
+      <h4>Mis Favoritos</h4> <div class="my-favorites-grid" id="myFavoritesGrid">
+      </div>
+      
+      <button class="auth-btn logout-btn" id="logoutBtn">Cerrar Sesión</button>
+    </div>
+  </div>
+
+  
+<div class="top-users-container" id="topUsersContainer">
+    <div class="top-users-content">
+      <span class="close-btn" id="closeTopUsersBtn">×</span>
+      <h3><i class="fas fa-crown"></i> Top 5 Publicadores</h3>
+      <div id="topUsersList">
+      </div>
+    </div>
+  </div>
+
+  
+<div class="content-section" id="minecraft-downloads-section" style="display: none;">
+    <h2><i class="fas fa-download"></i> Descargas de Minecraft</h2>
+    <a href="#" class="back-btn">← Volver al Hub</a>
+    <div class="minecraft-downloads-list" id="minecraftDownloadsList">
+      
+</div>
+    <div class="pagination-controls" id="minecraftDownloadsPagination">
+        <button class="next-btn" data-category="minecraft-version" style="display:none;">Cargar más versiones</button>
+    </div>
+  </div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+      <div class="spinner"></div>
+      <p>Cargando...</p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { 
+      getFirestore, 
+      collection, 
+      addDoc, 
+      serverTimestamp, 
+      getDocs, 
+      query, 
+      where, 
+      updateDoc, 
+      doc, 
+      increment,
+      orderBy,
+      limit,
+      getDoc,
+      setDoc,
+      arrayUnion, // Importado para añadir a array
+      arrayRemove // Importado para quitar de array
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+    import { 
+      getAuth, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword, 
+      signOut, 
+      onAuthStateChanged,
+      sendPasswordResetEmail
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+    import { 
+      getStorage, 
+      ref, 
+      uploadBytes, 
+      getDownloadURL 
+    } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
+    
+    // Configuración de Firebase - ¡REEMPLAZA CON TUS PROPIAS CREDENCIALES!
+    const firebaseConfig = {
+      apiKey: "AIzaSyBiazxsNqn_kj0VQqROMnp0XU2OukdMtNo",
+      authDomain: "minecraft-hub-2f796.firebaseapp.com",
+      projectId: "minecraft-hub-2f796",
+      storageBucket: "minecraft-hub-2f796.appspot.com",
+      messagingSenderId: "574308739058",
+      appId: "1:574308739058:web:399691b7aeb785678fad6b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const storage = getStorage(app);
+
+    // Variables globales
+    let lastSubmissionTime = 0; // Se inicializará desde localStorage al cargar
+    const COOLDOWN_TIME = 5 * 60 * 1000; // 5 minutos en milisegundos
+    let currentUser = null; 
+    let selectedAvatarUrl = "https://i.ibb.co/5WF3JMwB/IMG-20250626-WA0080.jpg"; 
+    let currentCategory = ''; 
+
+    // --- Variables para Paginación ---
+    const pageSize = 12; // Número de publicaciones por página
+    const lastVisibleDocs = {}; // Objeto para guardar el último documento visible por categoría
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Registrar el Service Worker
+      if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+              navigator.serviceWorker.register('/sw.js')
+                  .then(registration => {
+                      console.log('ServiceWorker registered: ', registration);
+                  })
+                  .catch(registrationError => {
+                      console.log('ServiceWorker registration failed: ', registrationError);
+                  });
+          });
+      }
+
+      // Al cargar la página, intentar recuperar lastSubmissionTime de localStorage
+      // Usa 'parseInt' porque localStorage almacena todo como string
+      const storedTime = localStorage.getItem('lastSubmissionTime');
+      if (storedTime) {
+          lastSubmissionTime = parseInt(storedTime, 10);
+          updateCooldownMessage(); // Iniciar el conteo regresivo si hay un tiempo guardado
+      }
+
+
+      // Elementos del DOM
+      const publishContentBtn = document.getElementById('publishContentBtn');
+      const contentFormOverlay = document.getElementById('contentFormOverlay');
+      const closeFormBtn = document.getElementById('closeFormBtn');
+      const publishForm = document.getElementById('publishForm');
+      const versionsContainer = document.getElementById('versionsContainer');
+      const addVersionBtn = document.getElementById('addVersionBtn');
+      const mainHub = document.getElementById('mainHub');
+      const contentSections = document.getElementById('contentSections');
+      const categoryBtns = document.querySelectorAll('.category-btn');
+      const cooldownMessage = document.getElementById('cooldownMessage');
+      const userNameInput = document.getElementById('userNameInput');
+      const loadingOverlay = document.getElementById('loadingOverlay');
+
+      // Elementos de Autenticación
+      const profileBtn = document.getElementById('profileBtn');
+      const authContainer = document.getElementById('authContainer');
+      const closeAuthBtn = document.getElementById('closeAuthBtn');
+      const authTitle = document.getElementById('authTitle');
+      const authForm = document.getElementById('authForm');
+      const registerFields = document.getElementById('registerFields');
+      const authUsernameInput = document.getElementById('authUsername');
+      const authEmailInput = document.getElementById('authEmail');
+      const authPasswordInput = document.getElementById('authPassword');
+      const authSubmitBtn = document.getElementById('authSubmitBtn');
+      const toggleAuthMode = document.getElementById('toggleAuthMode');
+      const avatarSelection = document.getElementById('avatarSelection');
+      const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+      const togglePasswordBtn = document.querySelector('.toggle-password');
+
+      // Elementos del Perfil de Usuario
+      const userProfile = document.getElementById('userProfile');
+      const closeProfileBtn = document.getElementById('closeProfileBtn');
+      const profileAvatar = document.getElementById('profileAvatar');
+      const profileUsername = document.getElementById('profileUsername');
+      const profileEmail = document.getElementById('profileEmail');
+      const profileDescription = document.getElementById('profileDescription');
+      const saveProfileBtn = document.getElementById('saveProfileBtn');
+      const profilePublicationsCount = document.getElementById('profilePublicationsCount');
+      const myPublicationsGrid = document.getElementById('myPublicationsGrid');
+      const myFavoritesGrid = document.getElementById('myFavoritesGrid'); // Nueva grid de favoritos
+      const logoutBtn = document.getElementById('logoutBtn');
+      const profileAvatarSelection = document.getElementById('profileAvatarSelection');
+      const profileAvatarFile = document.getElementById('profileAvatarFile');
+
+      // Elementos del Top de Usuarios
+      const topUsersBtn = document.getElementById('topUsersBtn');
+      const topUsersContainer = document.getElementById('topUsersContainer');
+      const closeTopUsersBtn = document.getElementById('closeTopUsersBtn');
+      const topUsersList = document.getElementById('topUsersList');
+
+      // Elemento para descargas de Minecraft
+      const minecraftDownloadsList = document.getElementById('minecraftDownloadsList');
+      const minecraftDownloadsSection = document.getElementById('minecraft-downloads-section');
+      const minecraftDownloadsPagination = document.getElementById('minecraftDownloadsPagination');
+
+      // Botón de Modo Oscuro/Claro
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+
+
+      // --- Funciones para Mostrar/Ocultar Carga ---
+      function showLoading() {
+          loadingOverlay.style.display = 'flex';
+      }
+
+      function hideLoading() {
+          loadingOverlay.style.display = 'none';
+      }
+
+      // --- Lógica de Modo Oscuro/Claro ---
+      const currentTheme = localStorage.getItem('theme');
+      if (currentTheme === 'light-mode') {
+        document.body.classList.add('light-mode');
+        themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>'; // Icono de luna para cambiar a oscuro
+      } else {
+        themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>'; // Icono de sol para cambiar a claro
+      }
+
+      themeToggleBtn.addEventListener('click', () => {
+        document.body.classList.toggle('light-mode');
+        if (document.body.classList.contains('light-mode')) {
+          localStorage.setItem('theme', 'light-mode');
+          themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+        } else {
+          localStorage.setItem('theme', 'dark-mode');
+          themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+      });
+
+
+      // --- Lógica de Autenticación ---
+      let isRegisterMode = false;
+
+      // Escuchar cambios en el estado de autenticación
+      onAuthStateChanged(auth, async (user) => {
+        currentUser = user;
+        if (user) {
+          console.log("Usuario logueado:", user.email);
+          const userData = await getUserData(user.uid);
+          userNameInput.value = userData?.username || user.email;
+          userNameInput.readOnly = true;
+          publishContentBtn.style.display = 'inline-block';
+          profileBtn.innerHTML = '<i class="fas fa-user"></i>';
+          authContainer.style.display = 'none';
+          
+          publishContentBtn.removeEventListener('click', showAuthWarning);
+          publishContentBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            contentFormOverlay.style.display = 'flex';
+          });
+
+        } else {
+          console.log("No hay usuario logueado");
+          userNameInput.value = '';
+          userNameInput.readOnly = false;
+          publishContentBtn.style.display = 'inline-block';
+          publishContentBtn.textContent = '⬇️ Publicar Contenido (Requiere Inicio de Sesión)';
+          profileBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i>';
+          
+          publishContentBtn.removeEventListener('click', (event) => {
+            event.preventDefault();
+            contentFormOverlay.style.display = 'flex';
+          });
+          publishContentBtn.addEventListener('click', showAuthWarning);
+        }
+      });
+
+      function showAuthWarning(event) {
+        event.preventDefault();
+        alert('Debes iniciar sesión o registrarte para publicar contenido.');
+        authContainer.style.display = 'flex';
+        isRegisterMode = false;
+        renderAuthForm();
+      }
+
+      profileBtn.addEventListener('click', async () => {
+        if (currentUser) {
+          showLoading();
+          await loadUserProfile(currentUser.uid);
+          hideLoading();
+          userProfile.style.display = 'flex';
+        } else {
+          authContainer.style.display = 'flex';
+          isRegisterMode = false;
+          renderAuthForm();
+        }
+      });
+
+      closeAuthBtn.addEventListener('click', () => {
+        authContainer.style.display = 'none';
+      });
+
+      closeProfileBtn.addEventListener('click', () => {
+        userProfile.style.display = 'none';
+      });
+
+      toggleAuthMode.addEventListener('click', () => {
+        isRegisterMode = !isRegisterMode;
+        renderAuthForm();
+      });
+
+      function renderAuthForm() {
+        if (isRegisterMode) {
+          authTitle.textContent = 'Registrarse';
+          authSubmitBtn.textContent = 'Registrarse';
+          toggleAuthMode.textContent = '¿Ya tienes cuenta? Iniciar Sesión';
+          registerFields.style.display = 'block';
+        } else {
+          authTitle.textContent = 'Iniciar Sesión';
+          authSubmitBtn.textContent = 'Iniciar Sesión';
+          toggleAuthMode.textContent = '¿No tienes cuenta? Regístrate';
+          registerFields.style.display = 'none';
+        }
+      }
+
+      avatarSelection.querySelectorAll('img').forEach(img => {
+        img.addEventListener('click', () => {
+          avatarSelection.querySelectorAll('img').forEach(i => i.classList.remove('selected'));
+          img.classList.add('selected');
+          selectedAvatarUrl = img.dataset.avatarUrl;
+        });
+      });
+      
+      profileAvatarSelection.querySelectorAll('img').forEach(img => {
+        img.addEventListener('click', () => {
+            profileAvatarSelection.querySelectorAll('img').forEach(i => i.classList.remove('selected'));
+            img.classList.add('selected');
+            profileAvatar.src = img.dataset.avatarUrl;
+            profileAvatarFile.value = '';
+        });
+      });
+
+      profileAvatarFile.addEventListener('change', (event) => {
+          const file = event.target.files[0];
+          if (file) {
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                  profileAvatar.src = e.target.result;
+                  profileAvatarSelection.querySelectorAll('img').forEach(i => i.classList.remove('selected'));
+              };
+              reader.readAsDataURL(file);
+          }
+      });
+
+      // Toggle de visibilidad de contraseña
+      togglePasswordBtn.addEventListener('click', () => {
+          const type = authPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+          authPasswordInput.setAttribute('type', type);
+          togglePasswordBtn.querySelector('i').classList.toggle('fa-eye');
+          togglePasswordBtn.querySelector('i').classList.toggle('fa-eye-slash');
+      });
+
+      authForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        showLoading();
+        const email = authEmailInput.value;
+        const password = authPasswordInput.value;
+        const username = authUsernameInput.value.trim();
+
+        if (isRegisterMode) {
+          if (!username) {
+            hideLoading();
+            alert("Por favor, introduce un nombre de usuario.");
+            return;
+          }
+          try {
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, where("username", "==", username));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+              hideLoading();
+              alert("Ese nombre de usuario ya está en uso. Por favor, elige otro.");
+              return;
+            }
+
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            
+            await setDoc(doc(db, "users", user.uid), {
+              username: username,
+              email: email,
+              avatarURL: selectedAvatarUrl,
+              description: "",
+              publicationCount: 0,
+              favorites: [], // Inicializar el array de favoritos
+              createdAt: serverTimestamp()
+            });
+            
+            const contenidosRef = collection(db, "contenidos");
+            const qContent = query(contenidosRef, where("nombre", "==", username));
+            const contentSnapshot = await getDocs(qContent);
+            
+            for (const docSnapshot of contentSnapshot.docs) {
+                if (!docSnapshot.data().userId) { 
+                    await updateDoc(doc(db, "contenidos", docSnapshot.id), {
+                        userId: user.uid
+                    });
+                    await updateDoc(doc(db, "users", user.uid), {
+                        publicationCount: increment(1)
+                    });
+                }
+            }
+
+            hideLoading();
+            alert("¡Registro exitoso! Has iniciado sesión.");
+            authContainer.style.display = 'none';
+            authForm.reset();
+          } catch (error) {
+            hideLoading();
+            console.error("Error al registrar:", error.message);
+            alert(`Error al registrar: ${error.message}`);
+          }
+        } else {
+          try {
+            await signInWithEmailAndPassword(auth, email, password);
+            hideLoading();
+            alert("¡Inicio de sesión exitoso!");
+            authContainer.style.display = 'none';
+            authForm.reset();
+          } catch (error) {
+            hideLoading();
+            console.error("Error al iniciar sesión:", error.message);
+            alert(`Error al iniciar sesión: ${error.message}`);
+          }
+        }
+      });
+
+      forgotPasswordLink.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const email = authEmailInput.value;
+
+          if (!email) {
+              alert("Por favor, introduce tu correo electrónico en el campo de email para reestablecer la contraseña.");
+              return;
+          }
+
+          showLoading();
+          try {
+              await sendPasswordResetEmail(auth, email);
+              hideLoading();
+              alert(`Se ha enviado un correo electrónico a ${email} con instrucciones para reestablecer tu contraseña. Revisa tu bandeja de entrada (y spam).`);
+              authContainer.style.display = 'none';
+          } catch (error) {
+              hideLoading();
+              console.error("Error al enviar correo de restablecimiento:", error.message);
+              alert(`Error al enviar correo de restablecimiento: ${error.message}. Asegúrate de que el email es correcto y de que la cuenta existe.`);
+          }
+      });
+
+      logoutBtn.addEventListener('click', async () => {
+        showLoading();
+        try {
+          await signOut(auth);
+          hideLoading();
+          alert("Has cerrado sesión.");
+          userProfile.style.display = 'none';
+          userNameInput.value = ''; 
+          userNameInput.readOnly = false;
+        } catch (error) {
+          hideLoading();
+          console.error("Error al cerrar sesión:", error.message);
+          alert(`Error al cerrar sesión: ${error.message}`);
+        }
+      });
+
+      saveProfileBtn.addEventListener('click', async () => {
+        if (!currentUser) {
+            alert('Debes iniciar sesión para guardar cambios en tu perfil.');
+            return;
+        }
+
+        let newAvatarUrl = profileAvatar.src;
+
+        if (profileAvatarFile.files.length > 0) {
+            const file = profileAvatarFile.files[0];
+            const toBase64 = f => new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(f);
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+            });
+
+            showLoading();
+            try {
+                const base64 = await toBase64(file);
+                const formData = new FormData();
+                formData.append("key", "2f46a52689b8faf89cb1a670b25e89d5"); // Tu clave de ImgBB
+                formData.append("image", base64);
+
+                const res = await fetch("https://api.imgbb.com/1/upload", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const dataImgBB = await res.json();
+                if (!dataImgBB.data || !dataImgBB.data.url) {
+                    throw new Error("Error al subir imagen a ImgBB: " + (dataImgBB.error?.message || "Error desconocido"));
+                }
+                newAvatarUrl = dataImgBB.data.url;
+            } catch (err) {
+                hideLoading();
+                console.error("Error al subir nueva imagen de avatar:", err);
+                alert(`Error al subir la imagen de avatar: ${err.message}`);
+                return;
+            }
+        } else {
+            const selectedImg = profileAvatarSelection.querySelector('img.selected');
+            if (selectedImg) {
+                newAvatarUrl = selectedImg.dataset.avatarUrl;
+            }
+        }
+
+        try {
+            await updateDoc(doc(db, "users", currentUser.uid), {
+                description: profileDescription.value.trim(),
+                avatarURL: newAvatarUrl
+            });
+            hideLoading();
+            alert("Cambios de perfil guardados exitosamente.");
+            await loadUserProfile(currentUser.uid);
+        } catch (error) {
+            hideLoading();
+            console.error("Error al guardar descripción/avatar:", error);
+            alert("Error al guardar cambios en el perfil.");
+        }
+      });
+      
+      async function loadUserProfile(uid) {
+        try {
+          const userDocRef = doc(db, "users", uid);
+          const userDocSnap = await getDoc(userDocRef);
+
+          if (userDocSnap.exists()) {
+            const userData = userDocSnap.data();
+            profileAvatar.src = userData.avatarURL || "https://i.imgur.com/gK103rS.png";
+            profileUsername.textContent = userData.username || "Usuario";
+            profileEmail.textContent = userData.email || "";
+            profileDescription.value = userData.description || "";
+            profilePublicationsCount.textContent = userData.publicationCount || 0;
+
+            profileAvatarSelection.querySelectorAll('img').forEach(img => {
+                if (img.dataset.avatarUrl === userData.avatarURL) {
+                    img.classList.add('selected');
+                } else {
+                    img.classList.remove('selected');
+                }
+            });
+            profileAvatarFile.value = '';
+
+            await loadMyPublications(uid);
+            await loadMyFavorites(uid, userData.favorites || []); // Cargar favoritos del usuario
+          } else {
+            console.log("No se encontraron datos de usuario en Firestore para UID:", uid);
+            alert("Tu perfil no tiene datos completos. Por favor, completa tu registro.");
+          }
+        } catch (error) {
+          console.error("Error al cargar perfil de usuario:", error);
+          alert("Error al cargar el perfil. Por favor, intenta de nuevo.");
+        }
+      }
+
+      async function loadMyPublications(uid) {
+        myPublicationsGrid.innerHTML = '';
+        const q = query(collection(db, "contenidos"), where("userId", "==", uid), orderBy("fecha", "desc"));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          myPublicationsGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">Aún no tienes publicaciones.</p>';
+        } else {
+          querySnapshot.forEach(doc => {
+            const data = doc.data();
+            const card = document.createElement('div');
+            card.className = 'my-publication-card';
+            card.innerHTML = `
+              <img src="${data.imagenURL || 'https://i.imgur.com/hUPXXQF.png'}" alt="${data.titulo}">
+              <h4>${data.titulo}</h4>
+              <p>${data.tipo}</p>
+            `;
+            myPublicationsGrid.appendChild(card);
+          });
+        }
+      }
+
+      // Nueva función para cargar los favoritos del usuario
+      async function loadMyFavorites(uid, favoriteIds) {
+        myFavoritesGrid.innerHTML = '';
+        if (favoriteIds.length === 0) {
+          myFavoritesGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">Aún no has añadido favoritos.</p>';
+          return;
+        }
+
+        try {
+            // La forma correcta de cargar por ID del documento es con getDoc(doc(db, "collection", id)).
+            // Hacemos un getDoc por cada ID en favoriteIds.
+            const favoriteContentPromises = favoriteIds.map(id => getDoc(doc(db, "contenidos", id)));
+            const favoriteContentSnaps = await Promise.all(favoriteContentPromises);
+
+            let hasResults = false;
+            for (const docSnap of favoriteContentSnaps) {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    const card = document.createElement('div');
+                    card.className = 'my-favorite-card';
+                    card.innerHTML = `
+                      <img src="${data.imagenURL || 'https://i.imgur.com/hUPXXQF.png'}" alt="${data.titulo}">
+                      <h4>${data.titulo}</h4>
+                      <p>${data.tipo}</p>
+                    `;
+                    myFavoritesGrid.appendChild(card);
+                    hasResults = true;
+                }
+            }
+
+            if (!hasResults) {
+                myFavoritesGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No se encontraron favoritos.</p>';
+            }
+        } catch (error) {
+            console.error("Error al cargar favoritos:", error);
+            myFavoritesGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">Error al cargar favoritos.</p>';
+        }
+      }
+
+
+      // --- Lógica del Hub y Publicación ---
+
+      closeFormBtn.addEventListener('click', () => {
+        contentFormOverlay.style.display = 'none';
+      });
+
+      contentFormOverlay.addEventListener('click', (event) => {
+        if (event.target === contentFormOverlay) {
+          contentFormOverlay.style.display = 'none';
+        }
+      });
+
+      addVersionBtn.addEventListener('click', () => {
+        const versionDiv = document.createElement('div');
+        versionDiv.classList.add('version-block');
+        versionDiv.innerHTML = `
+          <input type="text" name="version-name[]" placeholder="Nombre de versión (ej: 1.20)" required>
+          <input type="url" name="version-link[]" placeholder="Link de descarga" required>
+          <button type="button" class="removeVersionBtn">❌ Quitar</button>
+        `;
+        versionsContainer.appendChild(versionDiv);
+
+        versionDiv.querySelector('.removeVersionBtn').addEventListener('click', () => {
+          versionDiv.remove();
+        });
+      });
+
+      publishForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (!currentUser) {
+            alert('Debes iniciar sesión para publicar contenido.');
+            return;
+        }
+
+        const currentTime = Date.now();
+        const timeSinceLastSubmission = currentTime - lastSubmissionTime;
+        
+        if (timeSinceLastSubmission < COOLDOWN_TIME) {
+          const remainingTimeSeconds = Math.ceil((COOLDOWN_TIME - timeSinceLastSubmission) / 1000);
+          const minutes = Math.floor(remainingTimeSeconds / 60);
+          const seconds = remainingTimeSeconds % 60;
+          alert(`Debes esperar ${minutes}m ${seconds}s antes de publicar nuevo contenido.`);
+          return;
+        }
+
+        const userName = userNameInput.value;
+        const contentTitle = document.getElementById('contentTitle').value;
+        const contentDescription = document.getElementById('contentDescription').value;
+        const contentType = document.getElementById('contentType').value;
+        const contentImageFile = document.getElementById('contentImage').files[0];
+        
+        const versionNames = document.querySelectorAll('input[name="version-name[]"]');
+        const versionLinks = document.querySelectorAll('input[name="version-link[]"]');
+        const versiones = {};
+        
+        versionNames.forEach((input, index) => {
+          const versionName = input.value;
+          const versionLink = versionLinks[index].value;
+          if (versionName && versionLink) {
+            versiones[versionName] = versionLink;
+          }
+        });
+
+        const toBase64 = file => new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result.split(',')[1]);
+          reader.onerror = reject;
+        });
+
+        showLoading();
+        try {
+          const base64 = await toBase64(contentImageFile);
+          const formData = new FormData();
+          formData.append("key", "2f46a52689b8faf89cb1a670b25e89d5"); // Tu clave de ImgBB
+          formData.append("image", base64);
+
+          const res = await fetch("https://api.imgbb.com/1/upload", {
+            method: "POST",
+            body: formData
+          });
+
+          const dataImgBB = await res.json();
+          if (!dataImgBB.data || !dataImgBB.data.url) {
+            throw new Error("Error al subir imagen a ImgBB: " + (dataImgBB.error?.message || "Error desconocido"));
+          }
+          const imagenURL = dataImgBB.data.url;
+
+          await addDoc(collection(db, "contenidos"), {
+            nombre: userName,
+            userId: currentUser.uid,
+            titulo: contentTitle,
+            descripcion: contentDescription,
+            tipo: contentType,
+            versiones: versiones,
+            fecha: serverTimestamp(),
+            imagenURL: imagenURL,
+            vistas: 0,
+            likes: 0
+          });
+
+          await updateDoc(doc(db, "users", currentUser.uid), {
+            publicationCount: increment(1)
+          });
+
+          // Actualizar el tiempo del último envío y guardarlo en localStorage
+          lastSubmissionTime = currentTime;
+          localStorage.setItem('lastSubmissionTime', currentTime.toString()); // Guardar como string
+          updateCooldownMessage();
+
+          hideLoading();
+          alert("¡Contenido publicado!");
+          contentFormOverlay.style.display = 'none';
+          publishForm.reset();
+          
+          versionsContainer.innerHTML = `
+            <div class="version-block">
+              <input type="text" name="version-name[]" placeholder="Nombre de versión (ej: 1.20)" required>
+              <input type="url" name="version-link[]" placeholder="Link de descarga" required>
+            </div>
+          `;
+          
+          const activeSection = document.querySelector('.content-section.active');
+          if (activeSection) {
+            const activeCategory = activeSection.id.replace('-section', '');
+            if (activeCategory === 'minecraft-downloads') {
+                loadMinecraftDownloads();
+            } else if (activeCategory !== 'top') {
+                loadCategoryContent(activeCategory);
+            }
+          }
+          loadUserProfile(currentUser.uid);
+        } catch (err) {
+          hideLoading();
+          console.error("Error al publicar:", err);
+          alert(`Error al publicar el contenido: ${err.message}`);
+        }
+      });
+
+      function updateCooldownMessage() {
+        // Limpiar cualquier intervalo existente para evitar duplicados
+        if (window._cooldownInterval) {
+            clearInterval(window._cooldownInterval);
+        }
+
+        window._cooldownInterval = setInterval(() => { // Guardar el ID del intervalo
+          const remainingTime = COOLDOWN_TIME - (Date.now() - lastSubmissionTime);
+          
+          if (remainingTime <= 0) {
+            cooldownMessage.textContent = '';
+            clearInterval(window._cooldownInterval);
+            localStorage.removeItem('lastSubmissionTime'); // Limpiar localStorage
+            window._cooldownInterval = null; // Resetear la variable
+          } else {
+            const minutes = Math.floor(remainingTime / 1000 / 60);
+            const seconds = Math.floor((remainingTime / 1000) % 60);
+            cooldownMessage.textContent = `Podrás publicar nuevo contenido en ${minutes}m ${seconds}s`;
+          }
+        }, 1000);
+      }
+
+      // --- Lógica de Carga de Contenido por Categoría y Paginación ---
+      async function loadCategoryContent(category, lastDoc = null) {
+        showLoading();
+        currentCategory = category;
+
+        document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+        topUsersContainer.style.display = 'none';
+        mainHub.style.display = 'none';
+
+        const sectionId = `${category}-section`;
+        let section = document.getElementById(sectionId);
+        if (!section) {
+            section = document.createElement('div');
+            section.className = 'content-section';
+            section.id = sectionId;
+            section.innerHTML = `
+                <h2>${getCategoryName(category)}</h2>
+                <a href="#" class="back-btn">← Volver al Hub</a>
+                <div class="content-grid" id="${category}-grid"></div>
+                <div class="pagination-controls">
+                    <button class="next-btn" data-category="${category}">Cargar más</button>
+                </div>
+            `;
+            contentSections.appendChild(section);
+            section.querySelector('.back-btn').addEventListener('click', handleBackButtonClick);
+            section.querySelector('.next-btn').addEventListener('click', (e) => {
+                loadCategoryContent(category, lastVisibleDocs[category]);
+            });
+        }
+        
+        const grid = document.getElementById(`${category}-grid`);
+        if (!lastDoc) {
+            grid.innerHTML = '';
+        }
+
+        let q = query(
+            collection(db, "contenidos"),
+            where("tipo", "==", category),
+            orderBy("fecha", "desc"),
+            limit(pageSize)
+        );
+
+        if (lastDoc) {
+            q = query(
+                collection(db, "contenidos"),
+                where("tipo", "==", category),
+                orderBy("fecha", "desc"),
+                startAfter(lastDoc),
+                limit(pageSize)
+            );
+        }
+
+        const querySnapshot = await getDocs(q);
+        const documents = querySnapshot.docs;
+
+        if (documents.length === 0 && !lastDoc) {
+            grid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No hay contenido en esta categoría aún.</p>';
+            section.querySelector('.next-btn').style.display = 'none';
+        } else if (documents.length === 0) {
+            alert("No hay más publicaciones en esta categoría.");
+            section.querySelector('.next-btn').style.display = 'none';
+        } else {
+            // Usar Promise.all para cargar las tarjetas en paralelo y mejorar el rendimiento
+            const cardPromises = documents.map(docSnap => createContentCard({ id: docSnap.id, ...docSnap.data() }));
+            const cards = await Promise.all(cardPromises);
+            cards.forEach(card => grid.appendChild(card));
+            
+            lastVisibleDocs[category] = documents[documents.length - 1];
+            section.querySelector('.next-btn').style.display = 'inline-block';
+        }
+        
+        section.classList.add('active');
+        hideLoading();
+      }
+
+      async function loadMinecraftDownloads(lastDoc = null) {
+        showLoading();
+        currentCategory = 'minecraft-downloads';
+
+        document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+        topUsersContainer.style.display = 'none';
+        mainHub.style.display = 'none';
+
+        const listContainer = minecraftDownloadsList;
+        if (!lastDoc) {
+            listContainer.innerHTML = '';
+        }
+
+        let q = query(
+            collection(db, "contenidos"),
+            where("tipo", "==", "minecraft-version"),
+            orderBy("fecha", "desc"),
+            limit(pageSize)
+        );
+
+        if (lastDoc) {
+            q = query(
+                collection(db, "contenidos"),
+                where("tipo", "==", "minecraft-version"),
+                orderBy("fecha", "desc"),
+                startAfter(lastDoc),
+                limit(pageSize)
+            );
+        }
+
+        const querySnapshot = await getDocs(q);
+        const documents = querySnapshot.docs;
+
+        if (documents.length === 0 && !lastDoc) {
+            listContainer.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No hay versiones de Minecraft disponibles aún.</p>';
+            minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'none';
+        } else if (documents.length === 0) {
+            alert("No hay más versiones de Minecraft disponibles.");
+            minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'none';
+        } else {
+            for (const docSnap of documents) {
+                const contenido = docSnap.data();
+                contenido.id = docSnap.id;
+                if (contenido.versiones && typeof contenido.versiones === 'object') {
+                    for (const [versionName, downloadLink] of Object.entries(contenido.versiones)) {
+                        const downloadItem = createDownloadItem(versionName, downloadLink);
+                        listContainer.appendChild(downloadItem);
+                    }
+                }
+            }
+            lastVisibleDocs['minecraft-version'] = documents[documents.length - 1];
+            minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'inline-block';
+        }
+        minecraftDownloadsSection.classList.add('active');
+        hideLoading();
+      }
+
+      minecraftDownloadsPagination.querySelector('.next-btn').addEventListener('click', () => {
+          loadMinecraftDownloads(lastVisibleDocs['minecraft-version']);
+      });
+
+      function handleCategoryClick(e) {
+        e.preventDefault();
+        const categoria = e.currentTarget.dataset.category;
+        
+        lastVisibleDocs[categoria] = null; 
+
+        document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+        topUsersContainer.style.display = 'none';
+        mainHub.style.display = 'none';
+        
+        if (categoria === 'top') {
+          showTopUsers();
+        } else if (categoria === 'minecraft-downloads') {
+            loadMinecraftDownloads();
+        } else {
+            loadCategoryContent(categoria);
+        }
+      }
+
+      categoryBtns.forEach(btn => {
+        btn.addEventListener('click', handleCategoryClick);
+      });
+
+      function handleBackButtonClick(e) {
+        if (e) e.preventDefault();
+        document.querySelectorAll('.content-section').forEach(section => {
+          section.classList.remove('active');
+        });
+        topUsersContainer.style.display = 'none';
+        mainHub.style.display = 'inline-block';
+        currentCategory = '';
+      }
+      
+      document.querySelectorAll('.back-btn').forEach(btn => {
+        btn.addEventListener('click', handleBackButtonClick);
+      });
+
+      async function createContentCard(contenido) {
+        const versiones = Object.keys(contenido.versiones || {});
+        const primeraVersion = versiones[0];
+        const primerLink = contenido.versiones[primeraVersion];
+        
+        let publisherName = contenido.nombre || "Anónimo";
+        let publisherAvatar = "https://i.imgur.com/gK103rS.png";
+        if (contenido.userId) {
+          const userDoc = await getDoc(doc(db, "users", contenido.userId));
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            publisherName = userData.username;
+            publisherAvatar = userData.avatarURL || publisherAvatar;
+          }
+        }
+
+        const card = document.createElement('div');
+        card.className = 'content-card';
+        card.innerHTML = `
+          <img data-src="${contenido.imagenURL || 'https://i.imgur.com/hUPXXQF.png'}" alt="${contenido.titulo}" class="lazyload-img">
+          <div class="card-body">
+            <h3>${contenido.titulo}</h3>
+            <p>${contenido.descripcion}</p>
+            <p><small>Publicado por: <strong>${publisherName}</strong></small></p>
+            
+            <div class="interaction-buttons">
+                <div class="like-section">
+                    <button class="like-btn" data-content-id="${contenido.id}">❤️</button>
+                    <span class="likes-count">${contenido.likes || 0} likes</span>
+                </div>
+                <div class="favorite-section">
+                    <button class="favorite-btn" data-content-id="${contenido.id}"><i class="far fa-star"></i></button>
+                    <span class="favorites-count">Favorito</span>
+                </div>
+            </div>
+            
+            <select class="version-select">
+              ${versiones.map(v => `<option value="${v}">${v}</option>`).join('')}
+            </select>
+            <a href="${primerLink}" target="_blank" class="download-btn">Descargar</a>
+            
+            <div class="comments-section">
+              <div class="comment-form" data-content-id="${contenido.id}">
+                <input type="text" class="comment-input" placeholder="Añade un comentario...">
+                <button class="comment-submit">Enviar</button>
+              </div>
+              <div class="comments-list" id="comments-${contenido.id}">
+                
+</div>
+            </div>
+          </div>
+        `;
+        
+        const likeBtn = card.querySelector('.like-btn');
+        const likesCount = card.querySelector('.likes-count');
+        const favoriteBtn = card.querySelector('.favorite-btn'); // Botón de favorito
+        
+        // --- Lógica de Likes ---
+        const likedContents = JSON.parse(localStorage.getItem('likedContents') || '{}');
+        if (likedContents[contenido.id]) {
+            likeBtn.classList.add('liked');
+        }
+
+        likeBtn.addEventListener('click', async () => {
+          if (!currentUser) {
+            alert('Debes iniciar sesión para dar "like".');
+            return;
+          }
+
+          if (likedContents[contenido.id]) {
+            alert("Ya le has dado like a este contenido.");
+            return;
+          }
+
+          try {
+            await updateDoc(doc(db, "contenidos", contenido.id), {
+              likes: increment(1)
+            });
+            
+            likeBtn.classList.add('liked');
+            likesCount.textContent = `${(contenido.likes || 0) + 1} likes`;
+            likedContents[contenido.id] = true;
+            localStorage.setItem('likedContents', JSON.stringify(likedContents));
+          } catch (error) {
+            console.error("Error al dar like:", error);
+          }
+        });
+
+        // --- Lógica de Favoritos ---
+        if (currentUser) {
+            const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+            if (userDoc.exists() && userDoc.data().favorites?.includes(contenido.id)) {
+                favoriteBtn.classList.add('favorited');
+                favoriteBtn.innerHTML = '<i class="fas fa-star"></i>'; // Estrella sólida
+            } else {
+                favoriteBtn.innerHTML = '<i class="far fa-star"></i>'; // Estrella vacía
+            }
+        } else {
+            favoriteBtn.innerHTML = '<i class="far fa-star"></i>'; // Estrella vacía si no logueado
+        }
+
+        favoriteBtn.addEventListener('click', async () => {
+            if (!currentUser) {
+                alert('Debes iniciar sesión para añadir a favoritos.');
+                return;
+            }
+
+            const contentId = contenido.id;
+            const userDocRef = doc(db, "users", currentUser.uid);
+
+            try {
+                const userDocSnap = await getDoc(userDocRef);
+                const favorites = userDocSnap.exists() ? (userDocSnap.data().favorites || []) : [];
+
+                if (favorites.includes(contentId)) {
+                    // Quitar de favoritos
+                    await updateDoc(userDocRef, {
+                        favorites: arrayRemove(contentId)
+                    });
+                    favoriteBtn.classList.remove('favorited');
+                    favoriteBtn.innerHTML = '<i class="far fa-star"></i>';
+                    alert('Eliminado de favoritos.');
+                } else {
+                    // Añadir a favoritos
+                    await updateDoc(userDocRef, {
+                        favorites: arrayUnion(contentId)
+                    });
+                    favoriteBtn.classList.add('favorited');
+                    favoriteBtn.innerHTML = '<i class="fas fa-star"></i>';
+                    alert('Añadido a favoritos.');
+                }
+                // Actualizar favoritos en el perfil si está abierto
+                if (userProfile.style.display === 'flex') {
+                    // Recargar los favoritos pasando la lista actualizada
+                    await loadMyFavorites(currentUser.uid, favorites.includes(contentId) ? favorites.filter(id => id !== contentId) : [...favorites, contentId]);
+                }
+            } catch (error) {
+                console.error("Error al gestionar favoritos:", error);
+                alert('Error al gestionar favoritos. Intenta de nuevo.');
+            }
+        });
+
+
+        // --- Lógica de Comentarios Anidados ---
+        const commentInput = card.querySelector('.comment-input');
+        const commentSubmit = card.querySelector('.comment-submit');
+        const commentsList = card.querySelector('.comments-list');
+        const commentForm = card.querySelector('.comment-form'); // Nuevo: para manejar respuestas
+
+        // Función para enviar comentario (puede ser raíz o respuesta)
+        async function submitComment(parentId = null, replyToUser = '') {
+            if (!currentUser) {
+                alert('Debes iniciar sesión para comentar.');
+                return;
+            }
+
+            let commentText = commentInput.value.trim();
+            if (!commentText) return;
+
+            // Si es una respuesta, prepend el nombre de usuario
+            if (replyToUser) {
+                commentText = `@${replyToUser} ${commentText}`;
+            }
+            
+            let authorName = "Anónimo";
+            if (currentUser) {
+                const userData = await getUserData(currentUser.uid);
+                authorName = userData?.username || currentUser.email;
+            }
+
+            try {
+                await addDoc(collection(db, "comentarios"), {
+                    contenidoId: contenido.id,
+                    autor: authorName,
+                    texto: commentText,
+                    fecha: serverTimestamp(),
+                    parentId: parentId // Campo para comentarios anidados
+                });
+                
+                commentInput.value = '';
+                // Quitar placeholder de respuesta si existe
+                if (commentInput.dataset.replyingTo) {
+                    commentInput.placeholder = 'Añade un comentario...';
+                    delete commentInput.dataset.replyingTo;
+                    delete commentInput.dataset.replyingToId;
+                }
+                loadComments(contenido.id, commentsList); // Recargar comentarios
+            } catch (error) {
+                console.error("Error al enviar comentario:", error);
+            }
+        }
+
+        // Listener para el botón de enviar del comentario principal
+        const submitCommentBaseListener = () => submitComment();
+        commentSubmit.addEventListener('click', submitCommentBaseListener);
+
+        loadComments(contenido.id, commentsList); // Cargar comentarios iniciales
+
+
+        const versionSelect = card.querySelector('.version-select');
+        const downloadBtn = card.querySelector('.download-btn');
+        versionSelect.addEventListener('change', () => {
+          const version = versionSelect.value;
+          downloadBtn.href = contenido.versiones[version] || '#';
+        });
+
+        // --- Lógica de Carga Perezosa (Lazy Loading) ---
+        const lazyImage = card.querySelector('.lazyload-img');
+        if ('IntersectionObserver' in window) {
+            let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        let img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazyload-img');
+                        lazyImageObserver.unobserve(img);
+                    }
+                });
+            });
+            lazyImageObserver.observe(lazyImage);
+        } else {
+            // Fallback para navegadores antiguos
+            lazyImage.src = lazyImage.dataset.src;
+            lazyImage.classList.remove('lazyload-img');
+        }
+
+
+        return card;
+      }
+
+      async function loadComments(contentId, container) {
+        const q = query(
+          collection(db, "comentarios"), 
+          where("contenidoId", "==", contentId),
+          orderBy("fecha", "asc") // Ordenar por fecha ascendente para mostrar hilos correctamente
+        );
+        
+        const querySnapshot = await getDocs(q);
+        container.innerHTML = '';
+        
+        if (querySnapshot.empty) {
+            container.innerHTML = '<p style="font-size: 0.8rem; color: var(--text-color-secondary);">Sé el primero en comentar.</p>';
+            return;
+        }
+
+        const comments = [];
+        querySnapshot.forEach((doc) => {
+            comments.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Construir árbol de comentarios para anidarlos
+        const commentMap = new Map();
+        comments.forEach(comment => commentMap.set(comment.id, { ...comment, replies: [] }));
+
+        const rootComments = [];
+        comments.forEach(comment => {
+            if (comment.parentId && commentMap.has(comment.parentId)) {
+                commentMap.get(comment.parentId).replies.push(commentMap.get(comment.id));
+            } else {
+                rootComments.push(commentMap.get(comment.id));
+            }
+        });
+
+        function renderComment(comment, parentElement) {
+            const commentElement = document.createElement('div');
+            commentElement.className = 'comment-item'; // Nuevo contenedor para cada comentario/respuesta
+            commentElement.innerHTML = `
+                <div class="comment">
+                    <span class="comment-author">${comment.autor}</span>
+                    <span class="comment-time">${formatDate(comment.fecha?.toDate())}</span>
+                    <p class="comment-text">${comment.texto}</p>
+                    <div class="comment-actions">
+                        <button class="comment-reply-btn" data-comment-id="${comment.id}" data-author="${comment.autor}">Responder</button>
+                    </div>
+                </div>
+                <div class="comment-replies"></div>
+            `;
+            parentElement.appendChild(commentElement);
+
+            // Listener para el botón de responder
+            commentElement.querySelector('.comment-reply-btn').addEventListener('click', (e) => {
+                const replyingToId = e.target.dataset.commentId;
+                const replyingToAuthor = e.target.dataset.author;
+                const form = e.target.closest('.comments-section').querySelector('.comment-form');
+                const input = form.querySelector('.comment-input');
+                const submitBtn = form.querySelector('.comment-submit');
+
+                input.placeholder = `Respondiendo a ${replyingToAuthor}...`;
+                input.dataset.replyingTo = replyingToAuthor;
+                input.dataset.replyingToId = replyingToId;
+
+                // Para evitar múltiples listeners, eliminamos y volvemos a añadir
+                // el listener del submit para que apunte a la función de respuesta correcta.
+                submitBtn.removeEventListener('click', submitCommentBaseListener); // Remueve el listener base
+                submitBtn.addEventListener('click', function replyListener() {
+                    submitComment(replyingToId, replyingToAuthor);
+                    input.placeholder = 'Añade un comentario...'; // Resetear placeholder
+                    delete input.dataset.replyingTo;
+                    delete input.dataset.replyingToId;
+                    submitBtn.removeEventListener('click', replyListener); // Eliminar este listener específico
+                    submitBtn.addEventListener('click', submitCommentBaseListener); // Volver al listener base
+                });
+                input.focus();
+            });
+
+            const repliesContainer = commentElement.querySelector('.comment-replies');
+            comment.replies.sort((a,b) => a.fecha.toDate() - b.fecha.toDate()).forEach(reply => renderComment(reply, repliesContainer));
+        }
+
+        // Listener base para el botón de enviar del comentario principal.
+        // Se define aquí para poder referenciarlo y eliminarlo/añadirlo.
+        const submitCommentBaseListener = () => submitComment();
+        // Asegurarse de que el listener base se aplique al formulario
+        // Solo la primera vez que se carga el componente o se resetea.
+        // Ya está aplicado en createContentCard, así que aquí lo gestionamos para las respuestas.
+        
+        rootComments.sort((a,b) => a.fecha.toDate() - b.fecha.toDate()).forEach(comment => renderComment(comment, container));
+      }
+      
+      // --- Lógica del Top de Usuarios ---
+      topUsersBtn.addEventListener('click', showTopUsers);
+      closeTopUsersBtn.addEventListener('click', () => {
+        topUsersContainer.style.display = 'none';
+        mainHub.style.display = 'inline-block'; 
+      });
+
+      async function showTopUsers() {
+        showLoading();
+        topUsersList.innerHTML = '';
+        currentCategory = 'top';
+        try {
+          const q = query(
+            collection(db, "users"),
+            orderBy("publicationCount", "desc"),
+            limit(5)
+          );
+          const querySnapshot = await getDocs(q);
+
+          if (querySnapshot.empty) {
+            topUsersList.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No hay usuarios en el top aún.</p>';
+          } else {
+            querySnapshot.forEach(docSnap => {
+              const userData = docSnap.data();
+              if (userData.username) {
+                const userCard = document.createElement('div');
+                userCard.className = 'user-card';
+                userCard.innerHTML = `
+                  <img src="${userData.avatarURL || 'https://i.imgur.com/gK103rS.png'}" alt="Avatar">
+                  <span>${userData.username}</span>
+                  <span class="publication-count">${userData.publicationCount || 0} publicaciones</span>
+                `;
+                topUsersList.appendChild(userCard);
+              }
+            });
+          }
+          mainHub.style.display = 'none';
+          topUsersContainer.style.display = 'flex';
+          hideLoading();
+        } catch (error) {
+          hideLoading();
+          console.error("Error al cargar el top de usuarios:", error);
+          alert("Error al cargar el top de usuarios.");
+        }
+      }
+
+      // --- Funciones de Utilidad ---
+      async function getUserData(uid) {
+        try {
+          const userDoc = await getDoc(doc(db, "users", uid));
+          if (userDoc.exists()) {
+            return userDoc.data();
+          }
+          return null;
+        } catch (error) {
+          console.error("Error al obtener datos de usuario:", error);
+          return null;
+        }
+      }
+
+      function formatDate(date) {
+        if (!date) return '';
+        // Usar un formato más simple si la complejidad es un problema
+        // Podrías mostrar solo la fecha si la hora exacta no es crucial
+        return date.toLocaleString('es-CO', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      }
+
+      function getCategoryName(categoria) {
+        const nombres = {
+          textura: 'Texturas',
+          addon: 'Addons',
+          mod: 'Mods',
+          plantilla: 'Plantillas', // AÑADIDA DE NUEVO
+          skin: 'Skins',
+          shader: 'Shaders',
+          tutorial: 'Tutoriales',
+          top: 'Top', 
+          'minecraft-downloads': 'Descargas de Minecraft',
+          'minecraft-version': 'Descargas de Minecraft'
+        };
+        return nombres[categoria] || categoria;
+      }
+
+      function createDownloadItem(versionName, downloadLink) {
+          const item = document.createElement('div');
+          item.className = 'download-item';
+          item.innerHTML = `
+              <span>Minecraft ${versionName}</span>
+              <a href="${downloadLink}" target="_blank">Descargar</a>
+          `;
+          return item;
+      }
+      
+      mainHub.style.display = 'inline-block';
+    });
+  </script>
+</body>
+</html>
