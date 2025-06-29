@@ -148,33 +148,33 @@
             margin: 1rem 0;
         }
 
-        /* --- MEDIA QUERIES FOR RESPONSIVENESS (IMPROVED) --- */
+        /* --- MEDIA QUERIES PARA RESPONSIVIDAD (MEJORADO) --- */
         @media (max-width: 480px) {
             .grid {
-                grid-template-columns: 1fr; /* Single column on very small screens */
+                grid-template-columns: 1fr; /* Columna única en pantallas muy pequeñas */
                 gap: 0.8rem;
             }
             .hub {
-                width: 95%; /* Adjust width for smaller screens */
+                width: 95%; /* Ajustar ancho para pantallas más pequeñas */
                 padding: 0.8rem;
             }
             .btn, .main-minecraft-btn {
-                font-size: 1rem; /* Smaller font size for buttons */
+                font-size: 1rem; /* Tamaño de fuente más pequeño para los botones */
                 padding: 0.6rem;
             }
             .content-form-container, .auth-form-content, .profile-content, .top-users-content {
-                width: 95%; /* Make pop-ups wider on small screens */
+                width: 95%; /* Hacer las ventanas emergentes más anchas en pantallas pequeñas */
                 padding: 1rem;
             }
             .content-card {
-                margin: 0 auto; /* Center single column cards */
+                margin: 0 auto; /* Centrar tarjetas de una sola columna */
                 max-width: 90%;
             }
         }
 
         @media (min-width: 481px) and (max-width: 768px) {
             .grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* More flexible grid */
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Cuadrícula más flexible */
                 gap: 1rem;
             }
             .hub {
@@ -232,7 +232,7 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            overflow-y: auto; /* Allow scrolling if content is too tall */
+            overflow-y: auto; /* Permitir scroll si el contenido es muy alto */
         }
 
         .content-form-container {
@@ -247,7 +247,7 @@
             max-height: 90vh;
             overflow-y: auto;
             transition: background-color 0.3s;
-            box-sizing: border-box; /* Include padding in width calculation */
+            box-sizing: border-box; /* Incluir padding en el cálculo del ancho */
         }
 
         .content-form-container h3 {
@@ -327,7 +327,7 @@
             overflow: hidden;
             box-shadow: 0 0 10px rgba(255, 51, 102, 0.3);
             transition: background-color 0.3s;
-            position: relative; /* For delete button positioning */
+            position: relative; /* Para posicionar el botón de eliminar */
         }
 
         .content-card img {
@@ -913,7 +913,7 @@
             padding: 10px;
             text-align: center;
             transition: background-color 0.3s;
-            position: relative; /* For delete button positioning */
+            position: relative; /* Para el botón de eliminar */
         }
 
         .my-publication-card img {
@@ -936,7 +936,7 @@
             margin: 5px 0 0;
         }
 
-        .delete-publication-btn {
+        .delete-publication-btn { /* Botón de eliminar en el perfil (para las propias publicaciones) */
             position: absolute;
             top: 5px;
             right: 5px;
@@ -958,6 +958,29 @@
             background: rgba(255, 0, 0, 1);
         }
 
+        /* NUEVO: Estilos para el botón de eliminar en las tarjetas de contenido general (visible para el admin) */
+        .delete-content-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 0, 0, 0.7); /* Rojo semitransparente */
+            color: white;
+            border: none;
+            border-radius: 50%; /* Circular */
+            width: 25px;
+            height: 25px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.2s;
+            z-index: 10; /* Asegura que esté por encima de otros elementos */
+        }
+
+        .delete-content-btn:hover {
+            background: rgba(255, 0, 0, 1); /* Rojo sólido al pasar el ratón */
+        }
 
         /* Estilos para la sección de descargas de Minecraft */
         .minecraft-downloads-list {
@@ -1066,8 +1089,8 @@
             z-index: 9999;
             color: white;
             font-size: 1.2rem;
-            opacity: 0; /* Start hidden */
-            visibility: hidden; /* Start hidden for accessibility */
+            opacity: 0; /* Inicia oculto */
+            visibility: hidden; /* Inicia oculto para accesibilidad */
             transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
         }
 
@@ -1319,7 +1342,8 @@
             setDoc,
             arrayUnion,
             arrayRemove,
-            deleteDoc // Imported for deleting documents
+            deleteDoc, // Imported for deleting documents
+            startAfter // Imported for pagination
         } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
         import {
             getAuth,
@@ -1334,7 +1358,7 @@
             ref,
             uploadBytes,
             getDownloadURL,
-            deleteObject // Imported for deleting storage objects
+            deleteObject // Imported for deleting storage objects (not used with ImgBB without hash)
         } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
 
         // Configuración de Firebase - ¡REEMPLAZA CON TUS PROPIAS CREDENCIALES!
@@ -1489,7 +1513,10 @@
             onAuthStateChanged(auth, async (user) => {
                 currentUser = user;
                 if (user) {
-                    console.log("Usuario logueado:", user.email);
+                    console.log("Usuario logueado UID:", currentUser.uid); // Debug
+                    console.log("UID de Administrador configurado:", ADMIN_UID); // Debug
+                    console.log("¿Es el usuario admin?", currentUser.uid === ADMIN_UID); // Debug
+
                     const userData = await getUserData(user.uid);
                     userNameInput.value = userData?.username || user.email;
                     userNameInput.readOnly = true;
@@ -1532,6 +1559,14 @@
                     contentTypeSelect.querySelector('option[value="minecraft-version"]').style.display = 'none';
                     if (contentTypeSelect.value === 'minecraft-version') {
                         contentTypeSelect.value = '';
+                    }
+                }
+                // Si ya hay una categoría activa, recárgala para mostrar/ocultar botones de eliminar admin
+                if (currentCategory && document.getElementById(`${currentCategory}-section`) && document.getElementById(`${currentCategory}-section`).classList.contains('active')) {
+                    if (currentCategory === 'minecraft-downloads') {
+                        loadMinecraftDownloads(null); // Recargar desde el inicio
+                    } else if (currentCategory !== 'top') {
+                        loadCategoryContent(currentCategory, null); // Recargar desde el inicio
                     }
                 }
             });
@@ -1856,15 +1891,9 @@
                             if (confirm('¿Estás seguro de que quieres eliminar esta publicación? Esta acción es irreversible.')) {
                                 showLoading();
                                 try {
-                                    // Delete image from storage if it exists
-                                    if (imageUrl && imageUrl.startsWith('https://i.ibb.co/')) { // Only delete if hosted on ImgBB (adjust if you use Firebase Storage)
-                                        // ImgBB doesn't have a direct delete API via URL.
-                                        // If you uploaded to Firebase Storage, you'd use deleteObject(ref(storage, imagePath)).
-                                        // For ImgBB, once uploaded via key, deleting requires the delete hash.
-                                        // Since we don't store the delete hash, we'll just remove the Firestore document.
-                                        // If this were Firebase Storage, the path would be stored, e.g., "images/filename.jpg"
-                                        // const imageRef = ref(storage, imagePath);
-                                        // await deleteObject(imageRef);
+                                    // If you were using Firebase Storage, you'd use deleteObject(ref(storage, imagePath)).
+                                    // For ImgBB, once uploaded via key, deleting requires the delete hash which is not stored here.
+                                    if (imageUrl && imageUrl.startsWith('https://i.ibb.co/')) {
                                         console.warn("No se puede eliminar la imagen de ImgBB directamente sin el hash de eliminación. Se eliminará solo el documento de Firestore.");
                                     }
 
@@ -1882,9 +1911,9 @@
                                     // Optionally, refresh the main content view if this content was visible there
                                     if (currentCategory && document.getElementById(`${currentCategory}-section`).classList.contains('active')) {
                                         if (currentCategory === 'minecraft-downloads') {
-                                            loadMinecraftDownloads();
+                                            loadMinecraftDownloads(null);
                                         } else if (currentCategory !== 'top') {
-                                            loadCategoryContent(currentCategory);
+                                            loadCategoryContent(currentCategory, null);
                                         }
                                     }
                                 } catch (error) {
@@ -1907,8 +1936,6 @@
                 }
 
                 try {
-                    // La forma correcta de cargar por ID del documento es con getDoc(doc(db, "collection", id)).
-                    // Hacemos un getDoc por cada ID en favoriteIds.
                     const favoriteContentPromises = favoriteIds.map(id => getDoc(doc(db, "contenidos", id)));
                     const favoriteContentSnaps = await Promise.all(favoriteContentPromises);
 
@@ -2085,9 +2112,9 @@
                     if (activeSection) {
                         const activeCategory = activeSection.id.replace('-section', '');
                         if (activeCategory === 'minecraft-downloads') {
-                            loadMinecraftDownloads();
+                            loadMinecraftDownloads(null); // Recargar desde el inicio
                         } else if (activeCategory !== 'top') {
-                            loadCategoryContent(activeCategory);
+                            loadCategoryContent(activeCategory, null); // Recargar desde el inicio
                         }
                     }
                     loadUserProfile(currentUser.uid);
@@ -2243,7 +2270,7 @@
                         contenido.id = docSnap.id;
                         if (contenido.versiones && typeof contenido.versiones === 'object') {
                             for (const [versionName, downloadLink] of Object.entries(contenido.versiones)) {
-                                const downloadItem = createDownloadItem(versionName, downloadLink);
+                                const downloadItem = createDownloadItem(versionName, downloadLink, docSnap.id); // Pasamos el ID del doc
                                 listContainer.appendChild(downloadItem);
                             }
                         }
@@ -2312,12 +2339,18 @@
                     }
                 }
 
+                // NUEVO: Lógica para mostrar el botón de eliminar para el administrador
+                let deleteButtonHtml = '';
+                if (currentUser && currentUser.uid === ADMIN_UID) {
+                    deleteButtonHtml = `<button class="delete-content-btn" data-id="${contenido.id}" data-image-url="${contenido.imagenURL}">🗑️</button>`;
+                }
+
                 const card = document.createElement('div');
                 card.className = 'content-card';
                 card.innerHTML = `
                     <img data-src="${contenido.imagenURL || 'https://i.imgur.com/hUPXXQF.png'}" alt="${contenido.titulo}" class="lazyload-img">
                     <div class="card-body">
-                        <h3>${contenido.titulo}</h3>
+                        ${deleteButtonHtml} <h3>${contenido.titulo}</h3>
                         <p>${contenido.descripcion}</p>
                         <p><small>Publicado por: <strong>${publisherName}</strong></small></p>
 
@@ -2348,6 +2381,49 @@
                         </div>
                     </div>
                 `;
+
+                // NUEVO: Event Listener para el botón de eliminar de administrador
+                const deleteButton = card.querySelector('.delete-content-btn');
+                if (deleteButton) { // Solo si el botón existe (porque el admin está logueado)
+                    deleteButton.addEventListener('click', async (e) => {
+                        const contentId = e.target.dataset.id;
+                        const imageUrl = e.target.dataset.imageUrl;
+
+                        if (confirm('¿Estás seguro de que quieres eliminar esta publicación? Esta acción es irreversible y afectará a todos los usuarios.')) {
+                            showLoading();
+                            try {
+                                if (imageUrl && imageUrl.startsWith('https://i.ibb.co/')) {
+                                    console.warn("No se puede eliminar la imagen de ImgBB directamente sin el hash de eliminación. Se eliminará solo el documento de Firestore.");
+                                }
+
+                                await deleteDoc(doc(db, "contenidos", contentId));
+
+                                // Obtener el userId del contenido original para decrementar su contador
+                                const originalContentDoc = await getDoc(doc(db, "contenidos", contentId));
+                                if (originalContentDoc.exists() && originalContentDoc.data().userId) {
+                                    await updateDoc(doc(db, "users", originalContentDoc.data().userId), {
+                                        publicationCount: increment(-1)
+                                    });
+                                }
+
+                                hideLoading();
+                                alert('Publicación eliminada correctamente por el administrador.');
+                                // Recargar la categoría actual para reflejar la eliminación
+                                if (currentCategory && document.getElementById(`${currentCategory}-section`) && document.getElementById(`${currentCategory}-section`).classList.contains('active')) {
+                                    if (currentCategory === 'minecraft-downloads') {
+                                        loadMinecraftDownloads(null); // Recarga desde el principio
+                                    } else if (currentCategory !== 'top') {
+                                        loadCategoryContent(currentCategory, null); // Recarga desde el principio
+                                    }
+                                }
+                            } catch (error) {
+                                hideLoading();
+                                console.error("Error al eliminar publicación como admin:", error);
+                                alert('Error al eliminar la publicación como administrador.');
+                            }
+                        }
+                    });
+                }
 
                 const likeBtn = card.querySelector('.like-btn');
                 const likesCount = card.querySelector('.likes-count');
@@ -2429,7 +2505,6 @@
                         }
                         // Actualizar favoritos en el perfil si está abierto
                         if (userProfile.style.display === 'flex') {
-                            // Recargar los favoritos pasando la lista actualizada
                             await loadMyFavorites(currentUser.uid, favorites.includes(contentId) ? favorites.filter(id => id !== contentId) : [...favorites, contentId]);
                         }
                     } catch (error) {
@@ -2490,6 +2565,7 @@
                 }
 
                 // Listener para el botón de enviar del comentario principal
+                // Se define aquí para poder referenciarlo y eliminarlo/añadirlo.
                 const submitCommentBaseListener = () => submitComment();
                 commentSubmit.addEventListener('click', submitCommentBaseListener);
 
@@ -2613,11 +2689,7 @@
                 }
 
                 // Listener base para el botón de enviar del comentario principal.
-                // Se define aquí para poder referenciarlo y eliminarlo/añadirlo.
                 const submitCommentBaseListener = () => submitComment();
-                // Asegurarse de que el listener base se aplique al formulario
-                // Solo la primera vez que se carga el componente o se resetea.
-                // Ya está aplicado en createContentCard, así que aquí lo gestionamos para las respuestas.
 
                 rootComments.sort((a, b) => a.fecha.toDate() - b.fecha.toDate()).forEach(comment => renderComment(comment, container));
             }
@@ -2709,13 +2781,50 @@
                 return nombres[categoria] || categoria;
             }
 
-            function createDownloadItem(versionName, downloadLink) {
+            function createDownloadItem(versionName, downloadLink, contentId) {
                 const item = document.createElement('div');
                 item.className = 'download-item';
+                // NUEVO: Botón de eliminar para admin en la lista de descargas de Minecraft
+                let deleteBtnHtml = '';
+                if (currentUser && currentUser.uid === ADMIN_UID) {
+                     deleteBtnHtml = `<button class="delete-content-btn" data-id="${contentId}" data-image-url="">🗑️</button>`; // imageURL vacía, ya que no se muestra img en esta vista
+                }
+
                 item.innerHTML = `
                     <span>Minecraft ${versionName}</span>
-                    <a href="${downloadLink}" target="_blank">Descargar</a>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        ${deleteBtnHtml}
+                        <a href="${downloadLink}" target="_blank">Descargar</a>
+                    </div>
                 `;
+
+                // Añadir event listener para el botón de eliminar si existe
+                const deleteButton = item.querySelector('.delete-content-btn');
+                if (deleteButton) {
+                    deleteButton.addEventListener('click', async (e) => {
+                        const idToDelete = e.target.dataset.id;
+                        if (confirm('¿Estás seguro de que quieres eliminar esta versión de Minecraft? Esto eliminará la publicación completa.')) {
+                            showLoading();
+                            try {
+                                await deleteDoc(doc(db, "contenidos", idToDelete));
+                                // Opcional: decrementar contador del autor si es necesario
+                                const originalContentDoc = await getDoc(doc(db, "contenidos", idToDelete));
+                                if (originalContentDoc.exists() && originalContentDoc.data().userId) {
+                                    await updateDoc(doc(db, "users", originalContentDoc.data().userId), {
+                                        publicationCount: increment(-1)
+                                    });
+                                }
+                                hideLoading();
+                                alert('Versión de Minecraft eliminada correctamente.');
+                                loadMinecraftDownloads(null); // Recargar la lista de descargas
+                            } catch (error) {
+                                hideLoading();
+                                console.error("Error al eliminar versión de Minecraft como admin:", error);
+                                alert('Error al eliminar la versión de Minecraft.');
+                            }
+                        }
+                    });
+                }
                 return item;
             }
 
