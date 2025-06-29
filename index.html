@@ -1384,8 +1384,7 @@
         let currentCategory = '';
         // --- ADMIN USER ID ---
         // IMPORTANT: Replace with the actual UID of your admin account.
-        const ADMIN_UID = "W3Q0SYQQ7sVuygy4w2bq9nur95t1"; 
-
+        const ADMIN_UID = "W3Q0SYQQ7sVuygy4w2bq9nur95t1"; // Este UID ya está configurado.
 
         // --- Variables para Paginación ---
         const pageSize = 12; // Número de publicaciones por página
@@ -1863,7 +1862,7 @@
                     console.error("Error al cargar perfil de usuario:", error);
                     alert("Error al cargar el perfil. Por favor, intenta de nuevo.");
                 }
-            }
+            });
 
             async function loadMyPublications(uid) {
                 myPublicationsGrid.innerHTML = '';
@@ -1907,15 +1906,7 @@
 
                                     hideLoading();
                                     alert('Publicación eliminada correctamente.');
-                                    loadMyPublications(uid); // Reload publications
-                                    // Optionally, refresh the main content view if this content was visible there
-                                    if (currentCategory && document.getElementById(`${currentCategory}-section`).classList.contains('active')) {
-                                        if (currentCategory === 'minecraft-downloads') {
-                                            loadMinecraftDownloads(null);
-                                        } else if (currentCategory !== 'top') {
-                                            loadCategoryContent(currentCategory, null);
-                                        }
-                                    }
+                                    // No recargar aquí categorías generales ya que este botón es del perfil
                                 } catch (error) {
                                     hideLoading();
                                     console.error("Error al eliminar publicación:", error);
@@ -1962,7 +1953,7 @@
                     console.error("Error al cargar favoritos:", error);
                     myFavoritesGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">Error al cargar favoritos.</p>';
                 }
-            }
+            });
 
 
             // --- Lógica del Hub y Publicación ---
@@ -1994,6 +1985,18 @@
 
             publishForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
+
+                // Depuración: logs iniciales
+                console.log("--- INTENTO DE PUBLICACIÓN ---");
+                console.log("currentUser (desde onAuthStateChanged):", currentUser);
+                if (auth.currentUser) {
+                    console.log("auth.currentUser (directo):", auth.currentUser);
+                    console.log("UID del usuario logueado (auth.currentUser.uid):", auth.currentUser.uid);
+                } else {
+                    console.log("¡ADVERTENCIA! auth.currentUser es NULL. No hay usuario logueado visible para Firebase Auth.");
+                }
+                console.log("ADMIN_UID configurado en el código:", ADMIN_UID);
+
 
                 if (!currentUser) {
                     alert('Debes iniciar sesión para publicar contenido.');
@@ -2069,14 +2072,17 @@
                     });
 
                     const dataImgBB = await res.json();
+                    console.log("Respuesta completa de ImgBB:", dataImgBB); // Log respuesta ImgBB
                     if (!dataImgBB.data || !dataImgBB.data.url) {
                         throw new Error("Error al subir imagen a ImgBB: " + (dataImgBB.error?.message || "Error desconocido"));
                     }
                     const imagenURL = dataImgBB.data.url;
+                    console.log("URL de imagen de ImgBB obtenida:", imagenURL); // Log URL ImgBB
 
-                    await addDoc(collection(db, "contenidos"), {
+                    // Depuración: Datos que se enviarán a Firestore
+                    const dataToSend = {
                         nombre: userName,
-                        userId: currentUser.uid,
+                        userId: currentUser ? currentUser.uid : "UID_DESCONOCIDO",
                         titulo: contentTitle,
                         descripcion: contentDescription,
                         tipo: contentType,
@@ -2085,7 +2091,10 @@
                         imagenURL: imagenURL,
                         vistas: 0,
                         likes: 0
-                    });
+                    };
+                    console.log("Datos que se enviarán a Firestore:", dataToSend); // Log datos finales
+
+                    await addDoc(collection(db, "contenidos"), dataToSend); // Usar dataToSend
 
                     await updateDoc(doc(db, "users", currentUser.uid), {
                         publicationCount: increment(1)
@@ -2112,9 +2121,9 @@
                     if (activeSection) {
                         const activeCategory = activeSection.id.replace('-section', '');
                         if (activeCategory === 'minecraft-downloads') {
-                            loadMinecraftDownloads(null); // Recargar desde el inicio
+                            loadMinecraftDownloads(null);
                         } else if (activeCategory !== 'top') {
-                            loadCategoryContent(activeCategory, null); // Recargar desde el inicio
+                            loadCategoryContent(activeCategory, null);
                         }
                     }
                     loadUserProfile(currentUser.uid);
@@ -2339,7 +2348,7 @@
                     }
                 }
 
-                // NUEVO: Lógica para mostrar el botón de eliminar para el administrador
+                // Lógica para mostrar el botón de eliminar para el administrador
                 let deleteButtonHtml = '';
                 if (currentUser && currentUser.uid === ADMIN_UID) {
                     deleteButtonHtml = `<button class="delete-content-btn" data-id="${contenido.id}" data-image-url="${contenido.imagenURL}">🗑️</button>`;
@@ -2382,7 +2391,7 @@
                     </div>
                 `;
 
-                // NUEVO: Event Listener para el botón de eliminar de administrador
+                // Event Listener para el botón de eliminar de administrador
                 const deleteButton = card.querySelector('.delete-content-btn');
                 if (deleteButton) { // Solo si el botón existe (porque el admin está logueado)
                     deleteButton.addEventListener('click', async (e) => {
@@ -2411,9 +2420,9 @@
                                 // Recargar la categoría actual para reflejar la eliminación
                                 if (currentCategory && document.getElementById(`${currentCategory}-section`) && document.getElementById(`${currentCategory}-section`).classList.contains('active')) {
                                     if (currentCategory === 'minecraft-downloads') {
-                                        loadMinecraftDownloads(null); // Recarga desde el principio
+                                        loadMinecraftDownloads(null);
                                     } else if (currentCategory !== 'top') {
-                                        loadCategoryContent(currentCategory, null); // Recarga desde el principio
+                                        loadCategoryContent(currentCategory, null);
                                     }
                                 }
                             } catch (error) {
