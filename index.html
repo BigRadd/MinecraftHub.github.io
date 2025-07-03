@@ -26,9 +26,6 @@
             --comment-text: #ff8c66; /* Texto de comentarios */
             --toggle-password-color: #ff8c66;
             --user-card-bg: #260009; /* Fondo de tarjeta de usuario en Top */
-            --shop-item-bg: #260009;
-            --shop-item-border: #4d0013;
-            --currency-color: gold;
         }
 
         /* Tema Claro */
@@ -51,9 +48,6 @@
             --comment-text: #555555;
             --toggle-password-color: #777777;
             --user-card-bg: #e0e0e0;
-            --shop-item-bg: #e0e0e0;
-            --shop-item-border: #cccccc;
-            --currency-color: #DAA520; /* Darker gold for light mode */
         }
 
         body {
@@ -67,56 +61,12 @@
 
         .profile {
             padding: 2rem 0;
-            position: relative; /* Para el marco y banner principal */
         }
 
-        /* Contenedor para el avatar y el marco */
-        .avatar-frame-container {
-            position: relative;
-            width: 80px; /* Igual que el ancho del avatar */
-            height: 80px; /* Igual que el alto del avatar */
-            margin: 0 auto 10px auto; /* Centrar y añadir espacio abajo */
-            z-index: 2; /* Para que esté sobre el banner */
-        }
-
-        .avatar-frame-container img.profile-avatar-img {
-            width: 100%;
-            height: 100%;
+        .profile img {
+            width: 80px;
             border-radius: 50%;
-            object-fit: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            box-shadow: 0 0 10px var(--highlight-color); /* Sombra base */
-        }
-
-        .avatar-frame-container .profile-frame {
-            position: absolute;
-            top: -10px; /* Ajusta según el diseño del marco */
-            left: -10px; /* Ajusta según el diseño del marco */
-            width: calc(100% + 20px); /* Ajusta según el diseño del marco */
-            height: calc(100% + 20px); /* Ajusta según el diseño del marco */
-            border-radius: 50%; /* Si el marco es circular */
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-            z-index: 3; /* Asegura que el marco esté por encima del avatar */
-            pointer-events: none; /* Permite clics a través del marco al avatar */
-        }
-        
-        /* Contenedor principal del banner en el hub */
-        .profile-banner {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 120px; /* Altura de tu banner */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            z-index: 1; /* Detrás del avatar y el texto */
-            pointer-events: none;
+            box-shadow: 0 0 10px var(--highlight-color);
         }
 
         .logo-text {
@@ -127,8 +77,6 @@
             background-clip: text;
             animation: shine 3s linear infinite;
             display: inline-block;
-            position: relative; /* Para que quede sobre el banner */
-            z-index: 2;
         }
 
         @keyframes shine {
@@ -141,32 +89,10 @@
             }
         }
 
-        .profile h1, .profile p {
-            position: relative; /* Para que quede sobre el banner */
-            z-index: 2;
-        }
-
         .profile p {
             margin: 0.3rem;
             color: var(--highlight-color);
             font-weight: bold;
-        }
-        
-        .new-content-count {
-            font-size: 0.9rem;
-            color: var(--text-color-secondary);
-            margin-top: 5px;
-        }
-        
-        /* Estilo para el eslogan principal */
-        #mainProfileSlogan {
-            display: block;
-            margin-top: 5px;
-            font-size: 1.1rem;
-            color: var(--text-color-secondary);
-            font-style: italic;
-            position: relative;
-            z-index: 2;
         }
 
         .socials i {
@@ -236,16 +162,13 @@
                 font-size: 1rem; /* Tamaño de fuente más pequeño para los botones */
                 padding: 0.6rem;
             }
-            .content-form-container, .auth-form-content, .profile-content, .top-users-content, .shop-container, .view-profile-container {
+            .content-form-container, .auth-form-content, .profile-content, .top-users-content {
                 width: 95%; /* Hacer las ventanas emergentes más anchas en pantallas pequeñas */
                 padding: 1rem;
             }
             .content-card {
                 margin: 0 auto; /* Centrar tarjetas de una sola columna */
                 max-width: 90%;
-            }
-            .profile-banner { /* Ajustar altura para móvil */
-                height: 100px; 
             }
         }
 
@@ -405,14 +328,7 @@
             box-shadow: 0 0 10px rgba(255, 51, 102, 0.3);
             transition: background-color 0.3s;
             position: relative; /* Para posicionar el botón de eliminar */
-            cursor: pointer; /* Para indicar que es clickeable para ver perfil */
         }
-        
-        .content-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(255, 51, 102, 0.5);
-        }
-
 
         .content-card img {
             width: 100%;
@@ -783,27 +699,6 @@
         .theme-toggle-btn:hover {
             background: var(--hover-highlight-color);
         }
-        
-        /* Moneda del usuario */
-        .currency-display {
-            position: fixed;
-            top: 80px; /* Debajo del botón de perfil */
-            left: 20px;
-            background-color: var(--bg-hub);
-            color: var(--currency-color);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 998;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .currency-display i {
-            color: var(--currency-color);
-        }
 
         /* Perfil de Usuario */
         .user-profile {
@@ -843,60 +738,6 @@
             border: 4px solid var(--highlight-color);
             margin-bottom: 1rem;
         }
-        
-        /* Contenedor para el avatar y el marco en el perfil */
-        .profile-avatar-display-container {
-            position: relative;
-            width: 100px; /* Tamaño base del avatar */
-            height: 100px;
-            margin: 0 auto 1rem auto;
-        }
-
-        .profile-avatar-display-container .profile-avatar-img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--highlight-color);
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-
-        .profile-avatar-display-container .profile-frame-display {
-            position: absolute;
-            top: -15px; /* Ajustar para que el marco sea visible alrededor del avatar */
-            left: -15px;
-            width: calc(100% + 30px);
-            height: calc(100% + 30px);
-            border-radius: 50%;
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center;
-            z-index: 2; /* Para que el marco se muestre sobre el avatar */
-        }
-        
-        /* Contenedor para el banner dentro del perfil */
-        .user-equipped-banner {
-            width: 100%;
-            height: 150px; /* Altura de los banners del perfil */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        
-        /* Estilo para el eslogan dentro del perfil */
-        .user-equipped-slogan {
-            font-size: 1.1rem;
-            color: var(--text-color-secondary);
-            font-style: italic;
-            margin-bottom: 15px;
-        }
-
 
         .profile-content h3 {
             color: var(--highlight-color);
@@ -925,18 +766,13 @@
         }
 
         .profile-content .close-btn,
-        .auth-form-content .close-btn,
-        .shop-container .close-btn,
-        .view-profile-container .close-btn,
-        .content-form-overlay .close-btn, /* Asegurar que la X del formulario sea clicable */
-        .top-users-container .close-btn { /* Asegurar que la X del top sea clicable */
+        .auth-form-content .close-btn {
             position: absolute;
             top: 10px;
             right: 15px;
             font-size: 2rem;
             color: var(--highlight-color);
             cursor: pointer;
-            z-index: 1000; /* Alto z-index para asegurar que sea clicable */
         }
 
         .profile-content .logout-btn {
@@ -953,7 +789,7 @@
         }
 
         /* Mis Favoritos en el perfil */
-        .my-favorites-grid, .my-publications-grid {
+        .my-favorites-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 15px;
@@ -963,7 +799,7 @@
             color: var(--text-color-primary);
         }
 
-        .my-favorite-card, .my-publication-card {
+        .my-favorite-card {
             background: var(--user-card-bg);
             border-radius: 8px;
             overflow: hidden;
@@ -971,10 +807,9 @@
             padding: 10px;
             text-align: center;
             transition: background-color 0.3s;
-            position: relative;
         }
 
-        .my-favorite-card img, .my-publication-card img {
+        .my-favorite-card img {
             width: 80px;
             height: 80px;
             object-fit: cover;
@@ -982,13 +817,13 @@
             margin-bottom: 5px;
         }
 
-        .my-favorite-card h4, .my-publication-card h4 {
+        .my-favorite-card h4 {
             font-size: 0.9rem;
             margin: 0;
             color: var(--highlight-color);
         }
 
-        .my-favorite-card p, .my-publication-card p {
+        .my-favorite-card p {
             font-size: 0.7rem;
             color: var(--text-color-secondary);
             margin: 5px 0 0;
@@ -1040,11 +875,6 @@
             align-items: center;
             justify-content: space-between;
             transition: background-color 0.3s;
-            cursor: pointer; /* Para indicar que es clickeable para ver perfil */
-        }
-        .user-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(255, 51, 102, 0.3);
         }
 
         .user-card img {
@@ -1063,6 +893,47 @@
         .user-card .publication-count {
             font-weight: bold;
             color: var(--comment-text);
+        }
+
+        /* Mis publicaciones en el perfil */
+        .my-publications-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+            border-top: 1px solid var(--border-btn);
+            padding-top: 20px;
+        }
+
+        .my-publication-card {
+            background: var(--user-card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 5px rgba(255, 51, 102, 0.2);
+            padding: 10px;
+            text-align: center;
+            transition: background-color 0.3s;
+            position: relative; /* Para el botón de eliminar */
+        }
+
+        .my-publication-card img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        .my-publication-card h4 {
+            font-size: 0.9rem;
+            margin: 0;
+            color: var(--highlight-color);
+        }
+
+        .my-publication-card p {
+            font-size: 0.7rem;
+            color: var(--text-color-secondary);
+            margin: 5px 0 0;
         }
 
         .delete-publication-btn { /* Botón de eliminar en el perfil (para las propias publicaciones) */
@@ -1247,293 +1118,18 @@
                 transform: rotate(360deg);
             }
         }
-        
-        /* Tienda */
-        .shop-container {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-        .shop-content {
-            background: var(--auth-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 600px;
-            color: var(--text-color-primary);
-            text-align: center;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-            transition: background-color 0.3s;
-            box-sizing: border-box;
-        }
-
-        .shop-content h3 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: var(--highlight-color);
-        }
-
-        .shop-items-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .shop-item-card {
-            background: var(--shop-item-bg);
-            border: 1px solid var(--shop-item-border);
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
-            position: relative;
-        }
-
-        .shop-item-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-        }
-
-        .shop-item-card.purchased {
-            opacity: 0.7;
-            cursor: default;
-            border-color: green;
-        }
-
-        .shop-item-card img {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 50%;
-            margin-bottom: 5px;
-            border: 2px solid transparent;
-        }
-        
-        /* Estilos para el marco en la tienda */
-        .shop-item-card.frame-item img {
-            border-radius: 0; /* Los marcos no son circulares */
-            width: 100%; /* Ajustar para previsualizar el marco */
-            height: 70px; /* Altura para el preview */
-            object-fit: contain;
-            background-color: transparent; /* Asegurar fondo transparente para el marco */
-        }
-
-        /* Estilos para banner en la tienda */
-        .shop-item-card.banner-item img {
-            border-radius: 5px;
-            width: 100%;
-            height: 70px;
-            object-fit: cover;
-        }
-
-        /* Estilos para slogan en la tienda */
-        .shop-item-card.slogan-item img {
-            display: none; /* Los eslóganes no tienen imagen */
-        }
-        .shop-item-card.slogan-item h4 {
-            min-height: 70px; /* Para mantener la altura de la tarjeta */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            color: var(--text-color-primary);
-            text-align: center;
-        }
-
-        .shop-item-card h4 {
-            font-size: 0.9rem;
-            margin: 5px 0;
-            color: var(--text-color-primary);
-        }
-
-        .shop-item-card p {
-            font-size: 0.8rem;
-            color: var(--currency-color);
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-        }
-        
-        .shop-item-card .purchased-tag {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background-color: green;
-            color: white;
-            font-size: 0.7rem;
-            padding: 3px 6px;
-            border-radius: 5px;
-            display: none;
-        }
-        .shop-item-card.purchased .purchased-tag {
-            display: block;
-        }
-        
-        /* Ver Perfil de Otro Usuario */
-        .view-profile-container {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 1002; /* Más alto que el perfil propio */
-            overflow-y: auto;
-        }
-
-        .view-profile-content {
-            background: var(--auth-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 600px;
-            color: var(--text-color-primary);
-            text-align: center;
-            position: relative;
-            max-height: 90vh;
-            overflow-y: auto;
-            transition: background-color 0.3s;
-            box-sizing: border-box;
-        }
-        
-        /* Banner y eslogan para la vista de perfil de otro usuario */
-        .view-profile-content .user-equipped-banner {
-            width: 100%;
-            height: 150px;
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-        }
-        .view-profile-content .user-equipped-slogan {
-            font-size: 1.1rem;
-            color: var(--text-color-secondary);
-            font-style: italic;
-            margin-bottom: 15px;
-        }
-
-        .view-profile-content .profile-avatar-display-container {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 1rem;
-        }
-
-        .view-profile-content h3 {
-            color: var(--highlight-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .view-profile-content p {
-            color: var(--text-color-secondary);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .view-profile-content .profile-stats {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-btn);
-        }
-
-        .view-profile-content .profile-stat-item {
-            display: inline-block;
-            margin: 0 15px;
-        }
-        
-        .view-profile-content .profile-stat-item strong {
-            display: block;
-            font-size: 1.5rem;
-            color: var(--highlight-color);
-        }
-        
-        .view-profile-content .profile-stat-item span {
-            font-size: 0.8rem;
-            color: var(--text-color-secondary);
-        }
-        
-        .view-profile-content .profile-publications-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-            margin-top: 20px;
-            border-top: 1px solid var(--border-btn);
-            padding-top: 20px;
-        }
-        
-        .view-profile-content .profile-publication-card {
-            background: var(--user-card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 0 5px rgba(255, 51, 102, 0.1);
-            padding: 5px;
-            text-align: center;
-            cursor: pointer;
-        }
-        
-        .view-profile-content .profile-publication-card img {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 5px;
-            margin-bottom: 3px;
-        }
-        
-        .view-profile-content .profile-publication-card h4 {
-            font-size: 0.8rem;
-            margin: 0;
-            color: var(--highlight-color);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .view-profile-content .profile-publication-card p {
-            font-size: 0.6rem;
-            margin: 0;
-            color: var(--text-color-secondary);
-        }
-
     </style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8717206316250466"
-        crossorigin="anonymous"></script>
+     crossorigin="anonymous"></script>
 </head>
 <body>
 
     <button class="profile-btn" id="profileBtn"><i class="fas fa-user"></i></button>
     <button class="theme-toggle-btn" id="themeToggleBtn"><i class="fas fa-sun"></i></button>
-    <div class="currency-display" id="currencyDisplay" style="display: none;">
-        <i class="fas fa-coins"></i> <span id="userCoins">0</span>
-    </div>
-    
     <div class="profile">
-        <div class="profile-banner" id="mainProfileBanner"></div>
-        <div class="avatar-frame-container">
-            <img src="https://i.pinimg.com/736x/2d/b0/1d/2db01d6e21cba969c8363d2aa473c813.jpg" alt="Logo de Yasho" class="profile-avatar-img" id="mainProfileAvatar">
-            <div class="profile-frame" id="mainProfileFrame"></div>
-        </div>
+        <img src="https://i.pinimg.com/736x/2d/b0/1d/2db01d6e21cba969c8363d2aa473c813.jpg" alt="Logo de Yasho">
         <h1><span class="logo-text">Minecraft Hub</span></h1>
-        <p id="mainProfileSlogan"></p> <p>⛩️ raddcraft⛩️</p>
-        <p class="new-content-count" id="newContentCount"></p>
+        <p>⛩️ raddcraft⛩️</p>
         <div class="socials">
             <a href="https://whatsapp.com/channel/0029VayiemvJuyAE73jT4P0Q" target="_blank"><i
                     class="fab fa-whatsapp"></i></a>
@@ -1556,8 +1152,6 @@
             <a class="btn category-btn" data-category="shader"><i class="fas fa-sun"></i> Shaders</a>
             <a class="btn category-btn" data-category="tutorial"><i class="fas fa-graduation-cap"></i> Tutoriales</a>
             <a class="btn category-btn" data-category="top" id="topUsersBtn"><i class="fas fa-crown"></i> Top</a>
-            <a class="btn category-btn" data-category="trends"><i class="fas fa-fire"></i> Tendencias</a>
-            <a class="btn" id="shopBtn"><i class="fas fa-store"></i> Tienda</a>
 
         </div>
         <a class="publish-content-btn" id="publishContentBtn" style="display: none;">⬇️ Publicar Contenido</a>
@@ -1655,15 +1249,11 @@
     <div class="user-profile" id="userProfile">
         <div class="profile-content">
             <span class="close-btn" id="closeProfileBtn">×</span>
-            
-            <div class="user-equipped-banner" id="profileEquippedBanner"></div> <div class="profile-avatar-display-container">
-                <img src="https://i.imgur.com/gK103rS.png" alt="Avatar de Usuario" class="profile-avatar-img" id="profileAvatar">
-                <div class="profile-frame-display" id="profileFrameDisplay"></div>
-            </div>
+            <img src="https://i.imgur.com/gK103rS.png" alt="Avatar de Usuario" class="avatar-display" id="profileAvatar">
             <h3 id="profileUsername">Nombre de Usuario</h3>
-            <p id="profileCoinsDisplay" style="color:var(--currency-color); font-weight:bold;"><i class="fas fa-coins"></i> 0 Monedas</p>
             <p id="profileEmail">email@example.com</p>
-            <p class="user-equipped-slogan" id="profileEquippedSlogan"></p> <div class="profile-avatar-upload">
+
+            <div class="profile-avatar-upload">
                 <label for="profileAvatarFile">Cambiar Avatar (Subir):</label>
                 <input type="file" id="profileAvatarFile" accept="image/*">
                 <label for="profileAvatarSelect">O Elige un Avatar Predeterminado:</label>
@@ -1680,21 +1270,6 @@
                         data-avatar-url="https://i.ibb.co/239SGW4x/IMG-20250626-WA0068.jpg">
                 </div>
             </div>
-            
-            <label for="currentFrameSelect" style="text-align: left; display: block; margin-top: 1rem;">Tu Marco Actual:</label>
-            <select id="currentFrameSelect" class="version-select" style="margin-bottom: 1rem;">
-                <option value="">Sin Marco</option>
-            </select>
-
-            <label for="currentBannerSelect" style="text-align: left; display: block; margin-top: 1rem;">Tu Banner Actual:</label>
-            <select id="currentBannerSelect" class="version-select" style="margin-bottom: 1rem;">
-                <option value="">Sin Banner</option>
-            </select>
-
-            <label for="currentSloganSelect" style="text-align: left; display: block; margin-top: 1rem;">Tu Eslogan Actual:</label>
-            <select id="currentSloganSelect" class="version-select" style="margin-bottom: 1rem;">
-                <option value="">Sin Eslogan</option>
-            </select>
 
             <label for="profileDescription" style="text-align: left; display: block; margin-top: 1rem;">Tu
                 Descripción Personal:</label>
@@ -1728,50 +1303,6 @@
             <h3><i class="fas fa-crown"></i> Top 5 Publicadores</h3>
             <div id="topUsersList">
             </div>
-        </div>
-    </div>
-
-    <div class="content-section" id="trends-section" style="display: none;">
-        <h2><i class="fas fa-fire"></i> Contenido en Tendencia (Más Descargado)</h2>
-        <a href="#" class="back-btn">← Volver al Hub</a>
-        <div class="content-grid" id="trends-grid">
-            </div>
-        <div class="pagination-controls">
-            <button class="next-btn" data-category="trends" style="display:none;">Cargar más</button>
-        </div>
-    </div>
-
-    <div class="shop-container" id="shopContainer">
-        <div class="shop-content">
-            <span class="close-btn" id="closeShopBtn">×</span>
-            <h3><i class="fas fa-store"></i> Tienda del Hub</h3>
-            <p style="color:var(--currency-color); font-weight:bold; margin-bottom: 20px;"><i class="fas fa-coins"></i> Tus Monedas: <span id="shopUserCoins">0</span></p>
-            <div class="shop-items-grid" id="shopItemsGrid">
-                </div>
-        </div>
-    </div>
-    
-    <div class="view-profile-container" id="viewProfileContainer">
-        <div class="view-profile-content">
-            <span class="close-btn" id="closeViewProfileBtn">×</span>
-            
-            <div class="user-equipped-banner" id="viewProfileEquippedBanner"></div> <div class="profile-avatar-display-container">
-                <img src="https://i.imgur.com/gK103rS.png" alt="Avatar de Usuario" class="profile-avatar-img" id="viewProfileAvatar">
-                <div class="profile-frame-display" id="viewProfileFrameDisplay"></div>
-            </div>
-            <h3 id="viewProfileUsername">Nombre de Usuario</h3>
-            <p class="user-equipped-slogan" id="viewProfileEquippedSlogan"></p> <p id="viewProfileDescription">Descripción personal del usuario.</p>
-
-            <div class="profile-stats">
-                <div class="profile-stat-item">
-                    <strong id="viewProfilePublicationsCount">0</strong>
-                    <span>Publicaciones</span>
-                </div>
-            </div>
-
-            <h4>Publicaciones de <span id="viewProfilePubsOfUser"></span></h4>
-            <div class="profile-publications-grid" id="viewProfilePublicationsGrid">
-                </div>
         </div>
     </div>
 
@@ -1813,9 +1344,8 @@
             setDoc,
             arrayUnion,
             arrayRemove,
-            deleteDoc,
-            startAfter,
-            runTransaction
+            deleteDoc, // Imported for deleting documents
+            startAfter // Imported for pagination
         } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
         import {
             getAuth,
@@ -1830,18 +1360,18 @@
             ref,
             uploadBytes,
             getDownloadURL,
-            deleteObject
+            deleteObject // Imported for deleting storage objects (not used with ImgBB without hash)
         } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
 
         // Configuración de Firebase - ¡REEMPLAZA CON TUS PROPIAS CREDENCIALES!
         const firebaseConfig = {
-    apiKey: "AIzaSyBiazxsNqn_kj0VQqROMnp0XU2OukdMtNo", // <--- ¡Asegúrate de que esta sea tu clave real!
-    authDomain: "minecraft-hub-2f796.firebaseapp.com", // <--- ¡Asegúrate de que este sea tu dominio real!
-    projectId: "minecraft-hub-2f796", // <--- ¡Asegúrate de que este sea tu ID de proyecto real!
-    storageBucket: "minecraft-hub-2f796.appspot.com", // <--- ¡Asegúrate de que este sea tu bucket real!
-    messagingSenderId: "574308739058", // <--- ¡Asegúrate de que este sea tu ID real!
-    appId: "1:574308739058:web:399691b7aeb785678fad6b" // <--- ¡Asegúrate de que este sea tu ID de app real!
-};
+            apiKey: "AIzaSyBiazxsNqn_kj0VQqROMnp0XU2OukdMtNo",
+            authDomain: "minecraft-hub-2f796.firebaseapp.com",
+            projectId: "minecraft-hub-2f796",
+            storageBucket: "minecraft-hub-2f796.appspot.com",
+            messagingSenderId: "574308739058",
+            appId: "1:574308739058:web:399691b7aeb785678fad6b"
+        };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -1849,1374 +1379,22 @@
         const storage = getStorage(app);
 
         // Variables globales
-        let lastSubmissionTime = 0;
+        let lastSubmissionTime = 0; // Se inicializará desde localStorage al cargar
         const COOLDOWN_TIME = 5 * 60 * 1000; // 5 minutos en milisegundos
         let currentUser = null;
-        let currentUserData = null;
         let selectedAvatarUrl = "https://i.ibb.co/5WF3JMwB/IMG-20250626-WA0080.jpg";
         let currentCategory = '';
-        const LAST_VISITED_KEY = 'lastVisitedTime';
-
         // --- ADMIN USER ID ---
-        const ADMIN_UID = "W3Q0SYQQ7sVuygy4w2bq9nur95t1"; // ¡Asegúrate de reemplazar esto con tu UID de administrador!
+        // IMPORTANT: Replace with the actual UID of your admin account.
+        const ADMIN_UID = "W3Q0SYQQ7sVuygy4w2bq9nur95t1"; 
+
 
         // --- Variables para Paginación ---
         const pageSize = 12; // Número de publicaciones por página
         const lastVisibleDocs = {}; // Objeto para guardar el último documento visible por categoría
-        
-        // --- Monedas por categoría de publicación ---
-        const COINS_PER_CATEGORY = {
-            "textura": 10,
-            "addon": 15,
-            "mod": 20,
-            "plantilla": 12,
-            "skin": 8,
-            "shader": 18,
-            "tutorial": 25,
-            "minecraft-version": 30 // Solo admins
-        };
 
-        // --- Items de la tienda ---
-        const SHOP_ITEMS = [
-            { id: 'frame_gold', type: 'frame', name: 'Marco Dorado', cost: 100, imageUrl: 'https://i.ibb.co/F6P9b2m/gold-frame.png', style: 'border: 5px solid gold; padding: 5px;' },
-            { id: 'frame_diamond', type: 'frame', name: 'Marco Diamante', cost: 200, imageUrl: 'https://i.ibb.co/L5hY420/diamond-frame.png', style: 'border: 5px solid aqua; padding: 5px;' },
-            { id: 'frame_emerald', type: 'frame', name: 'Marco Esmeralda', cost: 150, imageUrl: 'https://i.ibb.co/D7N1p7q/emerald-frame.png', style: 'border: 5px solid limegreen; padding: 5px;' },
-            { id: 'frame_netherite', type: 'frame', name: 'Marco Netherite', cost: 500, imageUrl: 'https://i.ibb.co/q1z6W4w/netherite-frame.png', style: 'border: 5px solid #4a4a4a; padding: 5px; box-shadow: 0 0 10px #4a4a4a;' },
-            // Nuevos banners
-            { id: 'banner_sunset', type: 'banner', name: 'Banner Puesta de Sol', cost: 150, imageUrl: 'https://i.ibb.co/rQ2g4Lg/sunset-banner.png', style: 'background-size: cover; background-position: center;' },
-            { id: 'banner_nether', type: 'banner', name: 'Banner Nether', cost: 250, imageUrl: 'https://i.ibb.co/Wc2tB5m/nether-banner.png', style: 'background-size: cover; background-position: center;' },
-            // Nuevos eslóganes
-            { id: 'slogan_adventurer', type: 'slogan', name: 'Eslogan: Aventurero', cost: 50, text: '¡Siempre en busca de la siguiente aventura!' },
-            { id: 'slogan_builder', type: 'slogan', name: 'Eslogan: Maestro Constructor', cost: 75, text: 'Construyendo un mundo, un bloque a la vez.' }
-        ];
-
-
-        // --- Elementos del DOM (declarados fuera para accesibilidad) ---
-        const publishContentBtn = document.getElementById('publishContentBtn');
-        const contentFormOverlay = document.getElementById('contentFormOverlay');
-        const closeFormBtn = document.getElementById('closeFormBtn');
-        const publishForm = document.getElementById('publishForm');
-        const versionsContainer = document.getElementById('versionsContainer');
-        const addVersionBtn = document.getElementById('addVersionBtn');
-        const mainHub = document.getElementById('mainHub');
-        const contentSections = document.getElementById('contentSections');
-        const categoryBtns = document.querySelectorAll('.category-btn');
-        const cooldownMessage = document.getElementById('cooldownMessage');
-        const userNameInput = document.getElementById('userNameInput');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const contentTypeSelect = document.getElementById('contentType');
-        const newContentCountDisplay = document.getElementById('newContentCount');
-
-        const profileBtn = document.getElementById('profileBtn');
-        const authContainer = document.getElementById('authContainer');
-        const closeAuthBtn = document.getElementById('closeAuthBtn');
-        const authTitle = document.getElementById('authTitle');
-        const authForm = document.getElementById('authForm');
-        const registerFields = document.getElementById('registerFields');
-        const authUsernameInput = document.getElementById('authUsername');
-        const authEmailInput = document.getElementById('authEmail');
-        const authPasswordInput = document.getElementById('authPassword');
-        const authSubmitBtn = document.getElementById('authSubmitBtn');
-        const toggleAuthMode = document.getElementById('toggleAuthMode');
-        const avatarSelection = document.getElementById('avatarSelection');
-        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
-        const togglePasswordBtn = document.querySelector('.toggle-password');
-
-        const userProfile = document.getElementById('userProfile');
-        const closeProfileBtn = document.getElementById('closeProfileBtn');
-        const profileAvatar = document.getElementById('profileAvatar');
-        const profileFrameDisplay = document.getElementById('profileFrameDisplay');
-        const profileEquippedBanner = document.getElementById('profileEquippedBanner'); // Nuevo elemento
-        const profileEquippedSlogan = document.getElementById('profileEquippedSlogan'); // Nuevo elemento
-        const profileUsername = document.getElementById('profileUsername');
-        const profileEmail = document.getElementById('profileEmail');
-        const profileDescription = document.getElementById('profileDescription');
-        const saveProfileBtn = document.getElementById('saveProfileBtn');
-        const profilePublicationsCount = document.getElementById('profilePublicationsCount');
-        const myPublicationsGrid = document.getElementById('myPublicationsGrid');
-        const myFavoritesGrid = document.getElementById('myFavoritesGrid');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const profileAvatarSelection = document.getElementById('profileAvatarSelection');
-        const profileAvatarFile = document.getElementById('profileAvatarFile');
-        const profileCoinsDisplay = document.getElementById('profileCoinsDisplay');
-        const currentFrameSelect = document.getElementById('currentFrameSelect');
-        const currentBannerSelect = document.getElementById('currentBannerSelect'); // Nuevo selector
-        const currentSloganSelect = document.getElementById('currentSloganSelect'); // Nuevo selector
-
-        const topUsersBtn = document.getElementById('topUsersBtn');
-        const topUsersContainer = document.getElementById('topUsersContainer');
-        const closeTopUsersBtn = document.getElementById('closeTopUsersBtn');
-        const topUsersList = document.getElementById('topUsersList');
-
-        const trendsSection = document.getElementById('trends-section');
-        const trendsGrid = document.getElementById('trends-grid');
-        const trendsPaginationBtn = trendsSection.querySelector('.next-btn');
-
-        const minecraftDownloadsList = document.getElementById('minecraftDownloadsList');
-        const minecraftDownloadsSection = document.getElementById('minecraft-downloads-section');
-        const minecraftDownloadsPagination = document.getElementById('minecraftDownloadsPagination');
-
-        const shopBtn = document.getElementById('shopBtn');
-        const shopContainer = document.getElementById('shopContainer');
-        const closeShopBtn = document.getElementById('closeShopBtn');
-        const shopItemsGrid = document.getElementById('shopItemsGrid');
-        const shopUserCoins = document.getElementById('shopUserCoins');
-        const currencyDisplay = document.getElementById('currencyDisplay');
-
-        const viewProfileContainer = document.getElementById('viewProfileContainer');
-        const closeViewProfileBtn = document.getElementById('closeViewProfileBtn');
-        const viewProfileAvatar = document.getElementById('viewProfileAvatar');
-        const viewProfileFrameDisplay = document.getElementById('viewProfileFrameDisplay');
-        const viewProfileEquippedBanner = document.getElementById('viewProfileEquippedBanner'); // Nuevo elemento
-        const viewProfileEquippedSlogan = document.getElementById('viewProfileEquippedSlogan'); // Nuevo elemento
-        const viewProfileUsername = document.getElementById('viewProfileUsername');
-        const viewProfileDescription = document.getElementById('viewProfileDescription');
-        const viewProfilePublicationsCount = document.getElementById('viewProfilePublicationsCount');
-        const viewProfilePublicationsGrid = document.getElementById('viewProfilePublicationsGrid');
-        const viewProfilePubsOfUser = document.getElementById('viewProfilePubsOfUser');
-
-        const themeToggleBtn = document.getElementById('themeToggleBtn');
-        const mainProfileAvatar = document.getElementById('mainProfileAvatar');
-        const mainProfileFrame = document.getElementById('mainProfileFrame');
-        const mainProfileBanner = document.getElementById('mainProfileBanner'); // Nuevo
-        const mainProfileSlogan = document.getElementById('mainProfileSlogan'); // Nuevo
-        
-        let isRegisterMode = false;
-        let submitCommentBaseListener = null;
-
-        // --- Funciones para Mostrar/Ocultar Carga ---
-        function showLoading() {
-            loadingOverlay.classList.add('show');
-        }
-
-        function hideLoading() {
-            loadingOverlay.classList.remove('show');
-        }
-
-        // --- Lógica de Modo Oscuro/Claro ---
-        function initializeTheme() {
-            const currentTheme = localStorage.getItem('theme');
-            if (currentTheme === 'light-mode') {
-                document.body.classList.add('light-mode');
-                themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
-            } else {
-                themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
-            }
-        }
-        
-        // Función para actualizar las monedas en la interfaz principal
-        function updateCurrencyDisplay() {
-            if (currentUserData) {
-                document.getElementById('userCoins').textContent = currentUserData.coins || 0;
-                currencyDisplay.style.display = 'flex';
-            } else {
-                currencyDisplay.style.display = 'none';
-            }
-        }
-
-        function showAuthWarning(event) {
-            event.preventDefault();
-            alert('Debes iniciar sesión o registrarte para publicar contenido.');
-            authContainer.style.display = 'flex';
-            isRegisterMode = false;
-            renderAuthForm();
-        }
-
-        function renderAuthForm() {
-            if (isRegisterMode) {
-                authTitle.textContent = 'Registrarse';
-                authSubmitBtn.textContent = 'Registrarse';
-                toggleAuthMode.textContent = '¿Ya tienes cuenta? Iniciar Sesión';
-                registerFields.style.display = 'block';
-            } else {
-                authTitle.textContent = 'Iniciar Sesión';
-                authSubmitBtn.textContent = 'Iniciar Sesión';
-                toggleAuthMode.textContent = '¿No tienes cuenta? Regístrate';
-                registerFields.style.display = 'none';
-            }
-        }
-
-        // Función para aplicar el estilo del marco
-        function applyFrameToElement(element, frameId) {
-            const frameItem = SHOP_ITEMS.find(item => item.id === frameId && item.type === 'frame');
-            if (frameItem) {
-                element.style.cssText = `background-image: url(${frameItem.imageUrl}); ${frameItem.style}`;
-            } else {
-                element.style.backgroundImage = 'none';
-                element.style.border = 'none';
-                element.style.padding = '0';
-                element.style.boxShadow = 'none';
-            }
-        }
-
-        // Función para aplicar el estilo del banner
-        function applyBannerToElement(element, bannerId) {
-            const bannerItem = SHOP_ITEMS.find(item => item.id === bannerId && item.type === 'banner');
-            if (bannerItem) {
-                element.style.cssText = `background-image: url(${bannerItem.imageUrl}); ${bannerItem.style}`;
-                element.style.display = 'block'; // Asegura que el contenedor del banner sea visible
-            } else {
-                element.style.backgroundImage = 'none';
-                element.style.display = 'none'; // Oculta el contenedor del banner si no hay uno equipado
-            }
-        }
-
-        // Función para aplicar el eslogan
-        function applySloganToElement(element, sloganId) {
-            const sloganItem = SHOP_ITEMS.find(item => item.id === sloganId && item.type === 'slogan');
-            if (sloganItem) {
-                element.textContent = sloganItem.text;
-                element.style.display = 'block'; // Asegura que el contenedor del eslogan sea visible
-            } else {
-                element.textContent = '';
-                element.style.display = 'none'; // Oculta el contenedor del eslogan si no hay uno equipado
-            }
-        }
-
-        async function loadUserProfile(uid) {
-            try {
-                const userDocRef = doc(db, "users", uid);
-                const userDocSnap = await getDoc(userDocRef);
-
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-                    currentUserData = userData;
-                    
-                    profileAvatar.src = userData.avatarURL || "https://i.imgur.com/gK103rS.png";
-                    profileUsername.textContent = userData.username || "Usuario";
-                    profileEmail.textContent = userData.email || "";
-                    profileDescription.value = userData.description || "";
-                    profilePublicationsCount.textContent = userData.publicationCount || 0;
-                    profileCoinsDisplay.innerHTML = `<i class="fas fa-coins"></i> ${userData.coins || 0} Monedas`;
-                    updateCurrencyDisplay();
-
-                    profileAvatarSelection.querySelectorAll('img').forEach(img => {
-                        if (img.dataset.avatarUrl === userData.avatarURL) {
-                            img.classList.add('selected');
-                        } else {
-                            img.classList.remove('selected');
-                        }
-                    });
-                    profileAvatarFile.value = '';
-                    
-                    // Cargar y seleccionar marcos comprados
-                    currentFrameSelect.innerHTML = '<option value="">Sin Marco</option>';
-                    const purchasedFrames = SHOP_ITEMS.filter(item => item.type === 'frame' && userData.purchasedItems?.includes(item.id));
-                    purchasedFrames.forEach(frame => {
-                        const option = document.createElement('option');
-                        option.value = frame.id;
-                        option.textContent = frame.name;
-                        currentFrameSelect.appendChild(option);
-                    });
-                    currentFrameSelect.value = userData.equippedItems?.profileFrame || '';
-                    applyFrameToElement(profileFrameDisplay, userData.equippedItems?.profileFrame || '');
-
-                    // Cargar y seleccionar banners comprados
-                    currentBannerSelect.innerHTML = '<option value="">Sin Banner</option>';
-                    const purchasedBanners = SHOP_ITEMS.filter(item => item.type === 'banner' && userData.purchasedItems?.includes(item.id));
-                    purchasedBanners.forEach(banner => {
-                        const option = document.createElement('option');
-                        option.value = banner.id;
-                        option.textContent = banner.name;
-                        currentBannerSelect.appendChild(option);
-                    });
-                    currentBannerSelect.value = userData.equippedItems?.banner || '';
-                    applyBannerToElement(profileEquippedBanner, userData.equippedItems?.banner || '');
-
-                    // Cargar y seleccionar eslóganes comprados
-                    currentSloganSelect.innerHTML = '<option value="">Sin Eslogan</option>';
-                    const purchasedSlogans = SHOP_ITEMS.filter(item => item.type === 'slogan' && userData.purchasedItems?.includes(item.id));
-                    purchasedSlogans.forEach(slogan => {
-                        const option = document.createElement('option');
-                        option.value = slogan.id;
-                        option.textContent = slogan.name;
-                        currentSloganSelect.appendChild(option);
-                    });
-                    currentSloganSelect.value = userData.equippedItems?.slogan || '';
-                    applySloganToElement(profileEquippedSlogan, userData.equippedItems?.slogan || '');
-
-                    await loadMyPublications(uid);
-                    await loadMyFavorites(uid, userData.favorites || []);
-                } else {
-                    console.log("No se encontraron datos de usuario en Firestore para UID:", uid);
-                    alert("Tu perfil no tiene datos completos. Por favor, completa tu registro.");
-                }
-            } catch (error) {
-                console.error("Error al cargar perfil de usuario:", error);
-                alert("Error al cargar el perfil. Por favor, intenta de nuevo.");
-            }
-        }
-
-        async function loadMyPublications(uid) {
-            myPublicationsGrid.innerHTML = '';
-            const q = query(collection(db, "contenidos"), where("userId", "==", uid), orderBy("fecha", "desc"));
-            const querySnapshot = await getDocs(q);
-
-            if (querySnapshot.empty) {
-                myPublicationsGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">Aún no tienes publicaciones.</p>';
-            } else {
-                querySnapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    const card = document.createElement('div');
-                    card.className = 'my-publication-card';
-                    card.innerHTML = `
-                        <img src="${data.imagenURL || 'https://i.imgur.com/hUPXXQF.png'}" alt="${data.titulo}">
-                        <h4>${data.titulo}</h4>
-                        <p>${data.tipo}</p>
-                        <button class="delete-publication-btn" data-id="${docSnap.id}" data-image-url="${data.imagenURL}">🗑️</button>
-                    `;
-                    myPublicationsGrid.appendChild(card);
-
-                    card.querySelector('.delete-publication-btn').addEventListener('click', async (e) => {
-                        const contentId = e.target.dataset.id;
-                        const imageUrl = e.target.dataset.imageUrl;
-                        if (confirm('¿Estás seguro de que quieres eliminar esta publicación? Esta acción es irreversible.')) {
-                            showLoading();
-                            try {
-                                if (imageUrl && imageUrl.startsWith('https://i.ibb.co/')) {
-                                    console.warn("No se puede eliminar la imagen de ImgBB directamente sin el hash de eliminación. Se eliminará solo el documento de Firestore.");
-                                }
-
-                                await deleteDoc(doc(db, "contenidos", contentId));
-
-                                await updateDoc(doc(db, "users", uid), {
-                                    publicationCount: increment(-1)
-                                });
-
-                                hideLoading();
-                                alert('Publicación eliminada correctamente.');
-                                loadMyPublications(uid);
-                                if (currentCategory && document.getElementById(`${currentCategory}-section`) && document.getElementById(`${currentCategory}-section`).classList.contains('active')) {
-                                    if (currentCategory === 'minecraft-downloads') {
-                                        loadMinecraftDownloads(null);
-                                    } else if (currentCategory === 'trends') {
-                                        loadTrends(null);
-                                    }
-                                    else if (currentCategory !== 'top') {
-                                        loadCategoryContent(currentCategory, null);
-                                    }
-                                }
-                            } catch (error) {
-                                hideLoading();
-                                console.error("Error al eliminar publicación:", error);
-                                alert('Error al eliminar la publicación.');
-                            }
-                        }
-                    });
-                });
-            }
-        }
-
-        async function loadMyFavorites(uid, favoriteIds) {
-            myFavoritesGrid.innerHTML = '';
-            if (favoriteIds.length === 0) {
-                myFavoritesGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">Aún no has añadido favoritos.</p>';
-                return;
-            }
-
-            try {
-                const favoriteContentPromises = favoriteIds.map(id => getDoc(doc(db, "contenidos", id)));
-                const favoriteContentSnaps = await Promise.all(favoriteContentPromises);
-
-                let hasResults = false;
-                for (const docSnap of favoriteContentSnaps) {
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        const card = document.createElement('div');
-                        card.className = 'my-favorite-card';
-                        card.innerHTML = `
-                            <img src="${data.imagenURL || 'https://i.imgur.com/hUPXXQF.png'}" alt="${data.titulo}">
-                            <h4>${data.titulo}</h4>
-                            <p>${data.tipo}</p>
-                        `;
-                        myFavoritesGrid.appendChild(card);
-                        hasResults = true;
-                    }
-                }
-
-                if (!hasResults) {
-                    myFavoritesGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No se encontraron favoritos.</p>';
-                }
-            } catch (error) {
-                console.error("Error al cargar favoritos:", error);
-                myFavoritesGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">Error al cargar favoritos.</p>';
-            }
-        }
-
-        function updateCooldownMessage() {
-            if (window._cooldownInterval) {
-                clearInterval(window._cooldownInterval);
-            }
-
-            window._cooldownInterval = setInterval(() => {
-                const remainingTime = COOLDOWN_TIME - (Date.now() - lastSubmissionTime);
-
-                if (remainingTime <= 0) {
-                    cooldownMessage.textContent = '';
-                    clearInterval(window._cooldownInterval);
-                    localStorage.removeItem('lastSubmissionTime');
-                    window._cooldownInterval = null;
-                } else {
-                    const minutes = Math.floor(remainingTime / 1000 / 60);
-                    const seconds = Math.floor((remainingTime / 1000) % 60);
-                    cooldownMessage.textContent = `Podrás publicar nuevo contenido en ${minutes}m ${seconds}s`;
-                }
-            }, 1000);
-        }
-        
-        async function updateNewContentCount() {
-            const lastVisitedTime = localStorage.getItem(LAST_VISITED_KEY);
-            let newContentQuery = query(collection(db, "contenidos"));
-
-            if (lastVisitedTime) {
-                const lastTime = new Date(parseInt(lastVisitedTime));
-                newContentQuery = query(newContentQuery, where("fecha", ">", lastTime));
-            }
-            
-            newContentQuery = query(newContentQuery, where("tipo", "!=", "minecraft-version"));
-
-            const snapshot = await getDocs(newContentQuery);
-            const newCount = snapshot.size;
-
-            if (newCount > 0) {
-                newContentCountDisplay.textContent = `¡${newCount} nuevos archivos añadidos!`;
-                newContentCountDisplay.style.display = 'block';
-            } else {
-                newContentCountDisplay.textContent = 'No hay archivos nuevos.';
-                newContentCountDisplay.style.display = 'block';
-            }
-            
-            if (currentUser) {
-                localStorage.setItem(LAST_VISITED_KEY, Date.now().toString());
-            } else if (!lastVisitedTime) {
-                 localStorage.setItem(LAST_VISITED_KEY, Date.now().toString());
-            }
-        }
-        
-        async function updateLastVisitedTime() {
-            if (currentUser) {
-                localStorage.setItem(LAST_VISITED_KEY, Date.now().toString());
-            }
-            await updateNewContentCount();
-        }
-
-        async function loadCategoryContent(category, lastDoc = null) {
-            showLoading();
-            currentCategory = category;
-
-            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
-            topUsersContainer.style.display = 'none';
-            shopContainer.style.display = 'none';
-            viewProfileContainer.style.display = 'none';
-            mainHub.style.display = 'none';
-
-            const sectionId = `${category}-section`;
-            let section = document.getElementById(sectionId);
-            if (!section) {
-                section = document.createElement('div');
-                section.className = 'content-section';
-                section.id = sectionId;
-                section.innerHTML = `
-                    <h2>${getCategoryName(category)}</h2>
-                    <a href="#" class="back-btn">← Volver al Hub</a>
-                    <div class="content-grid" id="${category}-grid"></div>
-                    <div class="pagination-controls">
-                        <button class="next-btn" data-category="${category}">Cargar más</button>
-                    </div>
-                `;
-                contentSections.appendChild(section);
-                section.querySelector('.back-btn').addEventListener('click', handleBackButtonClick);
-                section.querySelector('.next-btn').addEventListener('click', (e) => {
-                    loadCategoryContent(category, lastVisibleDocs[category]);
-                });
-            }
-
-            const grid = document.getElementById(`${category}-grid`);
-            if (!lastDoc) {
-                grid.innerHTML = '';
-            }
-
-            let q = query(
-                collection(db, "contenidos"),
-                where("tipo", "==", category),
-                orderBy("fecha", "desc"),
-                limit(pageSize)
-            );
-
-            if (lastDoc) {
-                q = query(
-                    collection(db, "contenidos"),
-                    where("tipo", "==", category),
-                    orderBy("fecha", "desc"),
-                    startAfter(lastDoc),
-                    limit(pageSize)
-                );
-            }
-
-            const querySnapshot = await getDocs(q);
-            const documents = querySnapshot.docs;
-
-            if (documents.length === 0 && !lastDoc) {
-                grid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No hay contenido en esta categoría aún.</p>';
-                section.querySelector('.next-btn').style.display = 'none';
-            } else if (documents.length === 0) {
-                alert("No hay más publicaciones en esta categoría.");
-                section.querySelector('.next-btn').style.display = 'none';
-            } else {
-                const cardPromises = documents.map(docSnap => createContentCard({
-                    id: docSnap.id,
-                    ...docSnap.data()
-                }));
-                const cards = await Promise.all(cardPromises);
-                cards.forEach(card => grid.appendChild(card));
-
-                lastVisibleDocs[category] = documents[documents.length - 1];
-                section.querySelector('.next-btn').style.display = 'inline-block';
-            }
-
-            section.classList.add('active');
-            hideLoading();
-        }
-
-        async function loadMinecraftDownloads(lastDoc = null) {
-            showLoading();
-            currentCategory = 'minecraft-downloads';
-
-            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
-            topUsersContainer.style.display = 'none';
-            shopContainer.style.display = 'none';
-            viewProfileContainer.style.display = 'none';
-            mainHub.style.display = 'none';
-
-            const listContainer = minecraftDownloadsList;
-            if (!lastDoc) {
-                listContainer.innerHTML = '';
-            }
-
-            let q = query(
-                collection(db, "contenidos"),
-                where("tipo", "==", "minecraft-version"),
-                orderBy("fecha", "desc"),
-                limit(pageSize)
-            );
-
-            if (lastDoc) {
-                q = query(
-                    collection(db, "contenidos"),
-                    where("tipo", "==", "minecraft-version"),
-                    orderBy("fecha", "desc"),
-                    startAfter(lastDoc),
-                    limit(pageSize)
-                );
-            }
-
-            const querySnapshot = await getDocs(q);
-            const documents = querySnapshot.docs;
-
-            if (documents.length === 0 && !lastDoc) {
-                listContainer.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No hay versiones de Minecraft disponibles aún.</p>';
-                minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'none';
-            } else if (documents.length === 0) {
-                alert("No hay más versiones de Minecraft disponibles.");
-                minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'none';
-            } else {
-                for (const docSnap of documents) {
-                    const contenido = docSnap.data();
-                    contenido.id = docSnap.id;
-                    if (contenido.versiones && typeof contenido.versiones === 'object') {
-                        for (const [versionName, downloadLink] of Object.entries(contenido.versiones)) {
-                            const downloadItem = createDownloadItem(versionName, downloadLink, docSnap.id);
-                            listContainer.appendChild(downloadItem);
-                        }
-                    }
-                }
-                lastVisibleDocs['minecraft-version'] = documents[documents.length - 1];
-                minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'inline-block';
-            }
-            minecraftDownloadsSection.classList.add('active');
-            hideLoading();
-        }
-
-        function handleCategoryClick(e) {
-            e.preventDefault();
-            const categoria = e.currentTarget.dataset.category;
-
-            lastVisibleDocs[categoria] = null;
-
-            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
-            topUsersContainer.style.display = 'none';
-            shopContainer.style.display = 'none';
-            viewProfileContainer.style.display = 'none';
-            mainHub.style.display = 'none';
-
-            if (categoria === 'top') {
-                showTopUsers();
-            } else if (categoria === 'minecraft-downloads') {
-                loadMinecraftDownloads();
-            } else if (categoria === 'trends') {
-                loadTrends();
-            }
-            else {
-                loadCategoryContent(categoria);
-            }
-            updateLastVisitedTime();
-        }
-
-        function handleBackButtonClick(e) {
-            if (e) e.preventDefault();
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.remove('active');
-            });
-            topUsersContainer.style.display = 'none';
-            shopContainer.style.display = 'none';
-            viewProfileContainer.style.display = 'none';
-            mainHub.style.display = 'inline-block';
-            currentCategory = '';
-            updateLastVisitedTime();
-        }
-
-        async function createContentCard(contenido) {
-            const versiones = Object.keys(contenido.versiones || {});
-            const primeraVersion = versiones[0];
-            const primerLink = contenido.versiones[primeraVersion];
-
-            let publisherName = contenido.nombre || "Anónimo";
-            let publisherAvatar = "https://i.imgur.com/gK103rS.png";
-            let publisherFrame = '';
-            let publisherBanner = '';
-            let publisherSlogan = '';
-            
-            if (contenido.userId) {
-                const userDoc = await getDoc(doc(db, "users", contenido.userId));
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    publisherName = userData.username;
-                    publisherAvatar = userData.avatarURL || publisherAvatar;
-                    publisherFrame = userData.equippedItems?.profileFrame || '';
-                    publisherBanner = userData.equippedItems?.banner || '';
-                    publisherSlogan = userData.equippedItems?.slogan ? SHOP_ITEMS.find(item => item.id === userData.equippedItems.slogan)?.text || '' : '';
-                }
-            }
-
-            let deleteButtonHtml = '';
-            if (currentUser && currentUser.uid === ADMIN_UID) {
-                deleteButtonHtml = `<button class="delete-content-btn" data-id="${contenido.id}" data-image-url="${contenido.imagenURL}">🗑️</button>`;
-            }
-
-            const card = document.createElement('div');
-            card.className = 'content-card';
-            card.innerHTML = `
-                <img data-src="${contenido.imagenURL || 'https://i.imgur.com/hUPXXQF.png'}" alt="${contenido.titulo}" class="lazyload-img">
-                <div class="card-body">
-                    ${deleteButtonHtml} <h3>${contenido.titulo}</h3>
-                    <p>${contenido.descripcion}</p>
-                    <p style="margin-bottom: 5px;"><small>Descargas: <strong>${contenido.downloads || 0}</strong></small></p>
-                    <p><small>Publicado por: <span class="publisher-info" data-user-id="${contenido.userId}" 
-                                data-publisher-name="${publisherName}" 
-                                data-publisher-avatar="${publisherAvatar}"
-                                data-publisher-frame="${publisherFrame}"
-                                data-publisher-banner="${publisherBanner}"
-                                data-publisher-slogan="${publisherSlogan}">${publisherName}</span></small></p>
-
-                    <div class="interaction-buttons">
-                        <div class="like-section">
-                            <button class="like-btn" data-content-id="${contenido.id}">❤️</button>
-                            <span class="likes-count">${contenido.likes || 0} likes</span>
-                        </div>
-                        <div class="favorite-section">
-                            <button class="favorite-btn" data-content-id="${contenido.id}"><i class="far fa-star"></i></button>
-                            <span class="favorites-count">Favorito</span>
-                        </div>
-                    </div>
-
-                    <select class="version-select">
-                        ${versiones.map(v => `<option value="${v}">${v}</option>`).join('')}
-                    </select>
-                    <a href="${primerLink}" target="_blank" class="download-btn" data-content-id="${contenido.id}">Descargar</a>
-
-                    <div class="comments-section">
-                        <div class="comment-form" data-content-id="${contenido.id}">
-                            <input type="text" class="comment-input" placeholder="Añade un comentario...">
-                            <button class="comment-submit">Enviar</button>
-                        </div>
-                        <div class="comments-list" id="comments-${contenido.id}">
-
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            const publisherInfoSpan = card.querySelector('.publisher-info');
-            if (publisherInfoSpan && contenido.userId) {
-                publisherInfoSpan.style.cursor = 'pointer';
-                publisherInfoSpan.style.textDecoration = 'underline';
-                publisherInfoSpan.style.color = 'var(--highlight-color)';
-                publisherInfoSpan.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const userId = e.currentTarget.dataset.userId;
-                    const pubName = e.currentTarget.dataset.publisherName;
-                    const pubAvatar = e.currentTarget.dataset.publisherAvatar;
-                    const pubFrame = e.currentTarget.dataset.publisherFrame;
-                    const pubBanner = e.currentTarget.dataset.publisherBanner;
-                    const pubSlogan = e.currentTarget.dataset.publisherSlogan;
-                    showUserProfileView(userId, pubName, pubAvatar, pubFrame, pubBanner, pubSlogan);
-                });
-            }
-            
-            const downloadButton = card.querySelector('.download-btn');
-            downloadButton.addEventListener('click', async () => {
-                if (currentUser) {
-                    try {
-                        await updateDoc(doc(db, "contenidos", contenido.id), {
-                            downloads: increment(1)
-                        });
-                        card.querySelector('small strong').textContent = (contenido.downloads || 0) + 1;
-                    } catch (error) {
-                        console.error("Error al incrementar descargas:", error);
-                    }
-                } else {
-                    alert('Inicia sesión para registrar tu descarga y apoyar a los creadores!');
-                }
-            });
-
-
-            const deleteButton = card.querySelector('.delete-content-btn');
-            if (deleteButton) {
-                deleteButton.addEventListener('click', async (e) => {
-                    const contentId = e.target.dataset.id;
-                    const imageUrl = e.target.dataset.imageUrl;
-
-                    if (confirm('¿Estás seguro de que quieres eliminar esta publicación? Esta acción es irreversible y afectará a todos los usuarios.')) {
-                        showLoading();
-                        try {
-                            if (imageUrl && imageUrl.startsWith('https://i.ibb.co/')) {
-                                console.warn("No se puede eliminar la imagen de ImgBB directamente sin el hash de eliminación. Se eliminará solo el documento de Firestore.");
-                            }
-
-                            const originalContentDocSnap = await getDoc(doc(db, "contenidos", contentId));
-                            const originalContentData = originalContentDocSnap.exists() ? originalContentDocSnap.data() : null;
-
-                            await deleteDoc(doc(db, "contenidos", contentId));
-
-                            if (originalContentData && originalContentData.userId) {
-                                await updateDoc(doc(db, "users", originalContentData.userId), {
-                                    publicationCount: increment(-1)
-                                });
-                            }
-
-                            hideLoading();
-                            alert('Publicación eliminada correctamente por el administrador.');
-                            if (currentCategory && document.getElementById(`${currentCategory}-section`) && document.getElementById(`${currentCategory}-section`).classList.contains('active')) {
-                                if (currentCategory === 'minecraft-downloads') {
-                                    loadMinecraftDownloads(null);
-                                } else if (currentCategory === 'trends') {
-                                    loadTrends(null);
-                                } else if (currentCategory !== 'top') {
-                                    loadCategoryContent(currentCategory, null);
-                                }
-                            }
-                        } catch (error) {
-                            hideLoading();
-                            console.error("Error al eliminar publicación como admin:", error);
-                            alert('Error al eliminar la publicación como administrador.');
-                        }
-                    }
-                });
-            }
-
-            const likeBtn = card.querySelector('.like-btn');
-            const likesCount = card.querySelector('.likes-count');
-            const favoriteBtn = card.querySelector('.favorite-btn');
-
-            const likedContents = JSON.parse(localStorage.getItem('likedContents') || '{}');
-            if (likedContents[contenido.id]) {
-                likeBtn.classList.add('liked');
-            }
-
-            likeBtn.addEventListener('click', async () => {
-                if (!currentUser) {
-                    alert('Debes iniciar sesión para dar "like".');
-                    return;
-                }
-
-                if (likedContents[contenido.id]) {
-                    alert("Ya le has dado like a este contenido.");
-                    return;
-                }
-
-                try {
-                    await updateDoc(doc(db, "contenidos", contenido.id), {
-                        likes: increment(1)
-                    });
-
-                    likeBtn.classList.add('liked');
-                    likesCount.textContent = `${(contenido.likes || 0) + 1} likes`;
-                    likedContents[contenido.id] = true;
-                    localStorage.setItem('likedContents', JSON.stringify(likedContents));
-                } catch (error) {
-                    console.error("Error al dar like:", error);
-                }
-            });
-
-            if (currentUser) {
-                const userDoc = await getDoc(doc(db, "users", currentUser.uid));
-                if (userDoc.exists() && userDoc.data().favorites?.includes(contenido.id)) {
-                    favoriteBtn.classList.add('favorited');
-                    favoriteBtn.innerHTML = '<i class="fas fa-star"></i>';
-                } else {
-                    favoriteBtn.innerHTML = '<i class="far fa-star"></i>';
-                }
-            } else {
-                favoriteBtn.innerHTML = '<i class="far fa-star"></i>';
-            }
-
-            favoriteBtn.addEventListener('click', async () => {
-                if (!currentUser) {
-                    alert('Debes iniciar sesión para añadir a favoritos.');
-                    return;
-                }
-
-                const contentId = contenido.id;
-                const userDocRef = doc(db, "users", currentUser.uid);
-
-                try {
-                    const userDocSnap = await getDoc(userDocRef);
-                    const favorites = userDocSnap.exists() ? (userDocSnap.data().favorites || []) : [];
-
-                    if (favorites.includes(contentId)) {
-                        await updateDoc(userDocRef, {
-                            favorites: arrayRemove(contentId)
-                        });
-                        favoriteBtn.classList.remove('favorited');
-                        favoriteBtn.innerHTML = '<i class="far fa-star"></i>';
-                        alert('Eliminado de favoritos.');
-                    } else {
-                        await updateDoc(userDocRef, {
-                            favorites: arrayUnion(contentId)
-                        });
-                        favoriteBtn.classList.add('favorited');
-                        favoriteBtn.innerHTML = '<i class="fas fa-star"></i>';
-                        alert('Añadido a favoritos.');
-                    }
-                    if (userProfile.style.display === 'flex') {
-                        await loadMyFavorites(currentUser.uid, favorites.includes(contentId) ? favorites.filter(id => id !== contentId) : [...favorites, contentId]);
-                    }
-                } catch (error) {
-                    console.error("Error al gestionar favoritos:", error);
-                    alert('Error al gestionar favoritos. Intenta de nuevo.');
-                }
-            });
-
-            const commentInput = card.querySelector('.comment-input');
-            const commentSubmit = card.querySelector('.comment-submit');
-            const commentsList = card.querySelector('.comments-list');
-            const commentForm = card.querySelector('.comment-form');
-
-            async function submitComment(parentId = null, replyToUser = '') {
-                if (!currentUser) {
-                    alert('Debes iniciar sesión para comentar.');
-                    return;
-                }
-
-                let commentText = commentInput.value.trim();
-                if (!commentText) return;
-
-                if (replyToUser) {
-                    commentText = `@${replyToUser} ${commentText}`;
-                }
-
-                let authorName = "Anónimo";
-                if (currentUser) {
-                    const userData = await getUserData(currentUser.uid);
-                    authorName = userData?.username || currentUser.email;
-                }
-
-                try {
-                    await addDoc(collection(db, "comentarios"), {
-                        contenidoId: contenido.id,
-                        autor: authorName,
-                        texto: commentText,
-                        fecha: serverTimestamp(),
-                        parentId: parentId
-                    });
-
-                    commentInput.value = '';
-                    if (commentInput.dataset.replyingTo) {
-                        commentInput.placeholder = 'Añade un comentario...';
-                        delete commentInput.dataset.replyingTo;
-                        delete commentInput.dataset.replyingToId;
-                    }
-
-                    loadComments(contenido.id, commentsList);
-                } catch (error) {
-                    console.error("Error al enviar comentario:", error);
-                }
-            }
-
-            // Define el listener base aquí
-            submitCommentBaseListener = () => submitComment();
-            commentSubmit.addEventListener('click', submitCommentBaseListener);
-
-            loadComments(contenido.id, commentsList);
-
-            const versionSelect = card.querySelector('.version-select');
-            const downloadBtn = card.querySelector('.download-btn');
-            versionSelect.addEventListener('change', () => {
-                const version = versionSelect.value;
-                downloadBtn.href = contenido.versiones[version] || '#';
-            });
-
-            const lazyImage = card.querySelector('.lazyload-img');
-            if ('IntersectionObserver' in window) {
-                let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
-                    entries.forEach(function(entry) {
-                        if (entry.isIntersecting) {
-                            let img = entry.target;
-                            img.src = img.dataset.src;
-                            img.classList.remove('lazyload-img');
-                            lazyImageObserver.unobserve(img);
-                        }
-                    });
-                });
-                lazyImageObserver.observe(lazyImage);
-            } else {
-                lazyImage.src = lazyImage.dataset.src;
-                lazyImage.classList.remove('lazyload-img');
-            }
-
-            return card;
-        }
-
-        async function loadComments(contentId, container) {
-            const q = query(
-                collection(db, "comentarios"),
-                where("contenidoId", "==", contentId),
-                orderBy("fecha", "asc")
-            );
-
-            const querySnapshot = await getDocs(q);
-            container.innerHTML = '';
-
-            if (querySnapshot.empty) {
-                container.innerHTML = '<p style="font-size: 0.8rem; color: var(--text-color-secondary);">Sé el primero en comentar.</p>';
-                return;
-            }
-
-            const comments = [];
-            querySnapshot.forEach((doc) => {
-                comments.push({
-                    id: doc.id,
-                    ...doc.data()
-                });
-            });
-
-            const commentMap = new Map();
-            comments.forEach(comment => commentMap.set(comment.id, {
-                ...comment,
-                replies: []
-            }));
-
-            const rootComments = [];
-            comments.forEach(comment => {
-                if (comment.parentId && commentMap.has(comment.parentId)) {
-                    commentMap.get(comment.parentId).replies.push(commentMap.get(comment.id));
-                } else {
-                    rootComments.push(commentMap.get(comment.id));
-                }
-            });
-
-            function renderComment(comment, parentElement) {
-                const commentElement = document.createElement('div');
-                commentElement.className = 'comment-item';
-                commentElement.innerHTML = `
-                    <div class="comment">
-                        <span class="comment-author">${comment.autor}</span>
-                        <span class="comment-time">${formatDate(comment.fecha?.toDate())}</span>
-                        <p class="comment-text">${comment.texto}</p>
-                        <div class="comment-actions">
-                            <button class="comment-reply-btn" data-comment-id="${comment.id}" data-author="${comment.autor}">Responder</button>
-                        </div>
-                    </div>
-                    <div class="comment-replies"></div>
-                `;
-                parentElement.appendChild(commentElement);
-
-                commentElement.querySelector('.comment-reply-btn').addEventListener('click', (e) => {
-                    const replyingToId = e.target.dataset.commentId;
-                    const replyingToAuthor = e.target.dataset.author;
-                    const form = e.target.closest('.comments-section').querySelector('.comment-form');
-                    const input = form.querySelector('.comment-input');
-                    const submitBtn = form.querySelector('.comment-submit');
-
-                    input.placeholder = `Respondiendo a ${replyingToAuthor}...`;
-                    input.dataset.replyingTo = replyingToAuthor;
-                    input.dataset.replyingToId = replyingToId;
-
-                    submitBtn.removeEventListener('click', submitCommentBaseListener);
-                    submitBtn.addEventListener('click', function replyListener() {
-                        submitComment(replyingToId, replyingToAuthor);
-                        input.placeholder = 'Añade un comentario...';
-                        delete input.dataset.replyingTo;
-                        delete input.dataset.replyingToId;
-                        submitBtn.removeEventListener('click', replyListener);
-                        submitBtn.addEventListener('click', submitCommentBaseListener);
-                    });
-                    input.focus();
-                });
-
-                const repliesContainer = commentElement.querySelector('.comment-replies');
-                comment.replies.sort((a, b) => a.fecha.toDate() - b.fecha.toDate()).forEach(reply => renderComment(reply, repliesContainer));
-            }
-
-            rootComments.sort((a, b) => a.fecha.toDate() - b.fecha.toDate()).forEach(comment => renderComment(comment, container));
-        }
-
-        async function showTopUsers() {
-            showLoading();
-            topUsersList.innerHTML = '';
-            currentCategory = 'top';
-            try {
-                const q = query(
-                    collection(db, "users"),
-                    orderBy("publicationCount", "desc"),
-                    limit(5)
-                );
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    topUsersList.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No hay usuarios en el top aún.</p>';
-                } else {
-                    querySnapshot.forEach(docSnap => {
-                        const userData = docSnap.data();
-                        if (userData.username) {
-                            const userCard = document.createElement('div');
-                            userCard.className = 'user-card';
-                            userCard.dataset.userId = docSnap.id;
-                            userCard.innerHTML = `
-                                <img src="${userData.avatarURL || 'https://i.imgur.com/gK103rS.png'}" alt="Avatar">
-                                <span>${userData.username}</span>
-                                <span class="publication-count">${userData.publicationCount || 0} publicaciones</span>
-                            `;
-                            topUsersList.appendChild(userCard);
-                            
-                            userCard.addEventListener('click', () => {
-                                // Pasar todos los datos necesarios para la vista de perfil
-                                showUserProfileView(
-                                    docSnap.id, 
-                                    userData.username, 
-                                    userData.avatarURL, 
-                                    userData.equippedItems?.profileFrame || '',
-                                    userData.equippedItems?.banner || '',
-                                    userData.equippedItems?.slogan || ''
-                                );
-                            });
-                        }
-                    });
-                }
-                mainHub.style.display = 'none';
-                topUsersContainer.style.display = 'flex';
-                hideLoading();
-            }
-            catch (error) {
-                hideLoading();
-                console.error("Error al cargar el top de usuarios:", error);
-                alert("Error al cargar el top de usuarios.");
-            }
-        }
-        
-        async function loadTrends(lastDoc = null) {
-            showLoading();
-            currentCategory = 'trends';
-
-            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
-            topUsersContainer.style.display = 'none';
-            shopContainer.style.display = 'none';
-            viewProfileContainer.style.display = 'none';
-            mainHub.style.display = 'none';
-
-            const grid = trendsGrid;
-            if (!lastDoc) {
-                grid.innerHTML = '';
-            }
-
-            let q = query(
-                collection(db, "contenidos"),
-                orderBy("downloads", "desc"), // Ordenar por el campo de descargas
-                limit(pageSize)
-            );
-
-            if (lastDoc) {
-                q = query(
-                    collection(db, "contenidos"),
-                    orderBy("downloads", "desc"),
-                    startAfter(lastDoc),
-                    limit(pageSize)
-                );
-            }
-
-            const querySnapshot = await getDocs(q);
-            const documents = querySnapshot.docs;
-
-            if (documents.length === 0 && !lastDoc) {
-                grid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No hay contenido en tendencia aún.</p>';
-                trendsPaginationBtn.style.display = 'none';
-            } else if (documents.length === 0) {
-                alert("No hay más contenido en tendencia.");
-                trendsPaginationBtn.style.display = 'none';
-            } else {
-                const cardPromises = documents.map(docSnap => createContentCard({
-                    id: docSnap.id,
-                    ...docSnap.data()
-                }));
-                const cards = await Promise.all(cardPromises);
-                cards.forEach(card => grid.appendChild(card));
-
-                lastVisibleDocs['trends'] = documents[documents.length - 1];
-                trendsPaginationBtn.style.display = 'inline-block';
-            }
-
-            trendsSection.classList.add('active');
-            hideLoading();
-        }
-        
-        async function loadShopItems() {
-            shopItemsGrid.innerHTML = '';
-            shopUserCoins.textContent = currentUserData?.coins || 0;
-
-            SHOP_ITEMS.forEach(item => {
-                const isPurchased = currentUserData?.purchasedItems?.includes(item.id);
-                const itemCard = document.createElement('div');
-                itemCard.className = `shop-item-card ${item.type}-item ${isPurchased ? 'purchased' : ''}`; // Añadir clase de tipo
-                
-                // Contenido específico según el tipo de item
-                let itemContentHtml = '';
-                if (item.type === 'slogan') {
-                    itemContentHtml = `<h4>${item.text}</h4>`; // Para eslóganes, muestra el texto
-                } else {
-                    itemContentHtml = `<img src="${item.imageUrl}" alt="${item.name}"><h4>${item.name}</h4>`;
-                }
-
-                itemCard.innerHTML = `
-                    ${itemContentHtml}
-                    <p><i class="fas fa-coins"></i> ${item.cost}</p>
-                    <span class="purchased-tag">ADQUIRIDO</span>
-                `;
-                shopItemsGrid.appendChild(itemCard);
-
-                if (!isPurchased) {
-                    itemCard.addEventListener('click', () => purchaseItem(item));
-                }
-            });
-        }
-
-        async function purchaseItem(item) {
-            if (!currentUser) {
-                alert('Debes iniciar sesión para comprar artículos.');
-                return;
-            }
-
-            if (currentUserData.coins < item.cost) {
-                alert('No tienes suficientes monedas para comprar este artículo.');
-                return;
-            }
-            
-            if (currentUserData.purchasedItems.includes(item.id)) {
-                alert('Ya has comprado este artículo.');
-                return;
-            }
-
-            showLoading();
-            try {
-                await runTransaction(db, async (transaction) => {
-                    const userDocRef = doc(db, "users", currentUser.uid);
-                    const userDocSnap = await transaction.get(userDocRef);
-
-                    if (!userDocSnap.exists()) {
-                        throw "Documento de usuario no existe!";
-                    }
-
-                    const currentCoins = userDocSnap.data().coins || 0;
-                    const purchasedItems = userDocSnap.data().purchasedItems || [];
-
-                    if (currentCoins < item.cost) {
-                        throw "No tienes suficientes monedas.";
-                    }
-                    if (purchasedItems.includes(item.id)) {
-                        throw "Ya has comprado este artículo.";
-                    }
-
-                    transaction.update(userDocRef, {
-                        coins: currentCoins - item.cost,
-                        purchasedItems: arrayUnion(item.id)
-                    });
-                });
-
-                hideLoading();
-                alert(`¡Has comprado ${item.name} exitosamente!`);
-                currentUserData.coins -= item.cost;
-                currentUserData.purchasedItems.push(item.id);
-                updateCurrencyDisplay();
-                loadShopItems();
-                if (userProfile.style.display === 'flex') {
-                    await loadUserProfile(currentUser.uid);
-                }
-
-            } catch (error) {
-                hideLoading();
-                console.error("Error al comprar artículo:", error);
-                alert(`Error al comprar el artículo: ${error.message || error}`);
-            }
-        }
-        
-        async function showUserProfileView(uid, username, avatarURL, frameId, bannerId, sloganText) {
-            showLoading();
-            mainHub.style.display = 'none';
-            document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
-            topUsersContainer.style.display = 'none';
-            shopContainer.style.display = 'none';
-
-            viewProfileContainer.style.display = 'flex';
-            viewProfileUsername.textContent = username;
-            viewProfileAvatar.src = avatarURL || "https://i.imgur.com/gK103rS.png";
-            applyFrameToElement(viewProfileFrameDisplay, frameId);
-            applyBannerToElement(viewProfileEquippedBanner, bannerId); // Aplicar banner
-            applySloganToElement(viewProfileEquippedSlogan, sloganText ? SHOP_ITEMS.find(item => item.text === sloganText)?.id : ''); // Aplicar eslogan (buscar por texto)
-            
-            viewProfilePubsOfUser.textContent = username;
-
-            try {
-                const userDocSnap = await getDoc(doc(db, "users", uid));
-                if (userDocSnap.exists()) {
-                    const userData = userDocSnap.data();
-                    viewProfileDescription.textContent = userData.description || 'Este usuario no ha añadido una descripción.';
-                    viewProfilePublicationsCount.textContent = userData.publicationCount || 0;
-                } else {
-                    viewProfileDescription.textContent = 'Usuario sin descripción.';
-                    viewProfilePublicationsCount.textContent = '0';
-                }
-
-                viewProfilePublicationsGrid.innerHTML = '';
-                const q = query(collection(db, "contenidos"), where("userId", "==", uid), orderBy("fecha", "desc"), limit(10));
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    viewProfilePublicationsGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">Este usuario aún no tiene publicaciones.</p>';
-                } else {
-                    querySnapshot.forEach(docSnap => {
-                        const data = docSnap.data();
-                        const card = document.createElement('div');
-                        card.className = 'profile-publication-card';
-                        card.innerHTML = `
-                            <img src="${data.imagenURL || 'https://i.imgur.com/hUPXXQF.png'}" alt="${data.titulo}">
-                            <h4>${data.titulo}</h4>
-                            <p>${data.tipo}</p>
-                        `;
-                        viewProfilePublicationsGrid.appendChild(card);
-                    });
-                }
-
-            } catch (error) {
-                console.error("Error al cargar el perfil del otro usuario:", error);
-                viewProfileDescription.textContent = 'Error al cargar los datos del perfil.';
-                viewProfilePublicationsCount.textContent = 'Error';
-                viewProfilePublicationsGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">Error al cargar las publicaciones de este usuario.</p>';
-            } finally {
-                hideLoading();
-            }
-        }
-
-
-        async function getUserData(uid) {
-            try {
-                const userDoc = await getDoc(doc(db, "users", uid));
-                if (userDoc.exists()) {
-                    return userDoc.data();
-                }
-                return null;
-            } catch (error) {
-                console.error("Error al obtener datos de usuario:", error);
-                return null;
-            }
-        }
-
-        function formatDate(date) {
-            if (!date) return '';
-            return date.toLocaleString('es-CO', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
-
-        function getCategoryName(categoria) {
-            const nombres = {
-                textura: 'Texturas',
-                addon: 'Addons',
-                mod: 'Mods',
-                plantilla: 'Plantillas',
-                skin: 'Skins',
-                shader: 'Shaders',
-                tutorial: 'Tutoriales',
-                top: 'Top',
-                'minecraft-downloads': 'Descargas de Minecraft',
-                'minecraft-version': 'Descargas de Minecraft',
-                'trends': 'Contenido en Tendencia'
-            };
-            return nombres[categoria] || categoria;
-        }
-
-        function createDownloadItem(versionName, downloadLink, contentId) {
-            const item = document.createElement('div');
-            item.className = 'download-item';
-            let deleteBtnHtml = '';
-            if (currentUser && currentUser.uid === ADMIN_UID) {
-                deleteBtnHtml = `<button class="delete-content-btn" data-id="${contentId}" data-image-url="">🗑️</button>`;
-            }
-
-            item.innerHTML = `
-                <span>Minecraft ${versionName}</span>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    ${deleteBtnHtml}
-                    <a href="${downloadLink}" target="_blank">Descargar</a>
-                </div>
-            `;
-
-            const deleteButton = item.querySelector('.delete-content-btn');
-            if (deleteButton) {
-                deleteButton.addEventListener('click', async (e) => {
-                    const idToDelete = e.target.dataset.id;
-                    if (confirm('¿Estás seguro de que quieres eliminar esta versión de Minecraft? Esto eliminará la publicación completa.')) {
-                        showLoading();
-                        try {
-                            const originalContentDocSnap = await getDoc(doc(db, "contenidos", idToDelete));
-                            const originalContentData = originalContentDocSnap.exists() ? originalContentDocSnap.data() : null;
-
-                            await deleteDoc(doc(db, "contenidos", idToDelete));
-                            if (originalContentData && originalContentData.userId) {
-                                await updateDoc(doc(db, "users", originalContentData.userId), {
-                                    publicationCount: increment(-1)
-                                });
-                            }
-                            hideLoading();
-                            alert('Versión de Minecraft eliminada correctamente.');
-                            loadMinecraftDownloads(null);
-                        } catch (error) {
-                            hideLoading();
-                            console.error("Error al eliminar versión de Minecraft como admin:", error);
-                            alert('Error al eliminar la versión de Minecraft.');
-                        }
-                    }
-                });
-            }
-            return item;
-        }
-
-        // --- DOMContentLoaded: Solo inicializaciones y EventListeners ---
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log("DOMContentLoaded cargado. Iniciando aplicación.");
-
+            // Registrar el Service Worker
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('/sw.js')
@@ -3229,16 +1407,179 @@
                 });
             }
 
-            initializeTheme();
-
+            // Al cargar la página, intentar recuperar lastSubmissionTime de localStorage
+            // Usa 'parseInt' porque localStorage almacena todo como string
             const storedTime = localStorage.getItem('lastSubmissionTime');
             if (storedTime) {
                 lastSubmissionTime = parseInt(storedTime, 10);
-                updateCooldownMessage();
+                updateCooldownMessage(); // Iniciar el conteo regresivo si hay un tiempo guardado
             }
-            
-            await updateNewContentCount();
-            setInterval(updateNewContentCount, 60 * 1000);
+
+
+            // Elementos del DOM
+            const publishContentBtn = document.getElementById('publishContentBtn');
+            const contentFormOverlay = document.getElementById('contentFormOverlay');
+            const closeFormBtn = document.getElementById('closeFormBtn');
+            const publishForm = document.getElementById('publishForm');
+            const versionsContainer = document.getElementById('versionsContainer');
+            const addVersionBtn = document.getElementById('addVersionBtn');
+            const mainHub = document.getElementById('mainHub');
+            const contentSections = document.getElementById('contentSections');
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            const cooldownMessage = document.getElementById('cooldownMessage');
+            const userNameInput = document.getElementById('userNameInput');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const contentTypeSelect = document.getElementById('contentType');
+
+
+            // Elementos de Autenticación
+            const profileBtn = document.getElementById('profileBtn');
+            const authContainer = document.getElementById('authContainer');
+            const closeAuthBtn = document.getElementById('closeAuthBtn');
+            const authTitle = document.getElementById('authTitle');
+            const authForm = document.getElementById('authForm');
+            const registerFields = document.getElementById('registerFields');
+            const authUsernameInput = document.getElementById('authUsername');
+            const authEmailInput = document.getElementById('authEmail');
+            const authPasswordInput = document.getElementById('authPassword');
+            const authSubmitBtn = document.getElementById('authSubmitBtn');
+            const toggleAuthMode = document.getElementById('toggleAuthMode');
+            const avatarSelection = document.getElementById('avatarSelection');
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            const togglePasswordBtn = document.querySelector('.toggle-password');
+
+            // Elementos del Perfil de Usuario
+            const userProfile = document.getElementById('userProfile');
+            const closeProfileBtn = document.getElementById('closeProfileBtn');
+            const profileAvatar = document.getElementById('profileAvatar');
+            const profileUsername = document.getElementById('profileUsername');
+            const profileEmail = document.getElementById('profileEmail');
+            const profileDescription = document.getElementById('profileDescription');
+            const saveProfileBtn = document.getElementById('saveProfileBtn');
+            const profilePublicationsCount = document.getElementById('profilePublicationsCount');
+            const myPublicationsGrid = document.getElementById('myPublicationsGrid');
+            const myFavoritesGrid = document.getElementById('myFavoritesGrid'); // Nueva grid de favoritos
+            const logoutBtn = document.getElementById('logoutBtn');
+            const profileAvatarSelection = document.getElementById('profileAvatarSelection');
+            const profileAvatarFile = document.getElementById('profileAvatarFile');
+
+            // Elementos del Top de Usuarios
+            const topUsersBtn = document.getElementById('topUsersBtn');
+            const topUsersContainer = document.getElementById('topUsersContainer');
+            const closeTopUsersBtn = document.getElementById('closeTopUsersBtn');
+            const topUsersList = document.getElementById('topUsersList');
+
+            // Elemento para descargas de Minecraft
+            const minecraftDownloadsList = document.getElementById('minecraftDownloadsList');
+            const minecraftDownloadsSection = document.getElementById('minecraft-downloads-section');
+            const minecraftDownloadsPagination = document.getElementById('minecraftDownloadsPagination');
+
+            // Botón de Modo Oscuro/Claro
+            const themeToggleBtn = document.getElementById('themeToggleBtn');
+
+
+            // --- Funciones para Mostrar/Ocultar Carga ---
+            function showLoading() {
+                loadingOverlay.classList.add('show');
+            }
+
+            function hideLoading() {
+                loadingOverlay.classList.remove('show');
+            }
+
+            // --- Lógica de Modo Oscuro/Claro ---
+            const currentTheme = localStorage.getItem('theme');
+            if (currentTheme === 'light-mode') {
+                document.body.classList.add('light-mode');
+                themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>'; // Icono de luna para cambiar a oscuro
+            } else {
+                themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>'; // Icono de sol para cambiar a claro
+            }
+
+            themeToggleBtn.addEventListener('click', () => {
+                document.body.classList.toggle('light-mode');
+                if (document.body.classList.contains('light-mode')) {
+                    localStorage.setItem('theme', 'light-mode');
+                    themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
+                } else {
+                    localStorage.setItem('theme', 'dark-mode');
+                    themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
+                }
+            });
+
+
+            // --- Lógica de Autenticación ---
+            let isRegisterMode = false;
+
+            // Escuchar cambios en el estado de autenticación
+            onAuthStateChanged(auth, async (user) => {
+                currentUser = user;
+                if (user) {
+                    console.log("Usuario logueado UID:", currentUser.uid); // Debug
+                    console.log("UID de Administrador configurado:", ADMIN_UID); // Debug
+                    console.log("¿Es el usuario admin?", currentUser.uid === ADMIN_UID); // Debug
+
+                    const userData = await getUserData(user.uid);
+                    userNameInput.value = userData?.username || user.email;
+                    userNameInput.readOnly = true;
+                    publishContentBtn.style.display = 'inline-block';
+                    publishContentBtn.textContent = '⬇️ Publicar Contenido';
+                    profileBtn.innerHTML = '<i class="fas fa-user"></i>';
+                    authContainer.style.display = 'none';
+
+                    publishContentBtn.removeEventListener('click', showAuthWarning);
+                    publishContentBtn.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        contentFormOverlay.style.display = 'flex';
+                    });
+
+                    // Manage Minecraft version upload option for admin
+                    if (currentUser.uid === ADMIN_UID) {
+                        contentTypeSelect.querySelector('option[value="minecraft-version"]').style.display = 'block';
+                    } else {
+                        contentTypeSelect.querySelector('option[value="minecraft-version"]').style.display = 'none';
+                        if (contentTypeSelect.value === 'minecraft-version') {
+                            contentTypeSelect.value = ''; // Reset if admin-only was selected
+                        }
+                    }
+
+                } else {
+                    console.log("No hay usuario logueado");
+                    userNameInput.value = '';
+                    userNameInput.readOnly = false;
+                    publishContentBtn.style.display = 'inline-block';
+                    publishContentBtn.textContent = '⬇️ Publicar Contenido (Requiere Inicio de Sesión)';
+                    profileBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i>';
+
+                    publishContentBtn.removeEventListener('click', (event) => {
+                        event.preventDefault();
+                        contentFormOverlay.style.display = 'flex';
+                    });
+                    publishContentBtn.addEventListener('click', showAuthWarning);
+
+                    // Hide Minecraft version upload option for non-admin
+                    contentTypeSelect.querySelector('option[value="minecraft-version"]').style.display = 'none';
+                    if (contentTypeSelect.value === 'minecraft-version') {
+                        contentTypeSelect.value = '';
+                    }
+                }
+                // Si ya hay una categoría activa, recárgala para mostrar/ocultar botones de eliminar admin
+                if (currentCategory && document.getElementById(`${currentCategory}-section`) && document.getElementById(`${currentCategory}-section`).classList.contains('active')) {
+                    if (currentCategory === 'minecraft-downloads') {
+                        loadMinecraftDownloads(null); // Recargar desde el inicio
+                    } else if (currentCategory !== 'top') {
+                        loadCategoryContent(currentCategory, null); // Recargar desde el inicio
+                    }
+                }
+            });
+
+            function showAuthWarning(event) {
+                event.preventDefault();
+                alert('Debes iniciar sesión o registrarte para publicar contenido.');
+                authContainer.style.display = 'flex';
+                isRegisterMode = false;
+                renderAuthForm();
+            }
 
             profileBtn.addEventListener('click', async () => {
                 if (currentUser) {
@@ -3253,34 +1594,32 @@
                 }
             });
 
-            themeToggleBtn.addEventListener('click', () => {
-                document.body.classList.toggle('light-mode');
-                if (document.body.classList.contains('light-mode')) {
-                    localStorage.setItem('theme', 'light-mode');
-                    themeToggleBtn.innerHTML = '<i class="fas fa-moon"></i>';
-                } else {
-                    localStorage.setItem('theme', 'dark-mode');
-                    themeToggleBtn.innerHTML = '<i class="fas fa-sun"></i>';
-                }
+            closeAuthBtn.addEventListener('click', () => {
+                authContainer.style.display = 'none';
             });
 
-            closeAuthBtn.addEventListener('click', () => { authContainer.style.display = 'none'; });
-            closeProfileBtn.addEventListener('click', () => { userProfile.style.display = 'none'; });
-            closeShopBtn.addEventListener('click', () => { shopContainer.style.display = 'none'; mainHub.style.display = 'inline-block'; });
-            closeViewProfileBtn.addEventListener('click', () => {
-                viewProfileContainer.style.display = 'none';
-                if (currentCategory && document.getElementById(`${currentCategory}-section`) && document.getElementById(`${currentCategory}-section`).classList.contains('active')) {
-                    document.getElementById(`${currentCategory}-section`).classList.add('active');
-                } else {
-                    mainHub.style.display = 'inline-block';
-                }
+            closeProfileBtn.addEventListener('click', () => {
+                userProfile.style.display = 'none';
             });
-            closeTopUsersBtn.addEventListener('click', () => { topUsersContainer.style.display = 'none'; mainHub.style.display = 'inline-block'; }); // Listener para cerrar Top
 
             toggleAuthMode.addEventListener('click', () => {
                 isRegisterMode = !isRegisterMode;
                 renderAuthForm();
             });
+
+            function renderAuthForm() {
+                if (isRegisterMode) {
+                    authTitle.textContent = 'Registrarse';
+                    authSubmitBtn.textContent = 'Registrarse';
+                    toggleAuthMode.textContent = '¿Ya tienes cuenta? Iniciar Sesión';
+                    registerFields.style.display = 'block';
+                } else {
+                    authTitle.textContent = 'Iniciar Sesión';
+                    authSubmitBtn.textContent = 'Iniciar Sesión';
+                    toggleAuthMode.textContent = '¿No tienes cuenta? Regístrate';
+                    registerFields.style.display = 'none';
+                }
+            }
 
             avatarSelection.querySelectorAll('img').forEach(img => {
                 img.addEventListener('click', () => {
@@ -3310,37 +1649,8 @@
                     reader.readAsDataURL(file);
                 }
             });
-            
-            // Event Listeners para los nuevos selectores de perfil
-            currentFrameSelect.addEventListener('change', async () => {
-                if (currentUser) {
-                    const selectedFrameId = currentFrameSelect.value;
-                    await updateDoc(doc(db, "users", currentUser.uid), { equippedItems: { ...currentUserData.equippedItems, profileFrame: selectedFrameId } });
-                    currentUserData.equippedItems.profileFrame = selectedFrameId; // Actualizar localmente
-                    applyFrameToElement(profileFrameDisplay, selectedFrameId);
-                    applyFrameToElement(mainProfileFrame, selectedFrameId);
-                }
-            });
-            currentBannerSelect.addEventListener('change', async () => {
-                if (currentUser) {
-                    const selectedBannerId = currentBannerSelect.value;
-                    await updateDoc(doc(db, "users", currentUser.uid), { equippedItems: { ...currentUserData.equippedItems, banner: selectedBannerId } });
-                    currentUserData.equippedItems.banner = selectedBannerId;
-                    applyBannerToElement(profileEquippedBanner, selectedBannerId);
-                    applyBannerToElement(mainProfileBanner, selectedBannerId);
-                }
-            });
-            currentSloganSelect.addEventListener('change', async () => {
-                if (currentUser) {
-                    const selectedSloganId = currentSloganSelect.value;
-                    await updateDoc(doc(db, "users", currentUser.uid), { equippedItems: { ...currentUserData.equippedItems, slogan: selectedSloganId } });
-                    currentUserData.equippedItems.slogan = selectedSloganId;
-                    applySloganToElement(profileEquippedSlogan, selectedSloganId);
-                    applySloganToElement(mainProfileSlogan, selectedSloganId);
-                }
-            });
 
-
+            // Toggle de visibilidad de contraseña
             togglePasswordBtn.addEventListener('click', () => {
                 const type = authPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
                 authPasswordInput.setAttribute('type', type);
@@ -3380,10 +1690,7 @@
                             avatarURL: selectedAvatarUrl,
                             description: "",
                             publicationCount: 0,
-                            favorites: [],
-                            coins: 0,
-                            ownedItems: [], // Inicializar como vacío
-                            equippedItems: {}, // Inicializar como objeto vacío
+                            favorites: [], // Inicializar el array de favoritos
                             createdAt: serverTimestamp()
                         });
 
@@ -3512,30 +1819,160 @@
                 }
 
                 try {
-                    const selectedFrame = currentFrameSelect.value;
-                    const selectedBanner = currentBannerSelect.value;
-                    const selectedSlogan = currentSloganSelect.value;
-
                     await updateDoc(doc(db, "users", currentUser.uid), {
                         description: profileDescription.value.trim(),
-                        avatarURL: newAvatarUrl,
-                        equippedItems: { // Actualizar el objeto equippedItems
-                            profileFrame: selectedFrame,
-                            banner: selectedBanner,
-                            slogan: selectedSlogan
-                        }
+                        avatarURL: newAvatarUrl
                     });
                     hideLoading();
                     alert("Cambios de perfil guardados exitosamente.");
-                    await loadUserProfile(currentUser.uid); // Recargar perfil para reflejar cambios
+                    await loadUserProfile(currentUser.uid);
                 } catch (error) {
                     hideLoading();
-                    console.error("Error al guardar descripción/avatar/marco:", error);
+                    console.error("Error al guardar descripción/avatar:", error);
                     alert("Error al guardar cambios en el perfil.");
                 }
             });
 
-            closeFormBtn.addEventListener('click', () => { contentFormOverlay.style.display = 'none'; });
+            async function loadUserProfile(uid) {
+                try {
+                    const userDocRef = doc(db, "users", uid);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        profileAvatar.src = userData.avatarURL || "https://i.imgur.com/gK103rS.png";
+                        profileUsername.textContent = userData.username || "Usuario";
+                        profileEmail.textContent = userData.email || "";
+                        profileDescription.value = userData.description || "";
+                        profilePublicationsCount.textContent = userData.publicationCount || 0;
+
+                        profileAvatarSelection.querySelectorAll('img').forEach(img => {
+                            if (img.dataset.avatarUrl === userData.avatarURL) {
+                                img.classList.add('selected');
+                            } else {
+                                img.classList.remove('selected');
+                            }
+                        });
+                        profileAvatarFile.value = '';
+
+                        await loadMyPublications(uid);
+                        await loadMyFavorites(uid, userData.favorites || []); // Cargar favoritos del usuario
+                    } else {
+                        console.log("No se encontraron datos de usuario en Firestore para UID:", uid);
+                        alert("Tu perfil no tiene datos completos. Por favor, completa tu registro.");
+                    }
+                } catch (error) {
+                    console.error("Error al cargar perfil de usuario:", error);
+                    alert("Error al cargar el perfil. Por favor, intenta de nuevo.");
+                }
+            }
+
+            async function loadMyPublications(uid) {
+                myPublicationsGrid.innerHTML = '';
+                const q = query(collection(db, "contenidos"), where("userId", "==", uid), orderBy("fecha", "desc"));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    myPublicationsGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">Aún no tienes publicaciones.</p>';
+                } else {
+                    querySnapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        const card = document.createElement('div');
+                        card.className = 'my-publication-card';
+                        card.innerHTML = `
+                            <img src="${data.imagenURL || 'https://i.imgur.com/hUPXXQF.png'}" alt="${data.titulo}">
+                            <h4>${data.titulo}</h4>
+                            <p>${data.tipo}</p>
+                            <button class="delete-publication-btn" data-id="${docSnap.id}" data-image-url="${data.imagenURL}">🗑️</button>
+                        `;
+                        myPublicationsGrid.appendChild(card);
+
+                        card.querySelector('.delete-publication-btn').addEventListener('click', async (e) => {
+                            const contentId = e.target.dataset.id;
+                            const imageUrl = e.target.dataset.imageUrl;
+                            if (confirm('¿Estás seguro de que quieres eliminar esta publicación? Esta acción es irreversible.')) {
+                                showLoading();
+                                try {
+                                    // If you were using Firebase Storage, you'd use deleteObject(ref(storage, imagePath)).
+                                    // For ImgBB, once uploaded via key, deleting requires the delete hash which is not stored here.
+                                    if (imageUrl && imageUrl.startsWith('https://i.ibb.co/')) {
+                                        console.warn("No se puede eliminar la imagen de ImgBB directamente sin el hash de eliminación. Se eliminará solo el documento de Firestore.");
+                                    }
+
+                                    // Delete document from Firestore
+                                    await deleteDoc(doc(db, "contenidos", contentId));
+
+                                    // Decrement publication count for the user
+                                    await updateDoc(doc(db, "users", uid), {
+                                        publicationCount: increment(-1)
+                                    });
+
+                                    hideLoading();
+                                    alert('Publicación eliminada correctamente.');
+                                    loadMyPublications(uid); // Reload publications
+                                    // Optionally, refresh the main content view if this content was visible there
+                                    if (currentCategory && document.getElementById(`${currentCategory}-section`).classList.contains('active')) {
+                                        if (currentCategory === 'minecraft-downloads') {
+                                            loadMinecraftDownloads(null);
+                                        } else if (currentCategory !== 'top') {
+                                            loadCategoryContent(currentCategory, null);
+                                        }
+                                    }
+                                } catch (error) {
+                                    hideLoading();
+                                    console.error("Error al eliminar publicación:", error);
+                                    alert('Error al eliminar la publicación.');
+                                }
+                            }
+                        });
+                    });
+                }
+            }
+
+            // Nueva función para cargar los favoritos del usuario
+            async function loadMyFavorites(uid, favoriteIds) {
+                myFavoritesGrid.innerHTML = '';
+                if (favoriteIds.length === 0) {
+                    myFavoritesGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">Aún no has añadido favoritos.</p>';
+                    return;
+                }
+
+                try {
+                    const favoriteContentPromises = favoriteIds.map(id => getDoc(doc(db, "contenidos", id)));
+                    const favoriteContentSnaps = await Promise.all(favoriteContentPromises);
+
+                    let hasResults = false;
+                    for (const docSnap of favoriteContentSnaps) {
+                        if (docSnap.exists()) {
+                            const data = docSnap.data();
+                            const card = document.createElement('div');
+                            card.className = 'my-favorite-card';
+                            card.innerHTML = `
+                                <img src="${data.imagenURL || 'https://i.imgur.com/hUPXXQF.png'}" alt="${data.titulo}">
+                                <h4>${data.titulo}</h4>
+                                <p>${data.tipo}</p>
+                            `;
+                            myFavoritesGrid.appendChild(card);
+                            hasResults = true;
+                        }
+                    }
+
+                    if (!hasResults) {
+                        myFavoritesGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No se encontraron favoritos.</p>';
+                    }
+                } catch (error) {
+                    console.error("Error al cargar favoritos:", error);
+                    myFavoritesGrid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">Error al cargar favoritos.</p>';
+                }
+            }
+
+
+            // --- Lógica del Hub y Publicación ---
+
+            closeFormBtn.addEventListener('click', () => {
+                contentFormOverlay.style.display = 'none';
+            });
+
             contentFormOverlay.addEventListener('click', (event) => {
                 if (event.target === contentFormOverlay) {
                     contentFormOverlay.style.display = 'none';
@@ -3582,6 +2019,7 @@
                 const contentType = document.getElementById('contentType').value;
                 const contentImageFile = document.getElementById('contentImage').files[0];
 
+                // Validate admin for "minecraft-version" uploads
                 if (contentType === 'minecraft-version' && currentUser.uid !== ADMIN_UID) {
                     alert('Solo el administrador puede subir contenido de tipo "Minecraft Versión".');
                     hideLoading();
@@ -3596,6 +2034,7 @@
                     const versionName = block.querySelector('input[name="version-name[]"]').value;
                     const versionLink = block.querySelector('input[name="version-link[]"]').value;
 
+                    // MediaFire link validation
                     if (versionLink && !versionLink.includes("mediafire.com")) {
                         isValidMediaFire = false;
                     }
@@ -3610,6 +2049,7 @@
                     hideLoading();
                     return;
                 }
+
 
                 const toBase64 = file => new Promise((resolve, reject) => {
                     const reader = new FileReader();
@@ -3635,48 +2075,31 @@
                         throw new Error("Error al subir imagen a ImgBB: " + (dataImgBB.error?.message || "Error desconocido"));
                     }
                     const imagenURL = dataImgBB.data.url;
-                    
-                    const coinsEarned = COINS_PER_CATEGORY[contentType] || 0;
-                    
-                    await runTransaction(db, async (transaction) => {
-                        const userDocRef = doc(db, "users", currentUser.uid);
-                        const userDocSnap = await transaction.get(userDocRef);
-                        
-                        if (!userDocSnap.exists()) {
-                            throw "Documento de usuario no existe!";
-                        }
-                        const currentCoins = userDocSnap.data().coins || 0;
-                        const currentPublications = userDocSnap.data().publicationCount || 0;
 
-                        transaction.update(userDocRef, { 
-                            publicationCount: currentPublications + 1,
-                            coins: currentCoins + coinsEarned
-                        });
-                        
-                        transaction.set(doc(collection(db, "contenidos")), {
-                            nombre: userName,
-                            userId: currentUser.uid,
-                            titulo: contentTitle,
-                            descripcion: contentDescription,
-                            tipo: contentType,
-                            versiones: versiones,
-                            fecha: serverTimestamp(),
-                            imagenURL: imagenURL,
-                            vistas: 0,
-                            likes: 0,
-                            downloads: 0
-                        });
+                    await addDoc(collection(db, "contenidos"), {
+                        nombre: userName,
+                        userId: currentUser.uid,
+                        titulo: contentTitle,
+                        descripcion: contentDescription,
+                        tipo: contentType,
+                        versiones: versiones,
+                        fecha: serverTimestamp(),
+                        imagenURL: imagenURL,
+                        vistas: 0,
+                        likes: 0
                     });
 
+                    await updateDoc(doc(db, "users", currentUser.uid), {
+                        publicationCount: increment(1)
+                    });
 
+                    // Actualizar el tiempo del último envío y guardarlo en localStorage
                     lastSubmissionTime = currentTime;
-                    localStorage.setItem('lastSubmissionTime', currentTime.toString());
+                    localStorage.setItem('lastSubmissionTime', currentTime.toString()); // Guardar como string
                     updateCooldownMessage();
-                    
-                    await updateLastVisitedTime();
 
                     hideLoading();
-                    alert(`¡Contenido publicado! Has ganado ${coinsEarned} monedas.`);
+                    alert("¡Contenido publicado!");
                     contentFormOverlay.style.display = 'none';
                     publishForm.reset();
 
@@ -3691,135 +2114,723 @@
                     if (activeSection) {
                         const activeCategory = activeSection.id.replace('-section', '');
                         if (activeCategory === 'minecraft-downloads') {
-                            loadMinecraftDownloads(null);
-                        } else if (activeCategory === 'trends') {
-                            loadTrends(null);
+                            loadMinecraftDownloads(null); // Recargar desde el inicio
                         } else if (activeCategory !== 'top') {
-                            loadCategoryContent(activeCategory, null);
+                            loadCategoryContent(activeCategory, null); // Recargar desde el inicio
                         }
                     }
-                    if (currentUser) {
-                        await loadUserProfile(currentUser.uid);
-                    }
+                    loadUserProfile(currentUser.uid);
                 } catch (err) {
                     hideLoading();
                     console.error("Error al publicar:", err);
                     alert(`Error al publicar el contenido: ${err.message}`);
                 }
             });
-            
-            mainHub.style.display = 'inline-block';
 
-            categoryBtns.forEach(btn => {
-                btn.addEventListener('click', handleCategoryClick);
-            });
+            function updateCooldownMessage() {
+                // Limpiar cualquier intervalo existente para evitar duplicados
+                if (window._cooldownInterval) {
+                    clearInterval(window._cooldownInterval);
+                }
+
+                window._cooldownInterval = setInterval(() => { // Guardar el ID del intervalo
+                    const remainingTime = COOLDOWN_TIME - (Date.now() - lastSubmissionTime);
+
+                    if (remainingTime <= 0) {
+                        cooldownMessage.textContent = '';
+                        clearInterval(window._cooldownInterval);
+                        localStorage.removeItem('lastSubmissionTime'); // Limpiar localStorage
+                        window._cooldownInterval = null; // Resetear la variable
+                    } else {
+                        const minutes = Math.floor(remainingTime / 1000 / 60);
+                        const seconds = Math.floor((remainingTime / 1000) % 60);
+                        cooldownMessage.textContent = `Podrás publicar nuevo contenido en ${minutes}m ${seconds}s`;
+                    }
+                }, 1000);
+            }
+
+            // --- Lógica de Carga de Contenido por Categoría y Paginación ---
+            async function loadCategoryContent(category, lastDoc = null) {
+                showLoading();
+                currentCategory = category;
+
+                document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+                topUsersContainer.style.display = 'none';
+                mainHub.style.display = 'none';
+
+                const sectionId = `${category}-section`;
+                let section = document.getElementById(sectionId);
+                if (!section) {
+                    section = document.createElement('div');
+                    section.className = 'content-section';
+                    section.id = sectionId;
+                    section.innerHTML = `
+                        <h2>${getCategoryName(category)}</h2>
+                        <a href="#" class="back-btn">← Volver al Hub</a>
+                        <div class="content-grid" id="${category}-grid"></div>
+                        <div class="pagination-controls">
+                            <button class="next-btn" data-category="${category}">Cargar más</button>
+                        </div>
+                    `;
+                    contentSections.appendChild(section);
+                    section.querySelector('.back-btn').addEventListener('click', handleBackButtonClick);
+                    section.querySelector('.next-btn').addEventListener('click', (e) => {
+                        loadCategoryContent(category, lastVisibleDocs[category]);
+                    });
+                }
+
+                const grid = document.getElementById(`${category}-grid`);
+                if (!lastDoc) {
+                    grid.innerHTML = '';
+                }
+
+                let q = query(
+                    collection(db, "contenidos"),
+                    where("tipo", "==", category),
+                    orderBy("fecha", "desc"),
+                    limit(pageSize)
+                );
+
+                if (lastDoc) {
+                    q = query(
+                        collection(db, "contenidos"),
+                        where("tipo", "==", category),
+                        orderBy("fecha", "desc"),
+                        startAfter(lastDoc),
+                        limit(pageSize)
+                    );
+                }
+
+                const querySnapshot = await getDocs(q);
+                const documents = querySnapshot.docs;
+
+                if (documents.length === 0 && !lastDoc) {
+                    grid.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No hay contenido en esta categoría aún.</p>';
+                    section.querySelector('.next-btn').style.display = 'none';
+                } else if (documents.length === 0) {
+                    alert("No hay más publicaciones en esta categoría.");
+                    section.querySelector('.next-btn').style.display = 'none';
+                } else {
+                    // Usar Promise.all para cargar las tarjetas en paralelo y mejorar el rendimiento
+                    const cardPromises = documents.map(docSnap => createContentCard({
+                        id: docSnap.id,
+                        ...docSnap.data()
+                    }));
+                    const cards = await Promise.all(cardPromises);
+                    cards.forEach(card => grid.appendChild(card));
+
+                    lastVisibleDocs[category] = documents[documents.length - 1];
+                    section.querySelector('.next-btn').style.display = 'inline-block';
+                }
+
+                section.classList.add('active');
+                hideLoading();
+            }
+
+            async function loadMinecraftDownloads(lastDoc = null) {
+                showLoading();
+                currentCategory = 'minecraft-downloads';
+
+                document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+                topUsersContainer.style.display = 'none';
+                mainHub.style.display = 'none';
+
+                const listContainer = minecraftDownloadsList;
+                if (!lastDoc) {
+                    listContainer.innerHTML = '';
+                }
+
+                let q = query(
+                    collection(db, "contenidos"),
+                    where("tipo", "==", "minecraft-version"),
+                    orderBy("fecha", "desc"),
+                    limit(pageSize)
+                );
+
+                if (lastDoc) {
+                    q = query(
+                        collection(db, "contenidos"),
+                        where("tipo", "==", "minecraft-version"),
+                        orderBy("fecha", "desc"),
+                        startAfter(lastDoc),
+                        limit(pageSize)
+                    );
+                }
+
+                const querySnapshot = await getDocs(q);
+                const documents = querySnapshot.docs;
+
+                if (documents.length === 0 && !lastDoc) {
+                    listContainer.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No hay versiones de Minecraft disponibles aún.</p>';
+                    minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'none';
+                } else if (documents.length === 0) {
+                    alert("No hay más versiones de Minecraft disponibles.");
+                    minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'none';
+                } else {
+                    for (const docSnap of documents) {
+                        const contenido = docSnap.data();
+                        contenido.id = docSnap.id;
+                        if (contenido.versiones && typeof contenido.versiones === 'object') {
+                            for (const [versionName, downloadLink] of Object.entries(contenido.versiones)) {
+                                const downloadItem = createDownloadItem(versionName, downloadLink, docSnap.id); // Pasamos el ID del doc
+                                listContainer.appendChild(downloadItem);
+                            }
+                        }
+                    }
+                    lastVisibleDocs['minecraft-version'] = documents[documents.length - 1];
+                    minecraftDownloadsPagination.querySelector('.next-btn').style.display = 'inline-block';
+                }
+                minecraftDownloadsSection.classList.add('active');
+                hideLoading();
+            }
 
             minecraftDownloadsPagination.querySelector('.next-btn').addEventListener('click', () => {
                 loadMinecraftDownloads(lastVisibleDocs['minecraft-version']);
             });
 
-            trendsPaginationBtn.addEventListener('click', () => {
-                loadTrends(lastVisibleDocs['trends']);
+            function handleCategoryClick(e) {
+                e.preventDefault();
+                const categoria = e.currentTarget.dataset.category;
+
+                lastVisibleDocs[categoria] = null;
+
+                document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+                topUsersContainer.style.display = 'none';
+                mainHub.style.display = 'none';
+
+                if (categoria === 'top') {
+                    showTopUsers();
+                } else if (categoria === 'minecraft-downloads') {
+                    loadMinecraftDownloads();
+                } else {
+                    loadCategoryContent(categoria);
+                }
+            }
+
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', handleCategoryClick);
             });
+
+            function handleBackButtonClick(e) {
+                if (e) e.preventDefault();
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                topUsersContainer.style.display = 'none';
+                mainHub.style.display = 'inline-block';
+                currentCategory = '';
+            }
 
             document.querySelectorAll('.back-btn').forEach(btn => {
                 btn.addEventListener('click', handleBackButtonClick);
             });
 
-            shopBtn.addEventListener('click', async () => {
-                if (!currentUser) {
-                    alert('Debes iniciar sesión para acceder a la tienda.');
-                    authContainer.style.display = 'flex';
-                    isRegisterMode = false;
-                    renderAuthForm();
+            async function createContentCard(contenido) {
+                const versiones = Object.keys(contenido.versiones || {});
+                const primeraVersion = versiones[0];
+                const primerLink = contenido.versiones[primeraVersion];
+
+                let publisherName = contenido.nombre || "Anónimo";
+                let publisherAvatar = "https://i.imgur.com/gK103rS.png";
+                if (contenido.userId) {
+                    const userDoc = await getDoc(doc(db, "users", contenido.userId));
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        publisherName = userData.username;
+                        publisherAvatar = userData.avatarURL || publisherAvatar;
+                    }
+                }
+
+                // NUEVO: Lógica para mostrar el botón de eliminar para el administrador
+                let deleteButtonHtml = '';
+                if (currentUser && currentUser.uid === ADMIN_UID) {
+                    deleteButtonHtml = `<button class="delete-content-btn" data-id="${contenido.id}" data-image-url="${contenido.imagenURL}">🗑️</button>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = 'content-card';
+                card.innerHTML = `
+                    <img data-src="${contenido.imagenURL || 'https://i.imgur.com/hUPXXQF.png'}" alt="${contenido.titulo}" class="lazyload-img">
+                    <div class="card-body">
+                        ${deleteButtonHtml} <h3>${contenido.titulo}</h3>
+                        <p>${contenido.descripcion}</p>
+                        <p><small>Publicado por: <strong>${publisherName}</strong></small></p>
+
+                        <div class="interaction-buttons">
+                            <div class="like-section">
+                                <button class="like-btn" data-content-id="${contenido.id}">❤️</button>
+                                <span class="likes-count">${contenido.likes || 0} likes</span>
+                            </div>
+                            <div class="favorite-section">
+                                <button class="favorite-btn" data-content-id="${contenido.id}"><i class="far fa-star"></i></button>
+                                <span class="favorites-count">Favorito</span>
+                            </div>
+                        </div>
+
+                        <select class="version-select">
+                            ${versiones.map(v => `<option value="${v}">${v}</option>`).join('')}
+                        </select>
+                        <a href="${primerLink}" target="_blank" class="download-btn">Descargar</a>
+
+                        <div class="comments-section">
+                            <div class="comment-form" data-content-id="${contenido.id}">
+                                <input type="text" class="comment-input" placeholder="Añade un comentario...">
+                                <button class="comment-submit">Enviar</button>
+                            </div>
+                            <div class="comments-list" id="comments-${contenido.id}">
+
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // NUEVO: Event Listener para el botón de eliminar de administrador
+                const deleteButton = card.querySelector('.delete-content-btn');
+                if (deleteButton) { // Solo si el botón existe (porque el admin está logueado)
+                    deleteButton.addEventListener('click', async (e) => {
+                        const contentId = e.target.dataset.id;
+                        const imageUrl = e.target.dataset.imageUrl;
+
+                        if (confirm('¿Estás seguro de que quieres eliminar esta publicación? Esta acción es irreversible y afectará a todos los usuarios.')) {
+                            showLoading();
+                            try {
+                                if (imageUrl && imageUrl.startsWith('https://i.ibb.co/')) {
+                                    console.warn("No se puede eliminar la imagen de ImgBB directamente sin el hash de eliminación. Se eliminará solo el documento de Firestore.");
+                                }
+
+                                await deleteDoc(doc(db, "contenidos", contentId));
+
+                                // Obtener el userId del contenido original para decrementar su contador
+                                const originalContentDoc = await getDoc(doc(db, "contenidos", contentId));
+                                if (originalContentDoc.exists() && originalContentDoc.data().userId) {
+                                    await updateDoc(doc(db, "users", originalContentDoc.data().userId), {
+                                        publicationCount: increment(-1)
+                                    });
+                                }
+
+                                hideLoading();
+                                alert('Publicación eliminada correctamente por el administrador.');
+                                // Recargar la categoría actual para reflejar la eliminación
+                                if (currentCategory && document.getElementById(`${currentCategory}-section`) && document.getElementById(`${currentCategory}-section`).classList.contains('active')) {
+                                    if (currentCategory === 'minecraft-downloads') {
+                                        loadMinecraftDownloads(null); // Recarga desde el principio
+                                    } else if (currentCategory !== 'top') {
+                                        loadCategoryContent(currentCategory, null); // Recarga desde el principio
+                                    }
+                                }
+                            } catch (error) {
+                                hideLoading();
+                                console.error("Error al eliminar publicación como admin:", error);
+                                alert('Error al eliminar la publicación como administrador.');
+                            }
+                        }
+                    });
+                }
+
+                const likeBtn = card.querySelector('.like-btn');
+                const likesCount = card.querySelector('.likes-count');
+                const favoriteBtn = card.querySelector('.favorite-btn');
+
+                // --- Lógica de Likes ---
+                const likedContents = JSON.parse(localStorage.getItem('likedContents') || '{}');
+                if (likedContents[contenido.id]) {
+                    likeBtn.classList.add('liked');
+                }
+
+                likeBtn.addEventListener('click', async () => {
+                    if (!currentUser) {
+                        alert('Debes iniciar sesión para dar "like".');
+                        return;
+                    }
+
+                    if (likedContents[contenido.id]) {
+                        alert("Ya le has dado like a este contenido.");
+                        return;
+                    }
+
+                    try {
+                        await updateDoc(doc(db, "contenidos", contenido.id), {
+                            likes: increment(1)
+                        });
+
+                        likeBtn.classList.add('liked');
+                        likesCount.textContent = `${(contenido.likes || 0) + 1} likes`;
+                        likedContents[contenido.id] = true;
+                        localStorage.setItem('likedContents', JSON.stringify(likedContents));
+                    } catch (error) {
+                        console.error("Error al dar like:", error);
+                    }
+                });
+
+                // --- Lógica de Favoritos ---
+                if (currentUser) {
+                    const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+                    if (userDoc.exists() && userDoc.data().favorites?.includes(contenido.id)) {
+                        favoriteBtn.classList.add('favorited');
+                        favoriteBtn.innerHTML = '<i class="fas fa-star"></i>'; // Estrella sólida
+                    } else {
+                        favoriteBtn.innerHTML = '<i class="far fa-star"></i>'; // Estrella vacía
+                    }
+                } else {
+                    favoriteBtn.innerHTML = '<i class="far fa-star"></i>'; // Estrella vacía si no logueado
+                }
+
+                favoriteBtn.addEventListener('click', async () => {
+                    if (!currentUser) {
+                        alert('Debes iniciar sesión para añadir a favoritos.');
+                        return;
+                    }
+
+                    const contentId = contenido.id;
+                    const userDocRef = doc(db, "users", currentUser.uid);
+
+                    try {
+                        const userDocSnap = await getDoc(userDocRef);
+                        const favorites = userDocSnap.exists() ? (userDocSnap.data().favorites || []) : [];
+
+                        if (favorites.includes(contentId)) {
+                            // Quitar de favoritos
+                            await updateDoc(userDocRef, {
+                                favorites: arrayRemove(contentId)
+                            });
+                            favoriteBtn.classList.remove('favorited');
+                            favoriteBtn.innerHTML = '<i class="far fa-star"></i>';
+                            alert('Eliminado de favoritos.');
+                        } else {
+                            // Añadir a favoritos
+                            await updateDoc(userDocRef, {
+                                favorites: arrayUnion(contentId)
+                            });
+                            favoriteBtn.classList.add('favorited');
+                            favoriteBtn.innerHTML = '<i class="fas fa-star"></i>';
+                            alert('Añadido a favoritos.');
+                        }
+                        // Actualizar favoritos en el perfil si está abierto
+                        if (userProfile.style.display === 'flex') {
+                            await loadMyFavorites(currentUser.uid, favorites.includes(contentId) ? favorites.filter(id => id !== contentId) : [...favorites, contentId]);
+                        }
+                    } catch (error) {
+                        console.error("Error al gestionar favoritos:", error);
+                        alert('Error al gestionar favoritos. Intenta de nuevo.');
+                    }
+                });
+
+
+                // --- Lógica de Comentarios Anidados ---
+                const commentInput = card.querySelector('.comment-input');
+                const commentSubmit = card.querySelector('.comment-submit');
+                const commentsList = card.querySelector('.comments-list');
+                const commentForm = card.querySelector('.comment-form');
+
+                // Función para enviar comentario (puede ser raíz o respuesta)
+                async function submitComment(parentId = null, replyToUser = '') {
+                    if (!currentUser) {
+                        alert('Debes iniciar sesión para comentar.');
+                        return;
+                    }
+
+                    let commentText = commentInput.value.trim();
+                    if (!commentText) return;
+
+                    // Si es una respuesta, prepend el nombre de usuario
+                    if (replyToUser) {
+                        commentText = `@${replyToUser} ${commentText}`;
+                    }
+
+                    let authorName = "Anónimo";
+                    if (currentUser) {
+                        const userData = await getUserData(currentUser.uid);
+                        authorName = userData?.username || currentUser.email;
+                    }
+
+                    try {
+                        await addDoc(collection(db, "comentarios"), {
+                            contenidoId: contenido.id,
+                            autor: authorName,
+                            texto: commentText,
+                            fecha: serverTimestamp(),
+                            parentId: parentId // Campo para comentarios anidados
+                        });
+
+                        commentInput.value = '';
+                        // Quitar placeholder de respuesta si existe
+                        if (commentInput.dataset.replyingTo) {
+                            commentInput.placeholder = 'Añade un comentario...';
+                            delete commentInput.dataset.replyingTo;
+                            delete commentInput.dataset.replyingToId;
+                        }
+
+                        loadComments(contenido.id, commentsList); // Recargar comentarios
+                    } catch (error) {
+                        console.error("Error al enviar comentario:", error);
+                    }
+                }
+
+                // Listener para el botón de enviar del comentario principal
+                // Se define aquí para poder referenciarlo y eliminarlo/añadirlo.
+                const submitCommentBaseListener = () => submitComment();
+                commentSubmit.addEventListener('click', submitCommentBaseListener);
+
+                loadComments(contenido.id, commentsList); // Cargar comentarios iniciales
+
+
+                const versionSelect = card.querySelector('.version-select');
+                const downloadBtn = card.querySelector('.download-btn');
+                versionSelect.addEventListener('change', () => {
+                    const version = versionSelect.value;
+                    downloadBtn.href = contenido.versiones[version] || '#';
+                });
+
+                // --- Lógica de Carga Perezosa (Lazy Loading) ---
+                const lazyImage = card.querySelector('.lazyload-img');
+                if ('IntersectionObserver' in window) {
+                    let lazyImageObserver = new IntersectionObserver(function(entries, observer) {
+                        entries.forEach(function(entry) {
+                            if (entry.isIntersecting) {
+                                let img = entry.target;
+                                img.src = img.dataset.src;
+                                img.classList.remove('lazyload-img');
+                                lazyImageObserver.unobserve(img);
+                            }
+                        });
+                    });
+                    lazyImageObserver.observe(lazyImage);
+                } else {
+                    // Fallback para navegadores antiguos
+                    lazyImage.src = lazyImage.dataset.src;
+                    lazyImage.classList.remove('lazyload-img');
+                }
+
+
+                return card;
+            }
+
+            async function loadComments(contentId, container) {
+                const q = query(
+                    collection(db, "comentarios"),
+                    where("contenidoId", "==", contentId),
+                    orderBy("fecha", "asc") // Ordenar por fecha ascendente para mostrar hilos correctamente
+                );
+
+                const querySnapshot = await getDocs(q);
+                container.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<p style="font-size: 0.8rem; color: var(--text-color-secondary);">Sé el primero en comentar.</p>';
                     return;
                 }
-                showLoading();
-                await loadShopItems();
-                shopContainer.style.display = 'flex';
-                mainHub.style.display = 'none';
-                document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
-                topUsersContainer.style.display = 'none';
-                viewProfileContainer.style.display = 'none';
-                hideLoading();
-            });
 
-            onAuthStateChanged(auth, async (user) => {
-                currentUser = user;
-                if (user) {
-                    console.log("Usuario logueado UID:", currentUser.uid);
-                    currentUserData = await getUserData(user.uid);
-                    userNameInput.value = currentUserData?.username || user.email;
-                    userNameInput.readOnly = true;
-                    publishContentBtn.style.display = 'inline-block';
-                    publishContentBtn.textContent = '⬇️ Publicar Contenido';
-                    profileBtn.innerHTML = '<i class="fas fa-user"></i>';
-                    authContainer.style.display = 'none';
-                    updateCurrencyDisplay();
-                    
-                    // Solo actualizar marco, banner y eslogan, no el avatar principal con el avatar de usuario.
-                    // mainProfileAvatar.src = currentUserData?.avatarURL || "https://i.imgur.com/gK103rS.png"; // COMENTADO O ELIMINADO
-                    applyFrameToElement(mainProfileFrame, currentUserData?.equippedItems?.profileFrame || '');
-                    applyBannerToElement(mainProfileBanner, currentUserData?.equippedItems?.banner || '');
-                    applySloganToElement(mainProfileSlogan, currentUserData?.equippedItems?.slogan || '');
-
-
-                    publishContentBtn.removeEventListener('click', showAuthWarning);
-                    publishContentBtn.addEventListener('click', (event) => {
-                        event.preventDefault();
-                        contentFormOverlay.style.display = 'flex';
+                const comments = [];
+                querySnapshot.forEach((doc) => {
+                    comments.push({
+                        id: doc.id,
+                        ...doc.data()
                     });
+                });
 
-                    if (currentUser.uid === ADMIN_UID) {
-                        contentTypeSelect.querySelector('option[value="minecraft-version"]').style.display = 'block';
+                // Construir árbol de comentarios para anidarlos
+                const commentMap = new Map();
+                comments.forEach(comment => commentMap.set(comment.id, {
+                    ...comment,
+                    replies: []
+                }));
+
+                const rootComments = [];
+                comments.forEach(comment => {
+                    if (comment.parentId && commentMap.has(comment.parentId)) {
+                        commentMap.get(comment.parentId).replies.push(commentMap.get(comment.id));
                     } else {
-                        contentTypeSelect.querySelector('option[value="minecraft-version"]').style.display = 'none';
-                        if (contentTypeSelect.value === 'minecraft-version') {
-                            contentTypeSelect.value = '';
-                        }
+                        rootComments.push(commentMap.get(comment.id));
                     }
+                });
 
-                } else {
-                    console.log("No hay usuario logueado");
-                    currentUserData = null;
-                    userNameInput.value = '';
-                    userNameInput.readOnly = false;
-                    publishContentBtn.style.display = 'inline-block';
-                    publishContentBtn.textContent = '⬇️ Publicar Contenido (Requiere Inicio de Sesión)';
-                    profileBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i>';
-                    currencyDisplay.style.display = 'none';
-                    
-                    // Restaurar elementos principales a sus estados por defecto
-                    // mainProfileAvatar.src = "https://i.pinimg.com/736x/2d/b0/1d/2db01d6e21cba969c8363d2aa473c813.jpg"; // Mantener la imagen original del logo
-                    applyFrameToElement(mainProfileFrame, ''); // Eliminar marco
-                    applyBannerToElement(mainProfileBanner, ''); // Eliminar banner
-                    applySloganToElement(mainProfileSlogan, ''); // Eliminar eslogan
+                function renderComment(comment, parentElement) {
+                    const commentElement = document.createElement('div');
+                    commentElement.className = 'comment-item'; // Nuevo contenedor para cada comentario/respuesta
+                    commentElement.innerHTML = `
+                        <div class="comment">
+                            <span class="comment-author">${comment.autor}</span>
+                            <span class="comment-time">${formatDate(comment.fecha?.toDate())}</span>
+                            <p class="comment-text">${comment.texto}</p>
+                            <div class="comment-actions">
+                                <button class="comment-reply-btn" data-comment-id="${comment.id}" data-author="${comment.autor}">Responder</button>
+                            </div>
+                        </div>
+                        <div class="comment-replies"></div>
+                    `;
+                    parentElement.appendChild(commentElement);
 
+                    // Listener para el botón de responder
+                    commentElement.querySelector('.comment-reply-btn').addEventListener('click', (e) => {
+                        const replyingToId = e.target.dataset.commentId;
+                        const replyingToAuthor = e.target.dataset.author;
+                        const form = e.target.closest('.comments-section').querySelector('.comment-form');
+                        const input = form.querySelector('.comment-input');
+                        const submitBtn = form.querySelector('.comment-submit');
 
-                    publishContentBtn.removeEventListener('click', (event) => {
-                        event.preventDefault();
-                        contentFormOverlay.style.display = 'flex';
+                        input.placeholder = `Respondiendo a ${replyingToAuthor}...`;
+                        input.dataset.replyingTo = replyingToAuthor;
+                        input.dataset.replyingToId = replyingToId;
+
+                        // Para evitar múltiples listeners, eliminamos y volvemos a añadir
+                        // el listener del submit para que apunte a la función de respuesta correcta.
+                        submitBtn.removeEventListener('click', submitCommentBaseListener); // Remueve el listener base
+                        submitBtn.addEventListener('click', function replyListener() {
+                            submitComment(replyingToId, replyingToAuthor);
+                            input.placeholder = 'Añade un comentario...'; // Resetear placeholder
+                            delete input.dataset.replyingTo;
+                            delete input.dataset.replyingToId;
+                            submitBtn.removeEventListener('click', replyListener); // Eliminar este listener específico
+                            submitBtn.addEventListener('click', submitCommentBaseListener); // Volver al listener base
+                        });
+                        input.focus();
                     });
-                    publishContentBtn.addEventListener('click', showAuthWarning);
 
-                    contentTypeSelect.querySelector('option[value="minecraft-version"]').style.display = 'none';
-                    if (contentTypeSelect.value === 'minecraft-version') {
-                        contentTypeSelect.value = '';
-                    }
+                    const repliesContainer = commentElement.querySelector('.comment-replies');
+                    comment.replies.sort((a, b) => a.fecha.toDate() - b.fecha.toDate()).forEach(reply => renderComment(reply, repliesContainer));
                 }
-                if (currentCategory && document.getElementById(`${currentCategory}-section`) && document.getElementById(`${currentCategory}-section`).classList.contains('active')) {
-                    if (currentCategory === 'minecraft-downloads') {
-                        loadMinecraftDownloads(null);
-                    } else if (currentCategory === 'trends') {
-                        loadTrends(null);
-                    }
-                    else if (currentCategory !== 'top') {
-                        loadCategoryContent(currentCategory, null);
-                    }
-                }
-                await updateNewContentCount();
+
+                // Listener base para el botón de enviar del comentario principal.
+                const submitCommentBaseListener = () => submitComment();
+
+                rootComments.sort((a, b) => a.fecha.toDate() - b.fecha.toDate()).forEach(comment => renderComment(comment, container));
+            }
+
+            // --- Lógica del Top de Usuarios ---
+            topUsersBtn.addEventListener('click', showTopUsers);
+            closeTopUsersBtn.addEventListener('click', () => {
+                topUsersContainer.style.display = 'none';
+                mainHub.style.display = 'inline-block';
             });
 
+            async function showTopUsers() {
+                showLoading();
+                topUsersList.innerHTML = '';
+                currentCategory = 'top';
+                try {
+                    const q = query(
+                        collection(db, "users"),
+                        orderBy("publicationCount", "desc"),
+                        limit(5)
+                    );
+                    const querySnapshot = await getDocs(q);
+
+                    if (querySnapshot.empty) {
+                        topUsersList.innerHTML = '<p style="text-align: center; color: var(--text-color-secondary);">No hay usuarios en el top aún.</p>';
+                    } else {
+                        querySnapshot.forEach(docSnap => {
+                            const userData = docSnap.data();
+                            if (userData.username) {
+                                const userCard = document.createElement('div');
+                                userCard.className = 'user-card';
+                                userCard.innerHTML = `
+                                    <img src="${userData.avatarURL || 'https://i.imgur.com/gK103rS.png'}" alt="Avatar">
+                                    <span>${userData.username}</span>
+                                    <span class="publication-count">${userData.publicationCount || 0} publicaciones</span>
+                                `;
+                                topUsersList.appendChild(userCard);
+                            }
+                        });
+                    }
+                    mainHub.style.display = 'none';
+                    topUsersContainer.style.display = 'flex';
+                    hideLoading();
+                } catch (error) {
+                    hideLoading();
+                    console.error("Error al cargar el top de usuarios:", error);
+                    alert("Error al cargar el top de usuarios.");
+                }
+            }
+
+            // --- Funciones de Utilidad ---
+            async function getUserData(uid) {
+                try {
+                    const userDoc = await getDoc(doc(db, "users", uid));
+                    if (userDoc.exists()) {
+                        return userDoc.data();
+                    }
+                    return null;
+                } catch (error) {
+                    console.error("Error al obtener datos de usuario:", error);
+                    return null;
+                }
+            }
+
+            function formatDate(date) {
+                if (!date) return '';
+                return date.toLocaleString('es-CO', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+
+            function getCategoryName(categoria) {
+                const nombres = {
+                    textura: 'Texturas',
+                    addon: 'Addons',
+                    mod: 'Mods',
+                    plantilla: 'Plantillas',
+                    skin: 'Skins',
+                    shader: 'Shaders',
+                    tutorial: 'Tutoriales',
+                    top: 'Top',
+                    'minecraft-downloads': 'Descargas de Minecraft',
+                    'minecraft-version': 'Descargas de Minecraft'
+                };
+                return nombres[categoria] || categoria;
+            }
+
+            function createDownloadItem(versionName, downloadLink, contentId) {
+                const item = document.createElement('div');
+                item.className = 'download-item';
+                // NUEVO: Botón de eliminar para admin en la lista de descargas de Minecraft
+                let deleteBtnHtml = '';
+                if (currentUser && currentUser.uid === ADMIN_UID) {
+                     deleteBtnHtml = `<button class="delete-content-btn" data-id="${contentId}" data-image-url="">🗑️</button>`; // imageURL vacía, ya que no se muestra img en esta vista
+                }
+
+                item.innerHTML = `
+                    <span>Minecraft ${versionName}</span>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        ${deleteBtnHtml}
+                        <a href="${downloadLink}" target="_blank">Descargar</a>
+                    </div>
+                `;
+
+                // Añadir event listener para el botón de eliminar si existe
+                const deleteButton = item.querySelector('.delete-content-btn');
+                if (deleteButton) {
+                    deleteButton.addEventListener('click', async (e) => {
+                        const idToDelete = e.target.dataset.id;
+                        if (confirm('¿Estás seguro de que quieres eliminar esta versión de Minecraft? Esto eliminará la publicación completa.')) {
+                            showLoading();
+                            try {
+                                await deleteDoc(doc(db, "contenidos", idToDelete));
+                                // Opcional: decrementar contador del autor si es necesario
+                                const originalContentDoc = await getDoc(doc(db, "contenidos", idToDelete));
+                                if (originalContentDoc.exists() && originalContentDoc.data().userId) {
+                                    await updateDoc(doc(db, "users", originalContentDoc.data().userId), {
+                                        publicationCount: increment(-1)
+                                    });
+                                }
+                                hideLoading();
+                                alert('Versión de Minecraft eliminada correctamente.');
+                                loadMinecraftDownloads(null); // Recargar la lista de descargas
+                            } catch (error) {
+                                hideLoading();
+                                console.error("Error al eliminar versión de Minecraft como admin:", error);
+                                alert('Error al eliminar la versión de Minecraft.');
+                            }
+                        }
+                    });
+                }
+                return item;
+            }
+
+            mainHub.style.display = 'inline-block';
         });
     </script>
 </body>
