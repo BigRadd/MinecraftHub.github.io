@@ -98,10 +98,10 @@ const SHOP_ITEMS = [
     
     // --- EJEMPLOS DE ESLÓGANES ---
     { id: 'slogan_pro', type: 'slogan', name: 'Slogan: ¡PRO!', cost: 50, text: '¡PRO!', style: 'color: #00ff00;' },
-    { id: 'slogan_ban_trixxi', type: 'slogan', name: 'Slogan: ¡BAN TRIXXI! 1 DIA', cost: 1000, text: '¡BAN TRIXXI!', style: 'color:rgb(186, 30, 134);' },
+    { id: 'slogan_ban_trixxi', type: 'slogan', name: '1 DIA', cost: 1000, text: '¡BAN TRIXXI!', style: 'color:rgb(186, 30, 134);' },
     { id: 'slogan_esclavo_radd', type: 'slogan', name: 'Slogan: ESCLAVO DE RADD', cost: 50, text: 'ESCLAVO DE RADD', style: 'color:rgb(255, 25, 0);' },
-    { id: 'slogan_ban_jus', type: 'slogan', name: '!BAN JUS¡ 1 DIA"', cost: 1000, text: '!BAN JUS¡', style: 'color:rgb(18, 191, 226);' },
-    { id: 'slogan_admin', type: 'slogan', name: 'ADMIN CRAFTERS 2 DIAS🔥"', cost: 500, text: 'ADMIN🔥', style: 'color:rgb(4, 224, 11);' },
+    { id: 'slogan_ban_jus', type: 'slogan', name: '1 DIA"', cost: 1000, text: '¡BAN JUS!', style: 'color:rgb(18, 191, 226);' },
+    { id: 'slogan_admin', type: 'slogan', name: '2 DIAS🔥"', cost: 500, text: 'ADMIN🔥', style: 'color:rgb(4, 224, 11);' },
     { id: 'slogan_legend', type: 'slogan', name: 'Slogan: LEYENDA', cost: 120, text: '¡LEYENDA DEL HUB!', style: 'color: gold; text-shadow: 0 0 5px orange;' },
 
     // --- EJEMPLOS DE INSIGNIAS (BADGES) ---
