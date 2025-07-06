@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RADD | Minecraft Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8717206316250466"
+        crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <button class="profile-btn" id="profileBtn"><i class="fas fa-user"></i></button>
+    <button class="theme-toggle-btn" id="themeToggleBtn"><i class="fas fa-sun"></i></button>
+    <div class="currency-display" id="currencyDisplay" style="display: none;">
+        <i class="fas fa-coins"></i> <span id="userCoins">0</span>
+    </div>
+    
+    <div class="profile">
+        <div class="avatar-frame-container">
+            <img src="https://i.pinimg.com/736x/2d/b0/1d/2db01d6e21cba969c8363d2aa473c813.jpg" alt="Logo de Yasho" class="profile-avatar-img" id="mainProfileAvatar">
+            <div class="profile-badge-display" id="mainProfileBadgeDisplay"></div> 
+        </div>
+        <h1><span class="logo-text">Minecraft Hub</span></h1>
+        <p>⛩️ raddcraft⛩️</p>
+        <p class="new-content-count" id="newContentCount"></p>
+        <div class="socials">
+            <a href="https://whatsapp.com/channel/0029VayiemvJuyAE73jT4P0Q" target="_blank"><i
+                        class="fab fa-whatsapp"></i></a>
+            <a href="https://www.tiktok.com/@raddcraft?_t=ZS-8xVc0SfUJqE&_r=1" target="_blank"><i
+                        class="fab fa-tiktok"></i></a>
+        </div>
+    </div>
+
+    <div class="hub" id="mainHub">
+
+        <a class="main-minecraft-btn category-btn" data-category="minecraft-downloads" id="mainMinecraftBtn">
+            <i class="fas fa-gamepad"></i> MINECRAFT <i class="fas fa-gamepad"></i>
+        </a>
+        <div class="grid">
+            <a class="btn category-btn" data-category="textura"><i class="fas fa-paint-brush"></i> Texturas</a>
+            <a class="btn category-btn" data-category="addon"><i class="fas fa-puzzle-piece"></i> Addons</a>
+            <a class="btn category-btn" data-category="mod"><i class="fas fa-cogs"></i> Mods</a>
+            <a class="btn category-btn" data-category="plantilla"><i class="fas fa-layer-group"></i> Plantillas</a>
+            <a class="btn category-btn" data-category="skin"><i class="fas fa-user-friends"></i> Skins</a>
+            <a class="btn category-btn" data-category="shader"><i class="fas fa-sun"></i> Shaders</a>
+            <a class="btn category-btn" data-category="tutorial"><i class="fas fa-graduation-cap"></i> Tutoriales</a>
+            <a class="btn category-btn" data-category="top" id="topUsersBtn"><i class="fas fa-crown"></i> Top</a>
+            <a class="btn category-btn" data-category="trends"><i class="fas fa-fire"></i> Tendencias</a>
+            <a class="btn" id="shopBtn"><i class="fas fa-store"></i> Tienda</a>
+
+        </div>
+        <a class="publish-content-btn" id="publishContentBtn" style="display: none;">⬇️ Publicar Contenido</a>
+        <p id="cooldownMessage" class="cooldown-message"></p>
+    </div>
+
+
+    <div id="contentSections"></div>
+
+
+    <div class="content-form-overlay" id="contentFormOverlay">
+        <div class="content-form-container">
+            <span class="close-btn" id="closeFormBtn">×</span>
+            <h3>Publicar Nuevo Contenido</h3>
+            <form id="publishForm">
+                <label for="userNameInput">Nombre o Usuario:</label>
+                <input type="text" id="userNameInput" name="userName" required readonly>
+                <label for="contentTitle">Título del Contenido:</label>
+                <input type="text" id="contentTitle" name="contentTitle" required>
+
+                <label for="contentDescription">Descripción del Contenido:</label>
+                <textarea id="contentDescription" name="contentDescription" required></textarea>
+
+                <label for="contentType">Tipo de Contenido:</label>
+                <select id="contentType" name="contentType" required>
+                    <option value="">Selecciona un tipo</option>
+                    <option value="textura">Textura</option>
+                    <option value="addon">Addon</option>
+                    <option value="mod">Mod</option>
+                    <option value="plantilla">Plantilla</option>
+                    <option value="skin">Skin</option>
+                    <option value="shader">Shader</option>
+                    <option value="tutorial">Tutorial</option>
+                    <option value="minecraft-version">Minecraft Versión (Solo Admins)</option>
+                </select>
+
+                <label for="contentImage">Imagen del Contenido:</label>
+                <input type="file" id="contentImage" name="contentImage" accept="image/*" required>
+
+                <label>Versiones del Contenido:</label>
+                <div id="versionsContainer">
+                    <div class="version-block">
+                        <input type="text" name="version-name[]" placeholder="Nombre de versión (ej: 1.20)" required>
+                        <input type="url" name="version-link[]" placeholder="Link de descarga (solo MediaFire)"
+                            required>
+                    </div>
+                </div>
+                <button type="button" id="addVersionBtn">➕ Añadir Versión</button>
+
+                <button type="submit">Publicar ahora</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="auth-container" id="authContainer">
+        <div class="auth-form-content">
+            <span class="close-btn" id="closeAuthBtn">×</span>
+            <h3 id="authTitle">Iniciar Sesión</h3>
+            <form id="authForm">
+                <div id="registerFields" style="display: none;">
+                    <label for="authUsername">Nombre de Usuario:</label>
+                    <input type="text" id="authUsername" placeholder="Tu nombre de usuario único">
+                    <label for="avatarSelect">Elige tu Avatar:</label>
+                    <div class="avatar-selection" id="avatarSelection">
+                        <img src="https://i.ibb.co/5WF3JMwB/IMG-20250626-WA0080.jpg"
+                            data-avatar-url="https://i.ibb.co/5WF3JMwB/IMG-20250626-WA0080.jpg" class="selected">
+                        <img src="https://i.ibb.co/RT2rBhfq/IMG-20250626-WA0073.jpg"
+                            data-avatar-url="https://i.ibb.co/RT2rBhfq/IMG-20250626-WA0073.jpg">
+                        <img src="https://i.ibb.co/7xr0HW79/IMG-20250626-WA0072.jpg"
+                            data-avatar-url="https://i.ibb.co/7xr0HW79/IMG-20250626-WA0072.jpg">
+                        <img src="https://i.ibb.co/Kx0XcWHj/IMG-20250626-WA0070.jpg"
+                            data-avatar-url="https://i.ibb.co/Kx0XcWHj/IMG-20250626-WA0070.jpg">
+                        <img src="https://i.ibb.co/239SGW4x/IMG-20250626-WA0068.jpg"
+                            data-avatar-url="https://i.ibb.co/239SGW4x/IMG-20250626-WA0068.jpg">
+                    </div>
+                </div>
+                <label for="authEmail">Email:</label>
+                <input type="email" id="authEmail" placeholder="tu@email.com" required>
+                <label for="authPassword">Contraseña:</label>
+                <div class="password-input-container">
+                    <input type="password" id="authPassword" placeholder="********" required>
+                    <span class="toggle-password"><i class="fas fa-eye"></i></span>
+                </div>
+                <button type="submit" id="authSubmitBtn" class="auth-btn">Iniciar Sesión</button>
+                <a href="#" id="forgotPasswordLink"
+                    style="display: block; text-align: center; margin-top: 10px; color: var(--comment-text); font-size: 0.9rem; text-decoration: underline;">¿Olvidaste
+                    tu contraseña?</a>
+                <p class="toggle-auth-mode" id="toggleAuthMode">¿No tienes cuenta? Regístrate</p>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="user-profile" id="userProfile">
+        <div class="profile-content">
+            <span class="close-btn" id="closeProfileBtn">×</span>
+            <div class="profile-header"> 
+                <div id="profileBannerDisplay" class="profile-banner-display"></div>
+                <div class="profile-avatar-display-container">
+                    <img src="https://i.imgur.com/gK103rS.png" alt="Avatar de Usuario" class="profile-avatar-img" id="profileAvatar">
+                    <div class="profile-badge-display" id="profileBadgeDisplay"></div> 
+                </div>
+                <h3 id="profileUsername">Nombre de Usuario</h3>
+                <p id="profileEmail">email@example.com</p>
+                <p id="profileCoinsDisplay" style="color:var(--currency-color); font-weight:bold;"><i class="fas fa-coins"></i> <span id="profileUserCoins">0</span> Monedas</p>
+            </div>
+            <div class="profile-avatar-upload">
+                <label for="profileAvatarFile">Cambiar Avatar (Subir):</label>
+                <input type="file" id="profileAvatarFile" accept="image/*">
+                <label for="profileAvatarSelect">O Elige un Avatar Predeterminado:</label>
+                <div class="avatar-selection" id="profileAvatarSelection">
+                    <img src="https://i.ibb.co/5WF3JMwB/IMG-20250626-WA0080.jpg"
+                        data-avatar-url="https://i.ibb.co/5WF3JMwB/IMG-20250626-WA0080.jpg">
+                    <img src="https://i.ibb.co/RT2rBhfq/IMG-20250626-WA0073.jpg"
+                        data-avatar-url="https://i.ibb.co/RT2rBhfq/IMG-20250626-WA0073.jpg">
+                    <img src="https://i.ibb.co/7xr0HW79/IMG-20250626-WA0072.jpg"
+                        data-avatar-url="https://i.ibb.co/7xr0HW79/IMG-20250626-WA0072.jpg">
+                    <img src="https://i.ibb.co/Kx0XcWHj/IMG-20250626-WA0070.jpg"
+                        data-avatar-url="https://i.ibb.co/Kx0XcWHj/IMG-20250626-WA0070.jpg">
+                    <img src="https://i.ibb.co/239SGW4x/IMG-20250626-WA0068.jpg"
+                        data-avatar-url="https://i.ibb.co/239SGW4x/IMG-20250626-WA0068.jpg">
+                </div>
+            </div>
+            
+            <label for="currentBannerSelect" style="text-align: left; display: block; margin-top: 1rem;">Tu Banner Actual:</label>
+            <select id="currentBannerSelect" class="version-select" style="margin-bottom: 1rem;">
+                <option value="">Sin Banner</option>
+            </select>
+
+            <label for="currentSloganSelect" style="text-align: left; display: block; margin-top: 1rem;">Tu Eslogan Actual:</label>
+            <p id="profileSloganDisplay" class="profile-slogan-display"></p> <select id="currentSloganSelect" class="version-select" style="margin-bottom: 1rem;">
+                <option value="">Sin Eslogan</option>
+            </select>
+
+            <label for="currentBadgeSelect" style="text-align: left; display: block; margin-top: 1rem;">Tu Insignia Actual:</label>
+            <select id="currentBadgeSelect" class="version-select" style="margin-bottom: 1rem;">
+                <option value="">Sin Insignia</option>
+            </select>
+            <label for="profileDescription" style="text-align: left; display: block; margin-top: 1rem;">Tu
+                Descripción Personal:</label>
+            <textarea id="profileDescription" class="profile-description-area"
+                placeholder="Escribe algo sobre ti..."></textarea>
+            <button class="auth-btn save-profile-btn" id="saveProfileBtn">Guardar Cambios</button>
+
+            <div class="profile-stats">
+                <div class="profile-stat-item">
+                    <strong id="profilePublicationsCount">0</strong>
+                    <span>Publicaciones</span>
+                </div>
+            </div>
+
+            <h4>Mis Publicaciones</h4>
+            <div class="my-publications-grid" id="myPublicationsGrid">
+            </div>
+
+            <h4>Mis Favoritos</h4>
+            <div class="my-favorites-grid" id="myFavoritesGrid">
+            </div>
+
+            <button class="auth-btn logout-btn" id="logoutBtn">Cerrar Sesión</button>
+        </div>
+    </div>
+
+
+    <div class="top-users-container" id="topUsersContainer">
+        <div class="top-users-content">
+            <span class="close-btn" id="closeTopUsersBtn">×</span>
+            <h3><i class="fas fa-crown"></i> Top 5 Publicadores</h3>
+            <div id="topUsersList">
+            </div>
+        </div>
+    </div>
+
+    <div class="content-section" id="trends-section" style="display: none;">
+        <h2><i class="fas fa-fire"></i> Contenido en Tendencia (Más Descargado)</h2>
+        <a href="#" class="back-btn">← Volver al Hub</a>
+        <div class="content-grid" id="trends-grid">
+            </div>
+        <div class="pagination-controls">
+            <button class="next-btn" data-category="trends" style="display:none;">Cargar más</button>
+        </div>
+    </div>
+
+    <div class="shop-container" id="shopContainer">
+        <div class="shop-content">
+            <span class="close-btn" id="closeShopBtn">×</span>
+            <h3><i class="fas fa-store"></i> Tienda del Hub</h3>
+            <p style="color:var(--currency-color); font-weight:bold; margin-bottom: 20px;"><i class="fas fa-coins"></i> Tus Monedas: <span id="shopUserCoins">0</span></p>
+            <div class="shop-items-grid" id="shopItemsGrid">
+            </div>
+        </div>
+    </div>
+    
+    <div class="view-profile-container" id="viewProfileContainer">
+        <div class="view-profile-content">
+            <span class="close-btn" id="closeViewProfileBtn">×</span>
+            
+            <div class="profile-header"> 
+                <div id="viewProfileBannerDisplay" class="profile-banner-display"></div> 
+                
+                <div class="profile-avatar-display-container">
+                    <img src="https://i.imgur.com/gK103rS.png" alt="Avatar de Usuario" class="profile-avatar-img" id="viewProfileAvatar">
+                    <div class="profile-badge-display" id="viewProfileBadgeDisplay"></div>
+                </div>
+                <h3 id="viewProfileUsername">Nombre de Usuario</h3>
+                <p id="viewProfileSloganDisplay" class="profile-slogan-display"></p>
+            </div>
+            <p id="viewProfileDescription">Descripción personal del usuario.</p>
+            
+            <div class="profile-stats">
+                <div class="profile-stat-item">
+                    <strong id="viewProfilePublicationsCount">0</strong>
+                    <span>Publicaciones</span>
+                </div>
+            </div>
+
+            <h4>Publicaciones de <span id="viewProfilePubsOfUser"></span></h4>
+            <div class="profile-publications-grid" id="viewProfilePublicationsGrid">
+                </div>
+        </div>
+    </div>
+    <div class="content-section" id="minecraft-downloads-section" style="display: none;">
+        <h2><i class="fas fa-download"></i> Descargas de Minecraft</h2>
+        <a href="#" class="back-btn">← Volver al Hub</a>
+        <div class="minecraft-downloads-list" id="minecraftDownloadsList">
+
+        </div>
+        <div class="pagination-controls" id="minecraftDownloadsPagination">
+            <button class="next-btn" data-category="minecraft-version" style="display:none;">Cargar más versiones</button>
+        </div>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <p>Cargando...</p>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

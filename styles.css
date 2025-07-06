@@ -1,0 +1,1733 @@
+/*
+====================================================================================
+ CAMBIOS IMPORTANTES PARA EL BANNER Y EL AVATAR:
+ (Revisa estas secciones cuidadosamente)
+====================================================================================
+
+1.  #profileBannerDisplay y #viewProfileBannerDisplay:
+    -   Se le añaden las propiedades 'position: absolute;', 'top: 0;', 'left: 0;', 'z-index: 0;'.
+        ¡ESTO ES CRUCIAL para que el banner se posicione detrás y pueda moverse libremente!
+    -   Se elimina 'margin-bottom' para que no empuje el contenido.
+    -   'height' se establece a 190px, pero PUEDES AJUSTARLA si tu imagen de banner es más alta o quieres que se extienda más.
+    -   'transform: translateY(-XXpx);' es la propiedad que necesitas AJUSTAR CONSTANTEMENTE
+        para subir o bajar el banner hasta la posición vertical perfecta detrás del avatar.
+
+2.  .profile (y .profile-content / .view-profile-content para las ventanas emergentes):
+    -   Deben tener 'position: relative;' para que el 'position: absolute' del banner funcione correctamente
+        dentro de ellos. (Esto ya lo tenías, solo se refuerza).
+    -   Si el banner se corta por abajo, revisa el 'overflow: hidden;' en estos contenedores.
+        Podrías necesitar quitarlo o aumentar el 'padding-bottom' de .profile.
+
+3.  .avatar-frame-container (y .profile-avatar-display-container):
+    -   Se asegura que su 'z-index' sea mayor que el del banner (ya lo es: 2) para que el avatar
+        siempre esté por encima.
+    -   Se eliminan o ajustan los 'margin-bottom' para permitir que el banner suba más.
+
+4. Insignias:
+    - Se ha ajustado el posicionamiento (`position: absolute;`, `bottom/right/top/left`, `transform: translate()`)
+      y los `z-index` para que salgan "por fuera" del avatar/nombre.
+    - Se añadió un `overflow: hidden;` en el contenedor de cada insignia y un pseudo-elemento `::before` con una
+      animación de brillo (`@keyframes badge-shine`) para darle un efecto visual.
+====================================================================================
+*/
+
+/* Variables CSS para modos oscuro/claro */
+:root {
+    --bg-body: #1a0005;
+    --bg-hub: #33000b;
+    --bg-btn: #260009;
+    --border-btn: #4d0013;
+    --text-color-primary: white;
+    --text-color-secondary: #ffb3c6;
+    --highlight-color: #ff3366;
+    --hover-highlight-color: #cc0033;
+    --gradient-start: #ff3366;
+    --gradient-middle: #ff8c66;
+    --gradient-end: #ff3366;
+    --auth-bg: #33000b; /* Fondo de contenedores auth/perfil */
+    --auth-input-bg: #260009; /* Fondo de inputs auth */
+    --auth-input-border: #4d0013;
+    --comment-bg: #260009; /* Fondo de comentarios */
+    --comment-text: #ff8c66; /* Texto de comentarios */
+    --toggle-password-color: #ff8c66;
+    --user-card-bg: #260009; /* Fondo de tarjeta de usuario en Top */
+    --shop-item-bg: #260009;
+    --shop-item-border: #4d0013;
+    --currency-color: gold;
+}
+
+/* Tema Claro */
+body.light-mode {
+    --bg-body: #f0f0f0;
+    --bg-hub: #ffffff;
+    --bg-btn: #e0e0e0;
+    --border-btn: #cccccc;
+    --text-color-primary: #333333;
+    --text-color-secondary: #666666;
+    --highlight-color: #4CAF50; /* Verde más amigable */
+    --hover-highlight-color: #388E3C;
+    --gradient-start: #4CAF50;
+    --gradient-middle: #8BC34A;
+    --gradient-end: #4CAF50;
+    --auth-bg: #ffffff;
+    --auth-input-bg: #f9f9f9;
+    --auth-input-border: #dddddd;
+    --comment-bg: #e9e9e9;
+    --comment-text: #555555;
+    --toggle-password-color: #777777;
+    --user-card-bg: #e0e0e0;
+    --shop-item-bg: #e0e0e0;
+    --shop-item-border: #cccccc;
+    --currency-color: #DAA520; /* Darker gold for light mode */
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-color-primary);
+    text-align: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.profile {
+    padding: 2rem 0;
+    position: relative; /* CAMBIO IMPORTANTE: NECESARIO para que el banner posicionado absoluto se refiera a este contenedor. */
+    overflow: hidden; /* Esto podría estar recortando el banner si es más alto.
+                         Si el banner sigue cortándose por abajo, COMENTA O QUITA ESTA LÍNEA para probar. */
+    /* OPCIONAL: Si el banner es más alto de lo esperado y necesitas que se extienda por debajo del contenido normal,
+                puedes aumentar el padding-bottom de .profile. Ejemplo: */
+    /* padding: 2rem 0 5rem 0; */
+}
+
+/* Restaurado: Sombra y borde de la imagen del perfil principal */
+.profile img {
+    width: 80px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--highlight-color); /* Sombra restaurada */
+    position: relative;
+    z-index: 2; /* Bien, asegura que la imagen del avatar esté por encima del banner */
+    border: 4px solid var(--highlight-color); /* Borde restaurado */
+}
+
+/* Contenedor del avatar - ahora solo para la imagen circular y la insignia */
+.avatar-frame-container {
+    position: relative;
+    width: 80px; /* Igual que el ancho del avatar */
+    height: 80px; /* Igual que el alto del avatar */
+    margin: 0 auto; /* CAMBIO: Eliminado '10px auto' para que no empuje hacia abajo. Esto ayuda al banner a subir. */
+    z-index: 2; /* CAMBIO IMPORTANTE: Asegura que este contenedor esté por encima del banner */
+    /* AJUSTAR VALOR: Si la foto y la insignia se ven demasiado bajas después de mover el banner,
+                      puedes añadir un margen negativo aquí para subirlas un poco: */
+    /* margin-top: -30px; */ /* Descomenta y ajusta este valor si necesitas subir la foto/insignia */
+}
+
+/* La imagen del avatar: circular, con su borde y sombra originales */
+.avatar-frame-container img.profile-avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%; /* Asegura que la foto sea un círculo */
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1; /* Por debajo de la insignia, pero por encima del banner si el contenedor lo permite */
+    box-shadow: 0 0 10px var(--highlight-color); /* Sombra base restaurada */
+    border: 4px solid var(--highlight-color); /* Borde restaurado */
+}
+
+/* Eliminado: .avatar-frame-container .profile-frame, ya no se usa para marcos */
+
+/* NUEVO: Estilos para la insignia en el avatar principal del hub (AHORA MÁS GRANDE Y CON BRILLO) */
+.avatar-frame-container .profile-badge-display {
+    position: absolute;
+    bottom: 0; /* Posiciona en la parte inferior del avatar */
+    right: 0; /* Posiciona en la parte derecha del avatar */
+    width: 62px; /* TAMAÑO AUMENTADO */
+    height: 62px; /* TAMAÑO AUMENTADO */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 3; /* Asegura que la insignia esté por encima del avatar y del banner */
+    transform: translate(40%, 30%); /* Ajuste fino para sacarla un poco si es necesario */
+    overflow: hidden; /* IMPORTANTE para recortar el efecto de brillo */
+    display: none; /* Por defecto, oculto hasta que JS lo muestre */
+}
+/* EFECTO DE BRILLO para la insignia principal del hub */
+.avatar-frame-container .profile-badge-display::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: badge-shine 2s infinite linear;
+    pointer-events: none;
+}
+
+
+.logo-text {
+    background: linear-gradient(90deg, var(--gradient-start), var(--gradient-middle), var(--gradient-end));
+    background-size: 200% auto;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: shine 3s linear infinite;
+    display: inline-block;
+}
+
+@keyframes shine {
+    0% {
+        background-position: 0% center;
+    }
+
+    100% {
+        background-position: 200% center;
+    }
+}
+
+.profile p {
+    margin: 0.3rem;
+    color: var(--highlight-color);
+    font-weight: bold;
+}
+
+.new-content-count {
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+    margin-top: 5px;
+}
+
+.socials i {
+    font-size: 1.5rem;
+    margin: 0 0.5rem;
+    color: var(--text-color-primary);
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.socials i:hover {
+    color: var(--highlight-color);
+}
+
+.hub {
+    margin-top: 2rem;
+    background: var(--bg-hub);
+    padding: 1rem;
+    border-radius: 12px;
+    display: inline-block;
+    width: 90%;
+    max-width: 600px;
+    transition: background-color 0.3s;
+}
+
+/* Estilos para el nuevo botón principal de Minecraft */
+.hub .main-minecraft-btn {
+    background-color: var(--hover-highlight-color);
+    padding: 0.7rem;
+    border-radius: 8px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--text-color-primary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    margin-bottom: 1rem;
+}
+
+.hub .main-minecraft-btn:hover {
+    background-color: var(--highlight-color);
+    transform: scale(1.02);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+/* --- MEDIA QUERIES PARA RESPONSIVIDAD (MEJORADO) --- */
+@media (max-width: 480px) {
+    .grid {
+        grid-template-columns: 1fr; /* Columna única en pantallas muy pequeñas */
+        gap: 0.8rem;
+    }
+    .hub {
+        width: 95%; /* Ajustar ancho para pantallas más pequeñas */
+        padding: 0.8rem;
+    }
+    .btn, .main-minecraft-btn {
+        font-size: 1rem; /* Tamaño de fuente más pequeño para los botones */
+        padding: 0.6rem;
+    }
+    .content-form-container, .auth-form-content, .profile-content, .top-users-content, .shop-container, .view-profile-container {
+        width: 95%; /* Hacer las ventanas emergentes más anchas en pantallas pequeñas */
+        padding: 1rem;
+    }
+    .content-card {
+        margin: 0 auto; /* Centrar tarjetas de una sola columna */
+        max-width: 90%;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Cuadrícula más flexible */
+        gap: 1rem;
+    }
+    .hub {
+        width: 90%;
+    }
+}
+
+.btn {
+    background-color: var(--bg-btn);
+    border: 2px solid var(--border-btn);
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-weight: bold;
+    color: var(--text-color-primary);
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn:hover {
+    background-color: var(--border-btn);
+    transform: scale(1.05);
+}
+
+.publish-content-btn {
+    margin-top: 1rem;
+    background-color: var(--highlight-color);
+    color: var(--text-color-primary);
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.publish-content-btn:hover {
+    background-color: var(--hover-highlight-color);
+}
+
+/* Estilos para el formulario */
+.content-form-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow-y: auto; /* Permitir scroll si el contenido es muy alto */
+}
+
+.content-form-container {
+    background-color: var(--auth-bg);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    color: var(--text-color-primary);
+    text-align: left;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+}
+
+.content-form-container h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--highlight-color);
+}
+
+.content-form-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: var(--highlight-color);
+}
+
+.content-form-container input[type="text"],
+.content-form-container textarea,
+.content-form-container select,
+.content-form-container input[type="file"],
+.content-form-container input[type="url"] { /* Added url input */
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--auth-input-border);
+    border-radius: 5px;
+    background-color: var(--auth-input-bg);
+    color: var(--text-color-primary);
+    font-family: 'Segoe UI', sans-serif;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    box-sizing: border-box;
+}
+
+.content-form-container textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+.content-form-container button {
+    background-color: var(--hover-highlight-color);
+    color: var(--text-color-primary);
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: block;
+    margin: 1rem auto 0;
+}
+
+.content-form-container button:hover {
+    background-color: var(--highlight-color);
+}
+
+/* Estilos para el contenido */
+.content-section {
+    display: none;
+    padding: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.content-section.active {
+    display: block !important;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.content-card {
+    background: var(--bg-hub);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(255, 51, 102, 0.3);
+    transition: background-color 0.3s;
+    position: relative; /* Para posicionar el botón de eliminar y la insignia */
+    cursor: pointer; /* Para indicar que es clickeable para ver perfil */
+}
+
+.content-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(255, 51, 102, 0.5);
+}
+
+
+.content-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-body h3 {
+    margin: 0 0 10px;
+    font-size: 1.1rem;
+    color: var(--highlight-color);
+}
+
+.card-body p {
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+    margin-bottom: 15px;
+}
+
+.version-select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    background: var(--auth-input-bg);
+    border: 1px solid var(--auth-input-border);
+    color: var(--text-color-primary);
+    border-radius: 5px;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.download-btn {
+    display: block;
+    background: var(--highlight-color);
+    color: var(--text-color-primary);
+    text-align: center;
+    padding: 8px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.download-btn:hover {
+    background: var(--hover-highlight-color);
+}
+
+.back-btn {
+    display: inline-block;
+    margin: 20px 0;
+    padding: 10px 20px;
+    background: var(--hover-highlight-color);
+    color: var(--text-color-primary);
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.back-btn:hover {
+    background: var(--highlight-color);
+}
+
+/* Estilos para likes y favoritos */
+.interaction-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    border-top: 1px solid var(--border-btn);
+    padding-top: 10px;
+}
+
+.like-section,
+.favorite-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.like-btn,
+.favorite-btn {
+    background: none;
+    border: none;
+    color: var(--text-color-secondary);
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+}
+
+.like-btn.liked,
+.favorite-btn.favorited {
+    color: var(--highlight-color);
+    transform: scale(1.1);
+}
+
+.likes-count,
+.favorites-count {
+    font-size: 0.9rem;
+    color: var(--text-color-secondary);
+}
+
+/* Estilos para comentarios */
+.comments-section {
+    margin-top: 15px;
+    border-top: 1px solid var(--border-btn);
+    padding-top: 10px;
+}
+
+.comment-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.comment-input {
+    flex-grow: 1;
+    padding: 8px;
+    background: var(--comment-bg);
+    border: 1px solid var(--border-btn);
+    border-radius: 5px;
+    color: var(--text-color-primary);
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.comment-submit {
+    background: var(--highlight-color);
+    color: var(--text-color-primary);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.comment-submit:hover {
+    background: var(--hover-highlight-color);
+}
+
+.comments-list {
+    max-height: 200px;
+    /* Aumentado un poco para ver más comentarios */
+    overflow-y: auto;
+    padding-right: 5px;
+    /* Para el scrollbar */
+}
+
+.comment-item {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    border-left: 3px solid var(--highlight-color);
+    padding-left: 10px;
+}
+
+.comment {
+    background: var(--comment-bg);
+    padding: 8px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.comment-author {
+    font-weight: bold;
+    color: var(--highlight-color);
+}
+
+.comment-time {
+    font-size: 0.7rem;
+    color: var(--comment-text);
+    margin-left: 5px;
+}
+
+.comment-text {
+    margin-top: 5px;
+    color: var(--text-color-primary);
+}
+
+.comment-actions {
+    margin-top: 5px;
+    text-align: right;
+}
+
+.comment-reply-btn {
+    background: none;
+    border: none;
+    color: var(--comment-text);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.comment-reply-btn:hover {
+    color: var(--highlight-color);
+}
+
+/* Estilos para comentarios anidados */
+.comment-replies {
+    margin-left: 20px;
+    margin-top: 10px;
+    padding-left: 5px;
+    border-left: 1px dashed var(--border-btn);
+}
+
+.cooldown-message {
+    color: var(--comment-text);
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+/* Nuevos estilos para autenticación */
+.auth-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.auth-form-content {
+    background: var(--auth-bg);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    color: var(--text-color-primary);
+    text-align: left;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+}
+
+.auth-form-content h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--highlight-color);
+}
+
+.auth-form-content label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: var(--highlight-color);
+}
+
+.auth-form-content input[type="text"],
+.auth-form-content input[type="email"],
+.auth-form-content input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--auth-input-border);
+    border-radius: 5px;
+    background-color: var(--auth-input-bg);
+    color: var(--text-color-primary);
+    font-family: 'Segoe UI', sans-serif;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    box-sizing: border-box;
+}
+
+.auth-btn {
+    background: var(--highlight-color);
+    color: var(--text-color-primary);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: block;
+    margin: 1rem auto 0;
+    text-align: center;
+}
+
+.auth-btn:hover {
+    background-color: var(--hover-highlight-color);
+}
+
+.toggle-auth-mode {
+    text-align: center;
+    margin-top: 1rem;
+    color: var(--comment-text);
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* Estilos para avatares */
+.avatar-selection {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 1rem;
+    justify-content: center;
+}
+
+.avatar-selection img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+.avatar-selection img.selected {
+    border-color: var(--highlight-color);
+    transform: scale(1.1);
+}
+
+/* Botón de perfil flotante */
+.profile-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: var(--highlight-color);
+    color: var(--text-color-primary);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    transition: background 0.3s;
+}
+
+.profile-btn:hover {
+    background: var(--hover-highlight-color);
+}
+
+/* Botón de modo oscuro/claro */
+.theme-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--highlight-color);
+    color: var(--text-color-primary);
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    transition: background 0.3s;
+}
+
+.theme-toggle-btn:hover {
+    background: var(--hover-highlight-color);
+}
+
+/* Moneda del usuario */
+.currency-display {
+    position: fixed;
+    top: 80px; /* Debajo del botón de perfil */
+    left: 20px;
+    background-color: var(--bg-hub);
+    color: var(--currency-color);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 998;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+.currency-display i {
+    color: var(--currency-color);
+}
+
+/* Perfil de Usuario */
+.user-profile {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.profile-content {
+    background: var(--auth-bg);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    color: var(--text-color-primary);
+    text-align: center;
+    position: relative; /* CAMBIO IMPORTANTE: NECESARIO para que el banner posicionado absoluto dentro se refiera a este contenedor. */
+    max-height: 90vh;
+    overflow-y: auto;
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+}
+
+/* Restaurado: Sombra y border de la imagen del perfil en el perfil */
+.profile-content .avatar-display {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--highlight-color); /* Borde restaurado */
+    box-shadow: 0 0 10px var(--highlight-color); /* Sombra restaurada */
+    /* margin-bottom: 1rem; */ /* CAMBIO: Puedes eliminar este margen para que el avatar y banner suban más si es necesario. */
+    position: relative; /* Asegura el z-index */
+    z-index: 2; /* Asegura que el avatar esté encima del banner en el perfil */
+}
+
+/* Contenedor para el avatar y la insignia en el perfil */
+.profile-avatar-display-container {
+    position: relative;
+    width: 100px; /* Tamaño base del avatar */
+    height: 100px;
+    margin: 0 auto; /* CAMBIO: Eliminado '1rem auto' para que no empuje hacia abajo. */
+    z-index: 2; /* CAMBIO IMPORTANTE: Asegura que este contenedor esté por encima del banner. */
+    /* AJUSTAR VALOR: Si la foto y el banner no están donde quieres en la ventana de perfil, puedes añadir un margen negativo aquí */
+    /* margin-top: -30px; */ /* Descomenta y ajusta este valor si necesitas subir la foto/insignia en la ventana de perfil */
+}
+
+/* La imagen del avatar dentro del perfil: circular, con su borde y sombra originales */
+.profile-avatar-display-container .profile-avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%; /* Asegura que la foto sea un círculo */
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1; /* Por debajo de la insignia */
+    border: 4px solid var(--highlight-color); /* Borde restaurado */
+    box-shadow: 0 0 10px var(--highlight-color); /* Sombra restaurada */
+}
+
+/* Eliminado: .profile-avatar-display-container .profile-frame-display, ya no se usa para marcos */
+
+/* NUEVO: Estilos para la insignia en el perfil de usuario (AHORA MÁS GRANDE Y CON BRILLO) */
+.profile-content .profile-badge-display {
+    position: absolute;
+    bottom: 0; /* Posiciona en la parte inferior del avatar */
+    right: 0; /* Posiciona en la parte derecha del avatar */
+    width: 38px; /* TAMAÑO AUMENTADO */
+    height: 38px; /* TAMAÑO AUMENTADO */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 3; /* Asegura que la insignia esté por encima del avatar */
+    transform: translate(15%, 15%); /* Ajuste fino para sacarla un poco más allá del borde del avatar */
+    overflow: hidden; /* IMPORTANTE para recortar el efecto de brillo */
+    display: none; /* Por defecto, oculto hasta que JS lo muestre */
+}
+/* EFECTO DE BRILLO para la insignia en el perfil de usuario */
+.profile-content .profile-badge-display::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: badge-shine 2s infinite linear;
+    pointer-events: none;
+}
+
+/* ESTILOS PARA EL BANNER EN LA VISTA DE OTRO USUARIO */
+#viewProfileBannerDisplay {
+    width: 100%;
+    height: 190px; /* Puedes ajustar esta altura si quieres que sea más alta */
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    overflow: hidden; /* Si se recorta, puedes probar a comentar esto. */
+    border: 1px solid var(--border-btn);
+
+    /* Posicionamiento y z-index para que se vea como fondo, igual que tu banner principal */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0; /* Detrás del avatar (que tiene z-index: 2) */
+    display: none; /* Por defecto, oculto hasta que JS lo muestre */
+
+    /* AJUSTADO: Bajado el banner para dejar espacio para el avatar y texto */
+    transform: translateY(20px); /* Ajustado a un valor positivo para bajarlo más */
+}
+
+/* Es crucial que .view-profile-content tenga position: relative; (YA LA TIENE, NO TOCAR) */
+.view-profile-content {
+    /* ... tus estilos actuales ... */
+    position: relative; /* ¡IMPORTANTE! Asegura que el banner se posicione dentro de este div. */
+    /* Aumenta el padding-top si el contenido superior sigue chocando con el borde del contenedor */
+    padding-top: 10px; /* Puedes aumentar este valor si el contenido general se ve muy arriba */
+}
+
+/* ESTILOS PARA EL BANNER DEL PERFIL */
+#profileBannerDisplay {
+    width: 100%;
+    height: 190px; /* Puedes aumentar esta altura si la imagen de tu banner es más grande o quieres que ocupe más espacio vertical */
+    background-size: cover;
+    background-position: center;
+    /* margin-bottom: 1rem; */ /* CAMBIO IMPORTANTE: COMENTA O ELIMINA esta línea. No queremos que el banner tenga margen inferior si va posicionado de forma absoluta detrás. */
+    border-radius: 8px;
+    overflow: hidden; /* Si tu banner se sigue recortando, puedes probar a comentar esta línea. */
+    border: 1px solid var(--border-btn);
+
+    /* CAMBIOS CRUCIALES PARA POSICIONAR EL BANNER DETRÁS Y ARRIBA */
+    position: absolute; /* ¡FUNDAMENTAL! Saca al banner del flujo normal y permite posicionarlo. */
+    top: 0;             /* Ancla el banner a la parte superior de su contenedor con 'position: relative'. */
+    left: 0;            /* Ancla el banner a la parte izquierda de su contenedor. */
+    z-index: 0;         /* ¡FUNDAMENTAL! Asegura que el banner esté *detrás* de otros elementos (como el avatar que tiene z-index: 2). */
+    display: none; /* Por defecto, oculto hasta que JS lo muestre */
+
+    /* AJUSTAR VALOR: Esta es la propiedad que necesitas AFINAR.
+        Un valor negativo lo subirá. Si el banner solo se ve "un poquito arriba" y no baja,
+        es probable que necesites un valor NEGATIVO MÁS GRANDE para "tirarlo" más arriba
+        y que su parte inferior (que ahora tiene 190px de altura) se vea.
+        Prueba valores como -80px, -100px, -120px, etc., hasta que se vea como quieres. */
+    transform: translateY(0px); /* <<<-- ¡AJUSTA ESTE VALOR NEGATIVO PARA SUBIR EL BANNER! */
+}
+
+
+.profile-content h3 {
+    color: var(--highlight-color);
+    margin-bottom: 0.5rem;
+}
+
+.profile-content p {
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.profile-description-area {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--auth-input-border);
+    border-radius: 5px;
+    background-color: var(--auth-input-bg);
+    color: var(--text-color-primary);
+    font-family: 'Segoe UI', sans-serif;
+    resize: vertical;
+    min-height: 60px;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    box-sizing: border-box;
+}
+
+/* MODIFICADO: Ajustes para el botón de cerrar en todas las ventanas emergentes */
+.profile-content .close-btn,
+.auth-form-content .close-btn,
+.shop-container .close-btn,
+.view-profile-container .close-btn {
+    position: absolute;
+    top: 10px; /* Un poco más abajo del borde superior */
+    right: 15px;
+    font-size: 2rem;
+    color: var(--highlight-color);
+    cursor: pointer;
+    z-index: 100; /* MUY ALTO: Asegura que esté por encima de cualquier banner, avatar o contenido. */
+    background: transparent; /* Fondo transparente */
+    border: none; /* Sin borde */
+    padding: 5px; /* Pequeño padding para facilitar el clic */
+    border-radius: 50%; /* Si quieres que el área de clic sea circular */
+    transition: background-color 0.2s;
+}
+
+.profile-content .close-btn:hover,
+.auth-form-content .close-btn:hover,
+.shop-container .close-btn:hover,
+.view-profile-container .close-btn:hover {
+    background-color: rgba(255, 51, 102, 0.2); /* Un ligero fondo al pasar el ratón */
+}
+
+.profile-content .logout-btn {
+    background-color: var(--hover-highlight-color);
+    margin-top: 1.5rem;
+    padding: 0.7rem 1.2rem;
+}
+
+.profile-content .save-profile-btn {
+    background-color: #4CAF50;
+    /* Green */
+    margin-top: 1rem;
+    padding: 0.7rem 1.2rem;
+}
+
+/* Mis Favoritos en el perfil */
+.my-favorites-grid, .my-publications-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    border-top: 1px solid var(--border-btn);
+    padding-top: 20px;
+    color: var(--text-color-primary);
+}
+
+.my-favorite-card, .my-publication-card {
+    background: var(--user-card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 5px rgba(255, 51, 102, 0.2);
+    padding: 10px;
+    text-align: center;
+    transition: background-color 0.3s;
+    position: relative;
+}
+
+.my-favorite-card img, .my-publication-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.my-favorite-card h4, .my-publication-card h4 {
+    font-size: 0.9rem;
+    margin: 0;
+    color: var(--highlight-color);
+}
+
+.my-favorite-card p, .my-publication-card p {
+    font-size: 0.7rem;
+    color: var(--text-color-secondary);
+    margin: 5px 0 0;
+}
+
+
+/* Top usuarios */
+.top-users-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+    overflow-y: auto;
+}
+
+.top-users-content {
+    background: var(--auth-bg);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    color: var(--text-color-primary);
+    text-align: left;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+}
+
+.top-users-content h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--highlight-color);
+}
+
+.user-card {
+    background: var(--user-card-bg);
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color 0.3s;
+    cursor: pointer; /* Para indicar que es clickeable para ver perfil */
+    position: relative; /* CAMBIO: Necesario para que la insignia se posicione absolutamente dentro */
+}
+.user-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(255, 51, 102, 0.3);
+}
+
+.user-card img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--highlight-color);
+    margin-right: 10px;
+}
+
+/* NUEVO: Estilos para la insignia en las tarjetas de usuario del Top (AHORA MÁS GRANDE Y CON BRILLO) */
+/* MODIFICADO: Esta regla oculta la insignia por defecto en las tarjetas del top */
+.user-card .user-badge-display {
+    position: absolute; /* CAMBIO: Posicionamiento absoluto */
+    bottom: -5px; /* Ajusta la posición vertical */
+    right: -5px; /* Ajusta la posición horizontal */
+    width: 28px; /* TAMAÑO AUMENTADO */
+    height: 28px; /* TAMAÑO AUMENTADO */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 2; /* Para que esté por encima del borde de la tarjeta */
+    overflow: hidden; /* IMPORTANTE para recortar el efecto de brillo */
+    display: none !important; /* <--- CAMBIO CRÍTICO: ¡Añadido !important para forzar que se oculte! */
+}
+/* EFECTO DE BRILLO para la insignia en las tarjetas de usuario del Top */
+.user-card .user-badge-display::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: badge-shine 2s infinite linear;
+    pointer-events: none;
+}
+
+
+.user-card span {
+    flex-grow: 1;
+}
+
+.user-card .publication-count {
+    font-weight: bold;
+    color: var(--comment-text);
+}
+
+.delete-publication-btn { /* Botón de eliminar en el perfil (para las propias publicaciones) */
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.delete-publication-btn:hover {
+    background: rgba(255, 0, 0, 1);
+}
+
+/* NUEVO: Estilos para el botón de eliminar en las tarjetas de contenido general (visible para el admin) */
+.delete-content-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 0, 0, 0.7); /* Rojo semitransparente */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Circular */
+    width: 25px;
+    height: 25px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s;
+    z-index: 10; /* Asegura que esté por encima de otros elementos */
+}
+
+.delete-content-btn:hover {
+    background: rgba(255, 0, 0, 1); /* Rojo sólido al pasar el ratón */
+}
+
+/* Estilos para la sección de descargas de Minecraft */
+.minecraft-downloads-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 20px;
+    text-align: left;
+}
+
+.minecraft-downloads-list .download-item {
+    background: var(--bg-btn);
+    padding: 15px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--border-btn);
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.minecraft-downloads-list .download-item span {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--highlight-color);
+}
+
+.minecraft-downloads-list .download-item a {
+    background: var(--highlight-color);
+    color: var(--text-color-primary);
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.minecraft-downloads-list .download-item a:hover {
+    background: var(--hover-highlight-color);
+}
+
+/* Paginación */
+.pagination-controls {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.pagination-controls button {
+    background-color: var(--highlight-color);
+    color: var(--text-color-primary);
+    border: none;
+    padding: 0.7rem 1.2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pagination-controls button:hover {
+    background-color: var(--hover-highlight-color);
+}
+
+.pagination-controls button:disabled {
+    background-color: #66001a;
+    cursor: not-allowed;
+}
+
+/* Nuevo: Avatar en el perfil para cambiar */
+.profile-avatar-upload {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.profile-avatar-upload label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: var(--highlight-color);
+}
+
+.profile-avatar-upload input[type="file"] {
+    background-color: var(--bg-btn);
+    border: 1px solid var(--border-btn);
+    padding: 8px;
+    border-radius: 5px;
+    color: var(--text-color-primary);
+    width: calc(100% - 20px);
+    box-sizing: border-box; /* Asegura que el padding se incluya en el ancho total */
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    color: white;
+    font-size: 1.2rem;
+    opacity: 0; /* Inicia oculto */
+    visibility: hidden; /* Inicia oculto para accesibilidad */
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+.loading-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid var(--highlight-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 10px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+/* Animación de brillo para las insignias */
+@keyframes badge-shine {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 200%;
+    }
+}
+
+
+/* Tienda */
+.shop-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.shop-content {
+    background: var(--auth-bg);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    color: var(--text-color-primary);
+    text-align: center;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+}
+
+.shop-content h3 {
+    color: var(--highlight-color);
+    margin-bottom: 1.5rem;
+}
+
+.shop-items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.shop-item-card {
+    background: var(--shop-item-bg);
+    border: 1px solid var(--shop-item-border);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
+    position: relative;
+}
+
+.shop-item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+}
+
+.shop-item-card.purchased {
+    opacity: 0.7;
+    cursor: default;
+    border-color: green;
+}
+
+/* Estilo para imágenes genéricas en las tarjetas de la tienda */
+.shop-item-card img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 50%; /* Por defecto circular, se puede anular para items específicos */
+    margin-bottom: 5px;
+    border: 2px solid transparent;
+}
+
+/* Estilo específico para las imágenes de BANNERS en la tienda */
+.shop-item-card.banner-item img {
+    border-radius: 0; /* Los banners no son circulares */
+    max-width: 100%; /* Asegura que no sobresalga */
+    height: auto; /* Mantiene la proporción */
+    display: block; /* Para que max-width funcione bien */
+    object-fit: contain; /* Ajusta la imagen dentro del espacio sin recortarla */
+    margin: 0 auto 5px auto; /* Centra y añade espacio */
+}
+
+
+/* Estilo específico para las imágenes de INSIGNIAS en la tienda */
+.shop-item-card.badge-item img {
+    border-radius: 0; /* Las insignias no son circulares */
+    width: 70px; /* Tamaño de la insignia en la tienda */
+    height: 70px; /* Tamaño de la insignia en la tienda */
+    object-fit: contain; /* Para que la insignia completa sea visible */
+    background-color: transparent; /* Fondo transparente */
+    border: none; /* Sin borde aquí */
+}
+
+/* Estilo para la previsualización del eslogan en la tienda */
+.shop-item-card .shop-slogan-preview {
+    height: 70px; /* Misma altura que las imágenes para alinear el grid */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 5px;
+    box-sizing: border-box;
+    margin-bottom: 5px;
+    font-size: 0.9em; /* Ajusta el tamaño de fuente si es necesario */
+    /* Otros estilos de eslogan se aplicarán directamente desde JS */
+}
+
+
+.shop-item-card h4 {
+    font-size: 0.9rem;
+    margin: 5px 0;
+    color: var(--text-color-primary);
+}
+
+.shop-item-card p {
+    font-size: 0.8rem;
+    color: var(--currency-color);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+}
+
+.shop-item-card .purchased-tag {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: green;
+    color: white;
+    font-size: 0.7rem;
+    padding: 3px 6px;
+    border-radius: 5px;
+    display: none;
+}
+.shop-item-card.purchased .purchased-tag {
+    display: block;
+}
+
+/* Ver Perfil de Otro Usuario */
+.view-profile-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1002; /* Más alto que el perfil propio */
+    overflow-y: auto;
+}
+
+.view-profile-content {
+    background: var(--auth-bg);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    color: var(--text-color-primary);
+    text-align: center;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+    transition: background-color 0.3s;
+    box-sizing: border-box;
+    /* Ajustamos el padding-top para el contenido general de la ventana emergente */
+    padding-top: 10px; /* Ya estaba, si el contenido general se ve muy arriba, puedes aumentar este valor */
+}
+
+/* Se asume que el HTML para el perfil de otros usuarios tiene una estructura similar al propio,
+   con un contenedor de encabezado que englobe el banner, el avatar y las insignias. */
+.view-profile-content .profile-header {
+    position: relative; /* Contenedor padre del avatar y la insignia debe ser relativo */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px; /* Asegura espacio para la insignia si sobresale */
+    /* REMOVED: margin-top: -80px; - Esto estaba subiendo todo el header. */
+    /* AJUSTADO: Empuja el profile-header hacia abajo para hacer espacio para el banner que estará arriba */
+    padding-top: 100px; /* Valor base. Ajusta esto para mover el avatar/nombre/eslogan hacia abajo. */
+}
+
+.view-profile-content #viewProfileAvatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--highlight-color);
+    box-shadow: 0 0 10px var(--highlight-color);
+    position: relative; /* Asegura que el z-index funcione */
+    z-index: 2; /* Para que el avatar esté sobre el banner */
+    transform: translateY(-50px); /* AJUSTADO: Sube el avatar para superponerlo al banner. Ajusta este valor si es necesario. */
+}
+
+
+/* Eliminado: .view-profile-content .profile-frame-display, ya no se usa para marcos */
+
+/* NUEVO: Estilos para la insignia en el perfil de otro usuario (AHORA MÁS GRANDE Y CON BRILLO) */
+.view-profile-content .profile-badge-display {
+    position: absolute;
+    bottom: 0; /* Posiciona en la parte inferior del avatar */
+    right: 0; /* Posiciona en la parte derecha del avatar */
+    width: 38px; /* TAMAÑO AUMENTADO */
+    height: 38px; /* TAMAÑO AUMENTADO */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 3; /* Asegura que la insignia esté por encima del avatar */
+    transform: translate(15%, 15%); /* Ajuste fino para sacarla un poco más allá del borde del avatar */
+    overflow: hidden; /* IMPORTANTE para recortar el efecto de brillo */
+    display: none; /* Por defecto, oculto hasta que JS lo muestre */
+}
+/* EFECTO DE BRILLO para la insignia en el perfil de otro usuario */
+.view-profile-content .profile-badge-display::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: badge-shine 2s infinite linear;
+    pointer-events: none;
+}
+
+.view-profile-content h3 {
+    color: var(--highlight-color);
+    margin-bottom: 0.5rem;
+}
+
+.view-profile-content p {
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+/* Estilo para el eslogan del publicador en las tarjetas de contenido y en las vistas de perfil */
+.publisher-slogan,
+#profileSloganDisplay, /* También para tu propio eslogan en el perfil */
+#viewProfileSloganDisplay { /* Para el eslogan de otros usuarios */
+    display: inline-block; /* Para que el estilo funcione bien */
+    margin-left: 5px;
+    font-style: italic;
+    font-size: 0.8em; /* Un poco más pequeño que el nombre de usuario */
+    vertical-align: middle; /* Para alinear con el texto del nombre de usuario */
+    /* Cualquier estilo de color específico se aplicará directamente desde JS */
+    display: none; /* Por defecto, oculto hasta que JS lo muestre */
+}
+
+/* NUEVO: Estilo para la insignia del publicador en las tarjetas de contenido */
+.publisher-badge-display {
+    display: inline-block;
+    width: 20px; /* Tamaño de la insignia en las tarjetas de contenido */
+    height: 20px; /* Tamaño de la insignia en las tarjetas de contenido */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-left: 5px;
+    vertical-align: middle;
+    position: relative; /* Necesario para posicionar el pseudo-elemento */
+    overflow: hidden; /* IMPORTANTE para recortar el efecto de brillo */
+    display: none; /* Por defecto, oculto hasta que JS lo muestre */
+}
+/* EFECTO DE BRILLO para la insignia del publicador en las tarjetas de contenido */
+.publisher-badge-display::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: badge-shine 2s infinite linear;
+    pointer-events: none;
+}
+
+
+.view-profile-content .profile-stats {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-btn);
+}
+
+.view-profile-content .profile-stat-item {
+    display: inline-block;
+    margin: 0 15px;
+}
+
+.view-profile-content .profile-stat-item strong {
+    display: block;
+    font-size: 1.5rem;
+    color: var(--highlight-color);
+}
+
+.view-profile-content .profile-stat-item span {
+    font-size: 0.8rem;
+    color: var(--text-color-secondary);
+}
+
+.view-profile-content .profile-publications-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 10px;
+    margin-top: 20px;
+    border-top: 1px solid var(--border-btn);
+    padding-top: 20px;
+}
+
+.view-profile-content .profile-publication-card {
+    background: var(--user-card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 5px rgba(255, 51, 102, 0.1);
+    padding: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.view-profile-content .profile-publication-card img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 3px;
+}
+
+.view-profile-content .profile-publication-card h4 {
+    font-size: 0.8rem;
+    margin: 0;
+    color: var(--highlight-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.view-profile-content .profile-publication-card p {
+    font-size: 0.6rem;
+    margin: 0;
+    color: var(--text-color-secondary);
+}
