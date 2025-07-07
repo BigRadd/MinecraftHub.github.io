@@ -103,6 +103,7 @@ const SHOP_ITEMS = [
     { id: 'slogan_ban_jus', type: 'slogan', name: '1 DIA"', cost: 1000, text: '¡BAN JUS!', style: 'color:rgb(18, 191, 226);' },
     { id: 'slogan_admin', type: 'slogan', name: '2 DIAS🔥"', cost: 500, text: 'ADMIN🔥', style: 'color:rgb(4, 224, 11);' },
     { id: 'slogan_legend', type: 'slogan', name: 'Slogan: LEYENDA', cost: 120, text: '¡LEYENDA DEL HUB!', style: 'color: gold; text-shadow: 0 0 5px orange;' },
+    { id: 'slogan_ban_radd', type: 'slogan', name: '1 DIA"', cost: 1000, text: '¡BAN RADD!', style: 'color:rgb(18, 181, 216);' },
 
     // --- EJEMPLOS DE INSIGNIAS (BADGES) ---
     // ¡REEMPLAZA ESTAS URLs con las de tus insignias de Minecraft!
