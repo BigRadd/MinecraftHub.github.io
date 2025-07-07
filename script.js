@@ -71,12 +71,12 @@ const lastVisibleDocs = {}; // Objeto para guardar el último documento visible 
 
 // --- Monedas por categoría de publicación ---
 const COINS_PER_CATEGORY = {
-    "textura": 10,
+    "textura": 25,
     "addon": 25,
-    "mod": 20,
-    "plantilla": 12,
-    "skin": 8,
-    "shader": 18,
+    "mod": 25,
+    "plantilla": 25,
+    "skin": 25,
+    "shader": 25,
     "tutorial": 25,
     "minecraft-version": 30 // Solo admins
 };
