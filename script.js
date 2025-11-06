@@ -42,7 +42,7 @@ const storage = getStorage(app);
 // --- ADMIN USER IDs --- REEMPLAZA CON TUS UIDS REALES
 const ADMIN_UIDS = [
     "W3Q0SYQQ7sVuygy4w2bq9nur95t1", // Tu UID
-    "UID_DEL_OTRO_ADMIN" // UID del otro admin
+    "d3l33SOZIpMn8bcD708blbLcB2m1" // UID del otro admin
 ];
 
 // Variables globales
@@ -1054,3 +1054,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Inicializar
     updatePublishButtonVisibility();
 });
+
