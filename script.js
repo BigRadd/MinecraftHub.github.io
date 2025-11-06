@@ -45,9 +45,9 @@ const ADMIN_UIDS = [
     "d3l33SOZIpMn8bcD708blbLcB2m1" // UID del otro admin
 ];
 
-// Variables globales
+// Variables globales - COOLDOWN DESACTIVADO
 let lastSubmissionTime = 0;
-const COOLDOWN_TIME = 5 * 60 * 1000;
+const COOLDOWN_TIME = 0; // CERO minutos de espera
 let currentCategory = '';
 const LAST_VISITED_KEY = 'lastVisitedTime';
 let currentUser = null;
@@ -133,26 +133,7 @@ function updatePublishButtonVisibility() {
     }
 }
 
-function updateCooldownMessage() {
-    if (window._cooldownInterval) {
-        clearInterval(window._cooldownInterval);
-    }
-
-    window._cooldownInterval = setInterval(() => {
-        const remainingTime = COOLDOWN_TIME - (Date.now() - lastSubmissionTime);
-
-        if (remainingTime <= 0) {
-            cooldownMessage.textContent = '';
-            clearInterval(window._cooldownInterval);
-            localStorage.removeItem('lastSubmissionTime');
-            window._cooldownInterval = null;
-        } else {
-            const minutes = Math.floor(remainingTime / 1000 / 60);
-            const seconds = Math.floor((remainingTime / 1000) % 60);
-            cooldownMessage.textContent = `Podrás publicar nuevo contenido en ${minutes}m ${seconds}s`;
-        }
-    }, 1000);
-}
+// COOLDOWN DESACTIVADO - ELIMINADA LA FUNCIÓN updateCooldownMessage
 
 async function updateNewContentCount() {
     const lastVisitedTime = localStorage.getItem(LAST_VISITED_KEY);
@@ -856,11 +837,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    const storedTime = localStorage.getItem('lastSubmissionTime');
-    if (storedTime) {
-        lastSubmissionTime = parseInt(storedTime, 10);
-        updateCooldownMessage();
-    }
+    // COOLDOWN DESACTIVADO - ELIMINADA LA PARTE DEL COOLDOWN
     
     await updateNewContentCount();
     setInterval(updateNewContentCount, 60 * 1000);
@@ -899,22 +876,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
+    // FORMULARIO DE PUBLICACIÓN - COOLDOWN ELIMINADO
     publishForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        // Verificar permisos de administrador
         if (!isCurrentUserAdmin()) {
             alert('Solo los administradores pueden publicar contenido.');
-            return;
-        }
-
-        const currentTime = Date.now();
-        const timeSinceLastSubmission = currentTime - lastSubmissionTime;
-
-        if (timeSinceLastSubmission < COOLDOWN_TIME) {
-            const remainingTimeSeconds = Math.ceil((COOLDOWN_TIME - timeSinceLastSubmission) / 1000);
-            const minutes = Math.floor(remainingTimeSeconds / 60);
-            const seconds = remainingTimeSeconds % 60;
-            alert(`Debes esperar ${minutes}m ${seconds}s antes de publicar nuevo contenido.`);
             return;
         }
 
@@ -983,10 +951,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 vistas: 0,
                 likes: 0,
             });
-
-            lastSubmissionTime = currentTime;
-            localStorage.setItem('lastSubmissionTime', currentTime.toString());
-            updateCooldownMessage();
             
             await updateLastVisitedTime();
 
@@ -1054,4 +1018,3 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Inicializar
     updatePublishButtonVisibility();
 });
-
