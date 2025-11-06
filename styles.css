@@ -903,33 +903,3 @@ body {
         font-size: 1.1rem;
     }
 }
-
-/* Estilos para Anuncios Adsterra */
-.ad-container {
-    margin: 15px auto;
-    text-align: center;
-    padding: 10px;
-    background: var(--bg-btn);
-    border-radius: 10px;
-    border: 1px solid var(--border-btn);
-    max-width: 728px; /* Tamaño estándar de banners */
-}
-
-.ad-footer {
-    margin: 20px auto;
-    opacity: 0.8;
-}
-
-/* Asegurar que los anuncios sean responsivos */
-#container-3516a067875a17c5c11b1b76b5875df4 {
-    margin: 0 auto;
-}
-
-/* Anuncios en móviles */
-@media (max-width: 768px) {
-    .ad-container {
-        margin: 10px auto;
-        padding: 8px;
-        max-width: 90%;
-    }
-}
